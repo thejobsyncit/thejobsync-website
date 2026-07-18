@@ -526,7 +526,7 @@ function App() {
             <div className="container">
               <div className="section-title">
                 <h2>Welcome to The Jobsync</h2>
-                <p>We are experts in this industry with over 25 years experience. What that means is you are going to get right solution, please find our services.</p>
+                <p><strong>Transforming Businesses Through Innovation, Technology & Talent.</strong> The JobSync is a leading IT Consulting and Technology Services company delivering innovative digital solutions that empower businesses to thrive in a rapidly evolving world. Innovate. Transform. Grow.</p>
               </div>
 
               <div className="welcome-grid">
