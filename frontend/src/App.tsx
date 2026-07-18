@@ -253,14 +253,10 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
           <div className="about-grid">
             <img src="/features.png" alt="About The Jobsync" className="about-img" />
             <div className="about-content">
-              <h3>We are always looking for specific approach to each cases & Provide full solutions.</h3>
-              <p>We have built an enviable reputation in the IT sector, high-tech, manufacturing, medical, recreational vehicle, and transportation sectors. multidisciplinary team of engineering experts, who loves or pursues or desires to obtain pain of itself, because it is pain occasionally.</p>
-
-              <div className="about-features">
-                <div className="about-feature">✓ Reliable & Trustworthy</div>
-              </div>
-
-              <p style={{ fontSize: '13px' }}>Who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain desires to obtain pain of itself, because it is pain, but because occur in which toil and pain.</p>
+              <h3>The JobSync – IT Consulting & Services</h3>
+              <p>The JobSync is a global IT consulting and technology services company committed to helping organizations accelerate digital transformation, optimize business operations, and achieve sustainable growth through innovative technology solutions.</p>
+              <p>We partner with startups, SMEs, and large enterprises to deliver strategic consulting, custom software development, cloud solutions, cybersecurity, managed IT services, enterprise applications, AI-driven innovation, and IT staffing. Our experienced consultants and technology specialists provide end-to-end solutions that improve operational efficiency, reduce costs, enhance security, and enable business scalability.</p>
+              <p>Our customer-centric approach, industry expertise, and commitment to quality make The JobSync a trusted technology partner for organizations across multiple industries worldwide.</p>
 
               <div className="about-bottom">
                 <div className="signature">The Jobsync Team</div>
@@ -589,14 +585,10 @@ function App() {
               <div className="about-grid">
                 <img src="/features.png" alt="About The Jobsync" className="about-img" />
                 <div className="about-content">
-                  <h3>We are always looking for specific approach to each cases & Provide full solutions.</h3>
-                  <p>We have built an enviable reputation in the IT sector, high-tech, manufacturing, medical, recreational vehicle, and transportation sectors. multidisciplinary team of engineering experts, who loves or pursues or desires to obtain pain of itself, because it is pain occasionally.</p>
-
-                  <div className="about-features">
-                    <div className="about-feature">✓ Reliable & Trustworthy</div>
-                  </div>
-
-                  <p style={{ fontSize: '13px' }}>Who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain desires to obtain pain of itself, because it is pain, but because occur in which toil and pain.</p>
+                  <h3>The JobSync – IT Consulting & Services</h3>
+                  <p>The JobSync is a global IT consulting and technology services company committed to helping organizations accelerate digital transformation, optimize business operations, and achieve sustainable growth through innovative technology solutions.</p>
+                  <p>We partner with startups, SMEs, and large enterprises to deliver strategic consulting, custom software development, cloud solutions, cybersecurity, managed IT services, enterprise applications, AI-driven innovation, and IT staffing. Our experienced consultants and technology specialists provide end-to-end solutions that improve operational efficiency, reduce costs, enhance security, and enable business scalability.</p>
+                  <p>Our customer-centric approach, industry expertise, and commitment to quality make The JobSync a trusted technology partner for organizations across multiple industries worldwide.</p>
 
                   <div className="about-bottom">
                     <button className="btn-solid" style={{ padding: '10px 25px' }} onClick={(e) => { e.preventDefault(); setActiveTab('about'); window.scrollTo(0, 0); }}>READ MORE</button>
