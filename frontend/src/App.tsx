@@ -514,7 +514,7 @@ function App() {
                 <h1>Looking for first class IT solutions?</h1>
                 <p>With over 10 years of experience helping businesses to find comprehensive technological solutions and strategic IT consulting.</p>
                 <div className="hero-buttons">
-                  <button className="btn-outline">OUR COMPANY</button>
+                  <button className="btn-outline" onClick={() => { setActiveTab('about'); window.scrollTo(0, 0); }}>OUR COMPANY</button>
                   <button className="btn-solid" onClick={() => { setActiveTab('contact'); window.scrollTo(0, 0); }}>CONTACT US</button>
                 </div>
               </div>
