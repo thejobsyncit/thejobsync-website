@@ -558,16 +558,47 @@ a {
 
 /* Responsive */
 @media (max-width: 992px) {
-  .contact-grid {
+  .contact-grid, .about-grid {
     grid-template-columns: 1fr;
   }
   .footer-grid {
     grid-template-columns: 1fr 1fr;
   }
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .welcome-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
-  .footer-grid {
+  .top-bar {
+    display: none;
+  }
+  .header .container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+  .hero-content h1 {
+    font-size: 32px;
+  }
+  .hero-content p {
+    font-size: 14px;
+  }
+  .hero-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-solid, .btn-outline {
+    text-align: center;
+  }
+  .footer-grid, .welcome-grid, .services-grid, .jobs-grid {
     grid-template-columns: 1fr;
   }
 }
