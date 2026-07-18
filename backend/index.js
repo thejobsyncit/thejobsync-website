@@ -14,6 +14,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'The Jobsync Backend is running' });
 });
 
-app.listen(port, () => {
-  console.log(`Backend server is running on port ${port}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.log(`Backend server is running on port ${port}`);
+  });
+}
+
+module.exports = app;
