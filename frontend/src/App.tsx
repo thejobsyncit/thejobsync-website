@@ -2,6 +2,46 @@ import { useState } from 'react';
 import './index.css';
 
 const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setSuccessMsg('');
+    setErrorMsg('');
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      message: formData.get('message') as string,
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully.");
+        (e.target as HTMLFormElement).reset();
+      } else {
+        setErrorMsg(result.error || "Failed to send email. Please try again later.");
+      }
+    } catch (error) {
+      setErrorMsg("Failed to send email. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="contact-page">
       <div className="contact-hero">
@@ -52,22 +92,9 @@ const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
         </div>
 
         <div className="contact-right">
-          <form className="contact-page-form" onSubmit={(e) => {
-            e.preventDefault();
-            const formData = new FormData(e.currentTarget);
-            const name = formData.get('name') as string || '';
-            const email = formData.get('email') as string || '';
-            const phone = formData.get('phone') as string || '';
-            const message = formData.get('message') as string || '';
-            
-            const subject = "Website Inquiry from " + (name || "Visitor");
-            const body = `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`;
-            
-            const mailtoLink = `mailto:hr@thejobsync.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            window.open(mailtoLink, '_self');
-            
-            alert("Thanks for your inquiry! Your default email client should open now.\nIf it doesn't, please email us directly at hr@thejobsync.com.");
-          }}>
+          <form className="contact-page-form" onSubmit={handleSubmit}>
+            {successMsg && <div style={{ color: '#4caf50', marginBottom: '15px', fontWeight: '500' }}>{successMsg}</div>}
+            {errorMsg && <div style={{ color: '#f44336', marginBottom: '15px', fontWeight: '500' }}>{errorMsg}</div>}
             <div className="form-row">
               <input type="text" name="name" placeholder="Name" required />
               <input type="email" name="email" placeholder="Email*" required />
@@ -82,9 +109,13 @@ const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
               <input type="checkbox" id="terms" required />
               <label htmlFor="terms">I accept your Terms & Conditions</label>
             </div>
-            <button type="submit" className="btn-solid btn-get-touch">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-              Get In Touch
+            <button type="submit" className="btn-solid btn-get-touch" disabled={isLoading} style={{ opacity: isLoading ? 0.7 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}>
+              {isLoading ? (
+                <span style={{ display: 'inline-block', width: '16px', height: '16px', border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', animation: 'spin 1s linear infinite', marginRight: '8px', verticalAlign: 'middle' }}></span>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              )}
+              {isLoading ? 'Sending...' : 'Get In Touch'}
             </button>
           </form>
         </div>
@@ -451,6 +482,45 @@ const ServicesPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void })
 
 function App() {
   const [activeTab, setActiveTab] = useState('home');
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setSuccessMsg('');
+    setErrorMsg('');
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      message: formData.get('message') as string,
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully.");
+        (e.target as HTMLFormElement).reset();
+      } else {
+        setErrorMsg(result.error || "Failed to send email. Please try again later.");
+      }
+    } catch (error) {
+      setErrorMsg("Failed to send email. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="app-container">
@@ -810,22 +880,9 @@ function App() {
                 </div>
 
                 <div className="contact-form">
-                  <form onSubmit={(e) => {
-                    e.preventDefault();
-                    const formData = new FormData(e.currentTarget);
-                    const name = formData.get('name') as string || '';
-                    const email = formData.get('email') as string || '';
-                    const phone = formData.get('phone') as string || '';
-                    const message = formData.get('message') as string || '';
-                    
-                    const subject = "Website Inquiry from " + (name || "Visitor");
-                    const body = `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`;
-                    
-                    const mailtoLink = `mailto:hr@thejobsync.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                    window.open(mailtoLink, '_self');
-                    
-                    alert("Thanks for your inquiry! Your default email client should open now.\nIf it doesn't, please email us directly at hr@thejobsync.com.");
-                  }}>
+                  <form onSubmit={handleContactSubmit}>
+                    {successMsg && <div style={{ color: '#4caf50', marginBottom: '15px', fontWeight: '500' }}>{successMsg}</div>}
+                    {errorMsg && <div style={{ color: '#f44336', marginBottom: '15px', fontWeight: '500' }}>{errorMsg}</div>}
                     <div className="form-row">
                       <input type="text" name="name" placeholder="Full Name" required />
                     </div>
@@ -840,9 +897,13 @@ function App() {
                       <input type="checkbox" id="terms_home" required />
                       <label htmlFor="terms_home">I accept your Terms & Conditions</label>
                     </div>
-                    <button type="submit" className="btn-solid">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                      Submit Inquiry
+                    <button type="submit" className="btn-solid" disabled={isLoading} style={{ opacity: isLoading ? 0.7 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}>
+                      {isLoading ? (
+                        <span style={{ display: 'inline-block', width: '16px', height: '16px', border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', animation: 'spin 1s linear infinite', marginRight: '8px', verticalAlign: 'middle' }}></span>
+                      ) : (
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                      )}
+                      {isLoading ? 'Sending...' : 'Submit Inquiry'}
                     </button>
                   </form>
                 </div>
