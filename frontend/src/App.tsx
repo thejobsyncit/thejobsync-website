@@ -620,42 +620,54 @@ function App() {
 
               <div className="welcome-grid">
                 <div className="welcome-card">
-                  <img src="/service1.png" alt="Software Development" className="welcome-card-img" />
+                  <div className="welcome-card-img-wrapper">
+                    <img src="/service1.png" alt="Software Development" className="welcome-card-img" />
+                  </div>
                   <div className="welcome-card-content">
                     <h3>Custom Software</h3>
                     <p>We build scalable applications tailored to your business needs, ensuring high performance.</p>
                   </div>
                 </div>
                 <div className="welcome-card">
-                  <img src="/service2.png" alt="Cloud Infrastructure" className="welcome-card-img" />
+                  <div className="welcome-card-img-wrapper">
+                    <img src="/service2.png" alt="Cloud Infrastructure" className="welcome-card-img" />
+                  </div>
                   <div className="welcome-card-content">
                     <h3>Cloud Infrastructure</h3>
                     <p>Launch your infrastructure in no time with our fast and simple cloud deployment process.</p>
                   </div>
                 </div>
                 <div className="welcome-card">
-                  <img src="/service3.png" alt="Cybersecurity" className="welcome-card-img" />
+                  <div className="welcome-card-img-wrapper">
+                    <img src="/service3.png" alt="Cybersecurity" className="welcome-card-img" />
+                  </div>
                   <div className="welcome-card-content">
                     <h3>Cybersecurity</h3>
                     <p>Protect your data with maximum impact solutions and advanced threat detection.</p>
                   </div>
                 </div>
                 <div className="welcome-card">
-                  <img src="/service4.png" alt="Data Analytics & AI" className="welcome-card-img" />
+                  <div className="welcome-card-img-wrapper">
+                    <img src="/service4.png" alt="Data Analytics & AI" className="welcome-card-img" />
+                  </div>
                   <div className="welcome-card-content">
                     <h3>Data Analytics & AI</h3>
                     <p>Unlock actionable insights and automate workflows with cutting-edge artificial intelligence.</p>
                   </div>
                 </div>
                 <div className="welcome-card">
-                  <img src="/service5.png" alt="Enterprise Solutions" className="welcome-card-img" />
+                  <div className="welcome-card-img-wrapper">
+                    <img src="/service5.png" alt="Enterprise Solutions" className="welcome-card-img" />
+                  </div>
                   <div className="welcome-card-content">
                     <h3>Enterprise Solutions</h3>
                     <p>Streamline business operations with custom ERP, CRM, and supply chain implementations.</p>
                   </div>
                 </div>
                 <div className="welcome-card">
-                  <img src="/service6.png" alt="IT Staffing" className="welcome-card-img" />
+                  <div className="welcome-card-img-wrapper">
+                    <img src="/service6.png" alt="IT Staffing" className="welcome-card-img" />
+                  </div>
                   <div className="welcome-card-content">
                     <h3>IT Staffing</h3>
                     <p>Find the right technical talent quickly with our professional IT recruitment and augmentation services.</p>
