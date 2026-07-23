@@ -285,8 +285,11 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
           <div className="about-grid">
             <img src="/features.png" alt="About The Jobsync" className="about-img" />
             <div className="about-content">
-              <h3>The JobSync – IT Consulting & Services</h3>
-              <p>The JobSync is a global IT consulting and technology services company committed to helping organizations accelerate digital transformation, optimize business operations, and achieve sustainable growth through innovative technology solutions.</p>
+              <span className="about-tag">About The JobSync</span>
+              <h3>IT Consulting & Services</h3>
+              <div className="about-highlight">
+                The JobSync is a global IT consulting and technology services company committed to helping organizations accelerate digital transformation, optimize business operations, and achieve sustainable growth through innovative technology solutions.
+              </div>
               <p>We partner with startups, SMEs, and large enterprises to deliver strategic consulting, custom software development, cloud solutions, cybersecurity, managed IT services, enterprise applications, AI-driven innovation, and IT staffing. Our experienced consultants and technology specialists provide end-to-end solutions that improve operational efficiency, reduce costs, enhance security, and enable business scalability.</p>
               <p>Our customer-centric approach, industry expertise, and commitment to quality make The JobSync a trusted technology partner for organizations across multiple industries worldwide.</p>
 
@@ -686,8 +689,11 @@ function App() {
               <div className="about-grid">
                 <img src="/features.png" alt="About The Jobsync" className="about-img" />
                 <div className="about-content">
-                  <h3>The JobSync – IT Consulting & Services</h3>
-                  <p>The JobSync is a global IT consulting and technology services company committed to helping organizations accelerate digital transformation, optimize business operations, and achieve sustainable growth through innovative technology solutions.</p>
+                  <span className="about-tag">About The JobSync</span>
+                  <h3>IT Consulting & Services</h3>
+                  <div className="about-highlight">
+                    The JobSync is a global IT consulting and technology services company committed to helping organizations accelerate digital transformation, optimize business operations, and achieve sustainable growth through innovative technology solutions.
+                  </div>
                   <p>We partner with startups, SMEs, and large enterprises to deliver strategic consulting, custom software development, cloud solutions, cybersecurity, managed IT services, enterprise applications, AI-driven innovation, and IT staffing. Our experienced consultants and technology specialists provide end-to-end solutions that improve operational efficiency, reduce costs, enhance security, and enable business scalability.</p>
                   <p>Our customer-centric approach, industry expertise, and commitment to quality make The JobSync a trusted technology partner for organizations across multiple industries worldwide.</p>
 
