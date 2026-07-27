@@ -12,10 +12,20 @@
   --font-body: 'Open Sans', sans-serif;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw;
+  width: 100%;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -23,6 +33,13 @@ body {
   color: var(--text-dark);
   line-height: 1.6;
   background-color: var(--white);
+}
+
+#root, .app-container {
+  overflow-x: hidden !important;
+  max-width: 100vw;
+  width: 100%;
+  position: relative;
 }
 
 h1, h2, h3, h4, h5, h6, .nav a, .btn-quote, .btn-outline, .btn-solid {
@@ -992,5 +1009,55 @@ a {
   .jobs-grid {
     grid-template-columns: 1fr;
   }
+  
+  .contact-page-form .form-row {
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .contact-page-form {
+    padding: 25px 20px !important;
+  }
+  
+  .container {
+    padding: 0 15px !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  
+  .hero-content h1 {
+    font-size: 32px !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Guarantee no element exceeds phone screen width */
+  img, svg, video, canvas, audio, iframe, embed, object {
+    max-width: 100% !important;
+    height: auto;
+  }
+  
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
+
+@media (max-width: 480px) {
+  .contact-page-form {
+    padding: 20px 15px !important;
+  }
+  .contact-page-form input, 
+  .contact-page-form textarea {
+    padding: 12px !important;
+    font-size: 14px !important;
+  }
+  .btn-get-touch {
+    width: 100% !important;
+    padding: 14px !important;
+  }
+}
+
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
