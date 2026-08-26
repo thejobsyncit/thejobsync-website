@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Sarah Jenkins",
+    "role": "Chief Technology Officer",
+    "company": "FinTech Dynamics Dubai",
+    "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+    "rating": 5,
+    "category": "Cloud Infrastructure",
+    "quote": "The Jobsync transformed our legacy financial systems into a scalable cloud infrastructure with zero downtime. Their technical expertise and strategic guidance were outstanding."
+  },
+  {
+    "id": 2,
+    "name": "Marcus Vance",
+    "role": "VP of Operations",
+    "company": "Apex Health Systems",
+    "avatar": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80",
+    "rating": 5,
+    "category": "Custom Software",
+    "quote": "Working with The Jobsync felt like extending our internal engineering team. They delivered our HIPAA-compliant client portal ahead of schedule with exceptional quality."
+  }
+]

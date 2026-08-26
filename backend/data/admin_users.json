@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Master Admin",
+    "email": "admin@thejobsync.com",
+    "password": "admin123",
+    "role": "Super Admin"
+  }
+]

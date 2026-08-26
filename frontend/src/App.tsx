@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import './index.css';
+import { TestimonialsPage, TestimonialsSection } from './TestimonialsPage';
+import { BlogPage, BlogSection } from './BlogPage';
+import { AdminPage } from './AdminPage';
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -17,7 +20,7 @@ const ScrollReveal = ({
   delay = 0,
   threshold = 0.1
 }: ScrollRevealProps) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const domRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -583,7 +586,28 @@ const ServicesPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void })
 };
 
 function App() {
-  const [activeTab, setActiveTab] = useState('home');
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== 'undefined' && (window.location.pathname === '/admin' || window.location.hash === '#admin')) {
+      return 'admin';
+    }
+    return 'home';
+  });
+
+  useEffect(() => {
+    const checkPath = () => {
+      if (window.location.pathname === '/admin' || window.location.hash === '#admin') {
+        setActiveTab('admin');
+      }
+    };
+    checkPath();
+    window.addEventListener('popstate', checkPath);
+    window.addEventListener('hashchange', checkPath);
+    return () => {
+      window.removeEventListener('popstate', checkPath);
+      window.removeEventListener('hashchange', checkPath);
+    };
+  }, []);
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -625,6 +649,10 @@ function App() {
       setIsLoading(false);
     }
   };
+
+  if (activeTab === 'admin') {
+    return <AdminPage onExit={() => { setActiveTab('home'); window.history.pushState(null, '', '/'); }} />;
+  }
 
   return (
     <div className="app-container">
@@ -686,6 +714,7 @@ function App() {
               <a href="#" onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }} style={{ color: activeTab === 'home' ? 'var(--primary-cyan)' : '' }}>HOME</a>
               <a href="#about" onClick={() => { setActiveTab('about'); setIsMobileMenuOpen(false); }} style={{ color: activeTab === 'about' ? 'var(--primary-cyan)' : '' }}>ABOUT US</a>
               <a href="#services" onClick={() => { setActiveTab('services'); setIsMobileMenuOpen(false); }} style={{ color: activeTab === 'services' ? 'var(--primary-cyan)' : '' }}>SERVICES</a>
+              <a href="#" onClick={() => { setActiveTab('testimonials'); setIsMobileMenuOpen(false); }} style={{ color: activeTab === 'testimonials' ? 'var(--primary-cyan)' : '' }}>TESTIMONIALS</a>
               <a href="#" onClick={() => { setActiveTab('blog'); setIsMobileMenuOpen(false); }} style={{ color: activeTab === 'blog' ? 'var(--primary-cyan)' : '' }}>BLOG</a>
               <a href="#" onClick={() => { setActiveTab('careers'); setIsMobileMenuOpen(false); }} style={{ color: activeTab === 'careers' ? 'var(--primary-cyan)' : '' }}>CAREERS</a>
               <a href="#contact" onClick={() => { setActiveTab('contact'); setIsMobileMenuOpen(false); }} style={{ color: activeTab === 'contact' ? 'var(--primary-cyan)' : '' }}>CONTACT US</a>
@@ -694,7 +723,7 @@ function App() {
         </div>
       </header>
 
-      {activeTab !== 'contact' && activeTab !== 'careers' && activeTab !== 'about' && activeTab !== 'services' && (
+      {activeTab !== 'contact' && activeTab !== 'careers' && activeTab !== 'about' && activeTab !== 'services' && activeTab !== 'testimonials' && activeTab !== 'blog' && (
         <>
           {/* Hero Section */}
           <section className="hero">
@@ -1094,6 +1123,10 @@ function App() {
               </div>
             </div>
           </section>
+          {/* Testimonials Section on Home Page */}
+          <TestimonialsSection setActiveTab={setActiveTab} />
+          {/* Blog Section on Home Page */}
+          <BlogSection setActiveTab={setActiveTab} />
         </>
       )}
 
@@ -1101,6 +1134,8 @@ function App() {
       {activeTab === 'careers' && <CareersPage setActiveTab={setActiveTab} />}
       {activeTab === 'about' && <AboutPage setActiveTab={setActiveTab} />}
       {activeTab === 'services' && <ServicesPage setActiveTab={setActiveTab} />}
+      {activeTab === 'testimonials' && <TestimonialsPage setActiveTab={setActiveTab} />}
+      {activeTab === 'blog' && <BlogPage setActiveTab={setActiveTab} />}
 
       {/* Footer */}
       <footer className="footer">
@@ -1129,6 +1164,7 @@ function App() {
                 <li><a href="#" className={activeTab === 'home' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('home'); window.scrollTo(0, 0); }}>Home</a></li>
                 <li><a href="#" className={activeTab === 'about' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('about'); window.scrollTo(0, 0); }}>About Us</a></li>
                 <li><a href="#" className={activeTab === 'services' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('services'); window.scrollTo(0, 0); }}>Our Services</a></li>
+                <li><a href="#" className={activeTab === 'testimonials' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('testimonials'); window.scrollTo(0, 0); }}>Testimonials</a></li>
                 <li><a href="#contact" onClick={(e) => { e.preventDefault(); setActiveTab('contact'); window.scrollTo(0, 0); }}>Contact Us</a></li>
               </ul>
             </div>
