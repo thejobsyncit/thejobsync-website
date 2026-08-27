@@ -585,6 +585,229 @@ const ServicesPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void })
   );
 };
 
+/* Interactive HTML5 Canvas Networking Theme Hero */
+const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId: number;
+    let width = (canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth);
+    let height = (canvas.height = canvas.parentElement?.offsetHeight || 600);
+
+    const handleResize = () => {
+      if (!canvas || !canvas.parentElement) return;
+      width = canvas.width = canvas.parentElement.offsetWidth;
+      height = canvas.height = canvas.parentElement.offsetHeight;
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    const mouse = {
+      x: -1000,
+      y: -1000,
+      radius: 175
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    };
+
+    const handleMouseLeave = () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.touches[0].clientX - rect.left;
+        mouse.y = e.touches[0].clientY - rect.top;
+      }
+    };
+
+    const parent = canvas.parentElement;
+    if (parent) {
+      parent.addEventListener('mousemove', handleMouseMove);
+      parent.addEventListener('mouseleave', handleMouseLeave);
+      parent.addEventListener('touchmove', handleTouchMove);
+    }
+
+    // Clean, spacious particle density (approx 50-60 elegant nodes)
+    const count = Math.floor(Math.min(width, 1400) / 24);
+    interface NodeParticle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      radius: number;
+      color: string;
+    }
+
+    const nodes: NodeParticle[] = [];
+    const colors = ['#00f5d4', '#2bb6b4', '#36c5c3', '#00dbcf', '#38bdf8'];
+
+    for (let i = 0; i < count; i++) {
+      nodes.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 1.0,
+        vy: (Math.random() - 0.5) * 1.0,
+        radius: Math.random() * 1.5 + 3.0,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      // Deep Dark Midnight Background Gradient
+      const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+      bgGrad.addColorStop(0, '#040914');
+      bgGrad.addColorStop(0.5, '#091322');
+      bgGrad.addColorStop(1, '#0c1a2e');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw subtle mouse aura glow
+      if (mouse.x > 0 && mouse.y > 0) {
+        const aura = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, mouse.radius);
+        aura.addColorStop(0, 'rgba(0, 245, 212, 0.25)');
+        aura.addColorStop(0.5, 'rgba(0, 245, 212, 0.06)');
+        aura.addColorStop(1, 'rgba(0, 245, 212, 0)');
+        ctx.fillStyle = aura;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, mouse.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Render & update network nodes & connections
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        n1.x += n1.vx;
+        n1.y += n1.vy;
+
+        if (n1.x < 0 || n1.x > width) n1.vx *= -1;
+        if (n1.y < 0 || n1.y > height) n1.vy *= -1;
+
+        // Interactive mouse magnetic pull & crisp connection lines
+        if (mouse.x > 0 && mouse.y > 0) {
+          const dx = mouse.x - n1.x;
+          const dy = mouse.y - n1.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < mouse.radius) {
+            const force = (mouse.radius - dist) / mouse.radius;
+            n1.x += (dx / dist) * force * 1.2;
+            n1.y += (dy / dist) * force * 1.2;
+
+            // Draw crisp, bright neon cyan connection thread to cursor
+            const lineAlpha = (1 - dist / mouse.radius) * 0.95 + 0.05;
+            ctx.beginPath();
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = `rgba(0, 245, 212, ${lineAlpha})`;
+            ctx.lineWidth = 1.5;
+            ctx.shadowColor = '#00f5d4';
+            ctx.shadowBlur = 6;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+          }
+        }
+
+        // Draw NEAT, razor-sharp connections between neighboring network nodes
+        for (let j = i + 1; j < nodes.length; j++) {
+          const n2 = nodes[j];
+          const dx = n1.x - n2.x;
+          const dy = n1.y - n2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const maxDist = 105; // Tight distance threshold to avoid messy overlapping
+
+          if (dist < maxDist) {
+            const alpha = (1 - dist / maxDist) * 0.85 + 0.15;
+            ctx.beginPath();
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(n2.x, n2.y);
+            // Ultra-vivid neon color, thin crisp 1.1px line!
+            ctx.strokeStyle = `rgba(0, 245, 212, ${alpha})`;
+            ctx.lineWidth = 1.1;
+            ctx.stroke();
+          }
+        }
+
+        // Draw crisp node dot with glowing halo
+        ctx.beginPath();
+        ctx.arc(n1.x, n1.y, n1.radius, 0, Math.PI * 2);
+        ctx.fillStyle = n1.color;
+        ctx.shadowColor = '#00f5d4';
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (parent) {
+        parent.removeEventListener('mousemove', handleMouseMove);
+        parent.removeEventListener('mouseleave', handleMouseLeave);
+        parent.removeEventListener('touchmove', handleTouchMove);
+      }
+      cancelAnimationFrame(animId);
+    };
+  }, []);
+
+  return (
+    <section className="hero" style={{ position: 'relative', overflow: 'hidden', height: '600px', background: '#040914' }}>
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 1,
+          pointerEvents: 'none'
+        }}
+      />
+      <div
+        className="hero-overlay"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(to right, rgba(4, 9, 20, 0.65) 0%, rgba(9, 19, 34, 0.2) 100%)',
+          zIndex: 2,
+          pointerEvents: 'none'
+        }}
+      />
+      <div className="container" style={{ position: 'relative', zIndex: 10 }}>
+        <div className="hero-content">
+          <h1>Looking for first class IT solutions?</h1>
+          <p>With over 10 years of experience helping businesses to find comprehensive technological solutions and strategic IT consulting.</p>
+          <div className="hero-buttons">
+            <button className="btn-outline" onClick={() => { setActiveTab('about'); window.scrollTo(0, 0); }}>OUR COMPANY</button>
+            <button className="btn-solid" onClick={() => { setActiveTab('contact'); window.scrollTo(0, 0); }}>CONTACT US</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 function App() {
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== 'undefined' && (window.location.pathname === '/admin' || window.location.hash === '#admin')) {
@@ -725,20 +948,8 @@ function App() {
 
       {activeTab !== 'contact' && activeTab !== 'careers' && activeTab !== 'about' && activeTab !== 'services' && activeTab !== 'testimonials' && activeTab !== 'blog' && (
         <>
-          {/* Hero Section */}
-          <section className="hero">
-            <div className="hero-overlay"></div>
-            <div className="container">
-              <div className="hero-content">
-                <h1>Looking for first class IT solutions?</h1>
-                <p>With over 10 years of experience helping businesses to find comprehensive technological solutions and strategic IT consulting.</p>
-                <div className="hero-buttons">
-                  <button className="btn-outline" onClick={() => { setActiveTab('about'); window.scrollTo(0, 0); }}>OUR COMPANY</button>
-                  <button className="btn-solid" onClick={() => { setActiveTab('contact'); window.scrollTo(0, 0); }}>CONTACT US</button>
-                </div>
-              </div>
-            </div>
-          </section>
+          {/* Interactive Network Hero Section */}
+          <InteractiveNetworkHero setActiveTab={setActiveTab} />
 
           {/* Welcome Section */}
           <section className="welcome">
@@ -752,68 +963,109 @@ function App() {
 
               <div className="welcome-grid">
                 <ScrollReveal animation="fade-up" delay={0}>
-                  <div className="welcome-card">
+                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="/service1.png" alt="Software Development" className="welcome-card-img" />
+                      <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=1000&auto=format&fit=crop&q=90" alt="Software Engineering" className="welcome-card-img" />
+                      <div className="welcome-card-overlay">
+                        <span className="welcome-badge">💻 SOFTWARE ENGINEERING</span>
+                      </div>
                     </div>
                     <div className="welcome-card-content">
-                      <h3>Custom Software</h3>
-                      <p>We build scalable applications tailored to your business needs, ensuring high performance.</p>
+                      <div>
+                        <h3>Custom Software</h3>
+                        <p>We build scalable enterprise applications tailored to your business needs, ensuring high performance and security.</p>
+                      </div>
+                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
                     </div>
                   </div>
                 </ScrollReveal>
+
                 <ScrollReveal animation="fade-up" delay={100}>
-                  <div className="welcome-card">
+                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="/service2.png" alt="Cloud Infrastructure" className="welcome-card-img" />
+                      <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1000&auto=format&fit=crop&q=90" alt="Cloud Infrastructure" className="welcome-card-img" />
+                      <div className="welcome-card-overlay">
+                        <span className="welcome-badge">☁️ CLOUD ARCHITECTURE</span>
+                      </div>
                     </div>
                     <div className="welcome-card-content">
-                      <h3>Cloud Infrastructure</h3>
-                      <p>Launch your infrastructure in no time with our fast and simple cloud deployment process.</p>
+                      <div>
+                        <h3>Cloud Infrastructure</h3>
+                        <p>Launch your multi-cloud infrastructure seamlessly with automated DevOps and enterprise cloud deployment.</p>
+                      </div>
+                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
                     </div>
                   </div>
                 </ScrollReveal>
+
                 <ScrollReveal animation="fade-up" delay={200}>
-                  <div className="welcome-card">
+                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="/service3.png" alt="Cybersecurity" className="welcome-card-img" />
+                      <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1000&auto=format&fit=crop&q=90" alt="Cybersecurity SOC" className="welcome-card-img" />
+                      <div className="welcome-card-overlay">
+                        <span className="welcome-badge">🛡️ CYBERSECURITY & SOC</span>
+                      </div>
                     </div>
                     <div className="welcome-card-content">
-                      <h3>Cybersecurity</h3>
-                      <p>Protect your data with maximum impact solutions and advanced threat detection.</p>
+                      <div>
+                        <h3>Cybersecurity</h3>
+                        <p>Protect your critical infrastructure with 24/7 SOC monitoring, zero-trust protocols, and threat intelligence.</p>
+                      </div>
+                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
                     </div>
                   </div>
                 </ScrollReveal>
+
                 <ScrollReveal animation="fade-up" delay={0}>
-                  <div className="welcome-card">
+                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="/service4.png" alt="Data Analytics & AI" className="welcome-card-img" />
+                      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1000&auto=format&fit=crop&q=90" alt="Data Analytics & AI" className="welcome-card-img" />
+                      <div className="welcome-card-overlay">
+                        <span className="welcome-badge">🤖 DATA & AI SYSTEMS</span>
+                      </div>
                     </div>
                     <div className="welcome-card-content">
-                      <h3>Data Analytics & AI</h3>
-                      <p>Unlock actionable insights and automate workflows with cutting-edge artificial intelligence.</p>
+                      <div>
+                        <h3>Data Analytics & AI</h3>
+                        <p>Unlock actionable business intelligence and automate enterprise workflows with generative AI and machine learning.</p>
+                      </div>
+                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
                     </div>
                   </div>
                 </ScrollReveal>
+
                 <ScrollReveal animation="fade-up" delay={100}>
-                  <div className="welcome-card">
+                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="/service5.png" alt="Enterprise Solutions" className="welcome-card-img" />
+                      <img src="https://images.unsplash.com/photo-1531497865144-0464ef8fb9a9?w=1000&auto=format&fit=crop&q=90" alt="Enterprise Systems" className="welcome-card-img" />
+                      <div className="welcome-card-overlay">
+                        <span className="welcome-badge">📊 ENTERPRISE SYSTEMS</span>
+                      </div>
                     </div>
                     <div className="welcome-card-content">
-                      <h3>Enterprise Solutions</h3>
-                      <p>Streamline business operations with custom ERP, CRM, and supply chain implementations.</p>
+                      <div>
+                        <h3>Enterprise Solutions</h3>
+                        <p>Streamline core business operations with custom ERP, CRM, and supply chain management integrations.</p>
+                      </div>
+                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
                     </div>
                   </div>
                 </ScrollReveal>
+
                 <ScrollReveal animation="fade-up" delay={200}>
-                  <div className="welcome-card">
+                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="/service6.png" alt="IT Staffing" className="welcome-card-img" />
+                      <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1000&auto=format&fit=crop&q=90" alt="IT Talent Augmentation" className="welcome-card-img" />
+                      <div className="welcome-card-overlay">
+                        <span className="welcome-badge">👥 TALENT AUGMENTATION</span>
+                      </div>
                     </div>
                     <div className="welcome-card-content">
-                      <h3>IT Staffing</h3>
-                      <p>Find the right technical talent quickly with our professional IT recruitment and augmentation services.</p>
+                      <div>
+                        <h3>IT Staffing</h3>
+                        <p>Accelerate project delivery with vetted top-tier engineers, tech leads, and specialized IT consultants.</p>
+                      </div>
+                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
                     </div>
                   </div>
                 </ScrollReveal>

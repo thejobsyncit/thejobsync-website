@@ -101,10 +101,10 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
 
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-          <span style={{ color: 'var(--primary-cyan)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1.5px', fontSize: '13px', background: 'rgba(14, 165, 233, 0.1)', padding: '6px 16px', borderRadius: '20px', border: '1px solid rgba(14,165,233,0.2)' }}>
+          <span style={{ color: 'var(--primary-cyan)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1.5px', fontSize: '13px', background: 'rgba(43, 182, 180, 0.1)', padding: '6px 16px', borderRadius: '20px', border: '1px solid rgba(43, 182, 180, 0.2)' }}>
             ⭐ CLIENT SUCCESS STORIES
           </span>
-          <h2 style={{ fontSize: '36px', color: '#0f172a', fontWeight: '900', marginTop: '14px', marginBottom: '12px' }}>
+          <h2 style={{ fontSize: '36px', color: 'var(--logo-navy-primary)', fontWeight: '900', marginTop: '14px', marginBottom: '12px' }}>
             What Our Clients Say About Us
           </h2>
           <p style={{ maxWidth: '680px', margin: '0 auto', color: '#64748b', fontSize: '16px', lineHeight: '1.6' }}>
@@ -189,7 +189,7 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
         </div>
 
         {/* Impact Metrics Banner */}
-        <div style={{ background: '#0f172a', color: '#ffffff', borderRadius: '24px', padding: '40px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '30px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <div style={{ background: 'var(--navy-gradient)', color: '#ffffff', borderRadius: '24px', padding: '40px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '30px', textAlign: 'center', border: '1px solid rgba(43, 182, 180, 0.2)', boxShadow: '0 20px 40px rgba(11, 23, 42, 0.15)' }}>
           <div>
             <h3 style={{ fontSize: '36px', color: 'var(--primary-cyan)', fontWeight: '900', margin: 0 }}>150+</h3>
             <p style={{ color: '#94a3b8', fontSize: '14px', marginTop: '6px', margin: 0 }}>Enterprise Projects Delivered</p>
@@ -232,9 +232,9 @@ export const TestimonialsPage = ({ setActiveTab }: { setActiveTab: (tab: string)
     <div className="testimonials-page">
 
       {/* Hero Banner */}
-      <div style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', color: 'white', padding: '70px 0', textAlign: 'center', borderBottom: '3px solid var(--primary-cyan)' }}>
+      <div style={{ background: 'var(--navy-gradient)', color: 'white', padding: '75px 0', textAlign: 'center', borderBottom: '3px solid var(--primary-cyan)' }}>
         <div className="container">
-          <span style={{ background: 'rgba(14, 165, 233, 0.15)', color: 'var(--primary-cyan)', padding: '8px 20px', borderRadius: '30px', fontWeight: '800', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1.5px', display: 'inline-block', marginBottom: '16px', border: '1px solid rgba(14,165,233,0.3)' }}>
+          <span style={{ background: 'rgba(43, 182, 180, 0.15)', color: 'var(--primary-cyan)', padding: '8px 20px', borderRadius: '30px', fontWeight: '800', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1.5px', display: 'inline-block', marginBottom: '16px', border: '1px solid rgba(43, 182, 180, 0.3)' }}>
             ⭐ VERIFIED CLIENT REVIEWS
           </span>
           <h1 style={{ fontSize: '38px', fontWeight: '900', color: '#ffffff', marginBottom: '12px' }}>

@@ -205,7 +205,7 @@ app.get('/api/blogs/:id', (req, res) => {
 
 app.post('/api/blogs', (req, res) => {
   try {
-    const { title, content, category, author, authorRole, excerpt, coverImage, images } = req.body;
+    const { title, content, category, author, authorRole, excerpt, coverImage, images, date, eventDate } = req.body;
 
     if (!title || !content) {
       return res.status(400).json({ success: false, error: 'Title and content are required fields.' });
@@ -218,13 +218,19 @@ app.post('/api/blogs', (req, res) => {
       id: Date.now().toString(),
       title: title.trim(),
       slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
-      category: category || 'IT Consulting',
-      author: author || 'The Jobsync Team',
+      category: category ? category.trim() : 'General',
+      author: author ? author.trim() : 'The Jobsync Team',
       authorRole: authorRole || 'IT Consultant',
-      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      date: date || eventDate || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
       readTime: estimatedReadTime,
       coverImage: coverImage ? coverImage.trim() : '',
-      images: Array.isArray(images) ? images.map(s => String(s).trim()).filter(Boolean) : [],
+      images: Array.isArray(images) 
+        ? images.flatMap(item => {
+            const str = String(item).trim();
+            const matches = str.match(/https?:\/\/[^\s,]+/gi);
+            return matches ? matches.map(u => u.trim()) : [str];
+          }).filter(Boolean)
+        : [],
       excerpt: excerpt || (content.slice(0, 140) + '...'),
       content
     };
@@ -235,6 +241,54 @@ app.post('/api/blogs', (req, res) => {
     res.status(201).json({ success: true, message: 'Blog post created successfully!', data: newBlog });
   } catch (err) {
     res.status(500).json({ success: false, error: 'Failed to create blog post.' });
+  }
+});
+
+app.put('/api/blogs/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const blogIndex = blogs.findIndex(b => b.id === id);
+    if (blogIndex === -1) {
+      return res.status(404).json({ success: false, error: 'Blog post not found' });
+    }
+
+    const { title, content, category, author, authorRole, excerpt, coverImage, images, date, eventDate } = req.body;
+
+    if (!title || !content) {
+      return res.status(400).json({ success: false, error: 'Title and content are required fields.' });
+    }
+
+    const wordCount = content.trim().split(/\s+/).length;
+    const estimatedReadTime = Math.max(1, Math.ceil(wordCount / 200)) + ' min read';
+
+    const existingBlog = blogs[blogIndex];
+    const updatedBlog = {
+      ...existingBlog,
+      title: title.trim(),
+      slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
+      category: category ? category.trim() : existingBlog.category,
+      author: author ? author.trim() : existingBlog.author,
+      authorRole: authorRole ? authorRole.trim() : existingBlog.authorRole,
+      date: date || eventDate || existingBlog.date,
+      readTime: estimatedReadTime,
+      coverImage: coverImage !== undefined ? coverImage.trim() : existingBlog.coverImage,
+      images: Array.isArray(images)
+        ? images.flatMap(item => {
+            const str = String(item).trim();
+            const matches = str.match(/https?:\/\/[^\s,]+/gi);
+            return matches ? matches.map(u => u.trim()) : [str];
+          }).filter(Boolean)
+        : existingBlog.images,
+      excerpt: excerpt ? excerpt.trim() : (content.slice(0, 140) + '...'),
+      content: content.trim()
+    };
+
+    blogs[blogIndex] = updatedBlog;
+    saveData('blogs.json', blogs);
+
+    res.json({ success: true, message: 'Blog post updated successfully!', data: updatedBlog });
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'Failed to update blog post.' });
   }
 });
 

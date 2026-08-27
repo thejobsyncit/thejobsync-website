@@ -167,13 +167,14 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
 
   // Form states
   const [blogTitle, setBlogTitle] = useState('');
-  const [blogCategory, setBlogCategory] = useState('Cloud Solutions');
-  const [blogAuthor, setBlogAuthor] = useState('');
+  const [blogCategory, setBlogCategory] = useState('');
+  const [blogDate, setBlogDate] = useState('');
   const [blogCoverImage, setBlogCoverImage] = useState('');
   const [blogGalleryImages, setBlogGalleryImages] = useState('');
   const [blogExcerpt, setBlogExcerpt] = useState('');
   const [blogContent, setBlogContent] = useState('');
   const [blogSuccess, setBlogSuccess] = useState('');
+  const [editingBlogId, setEditingBlogId] = useState<string | null>(null);
 
   const [tName, setTName] = useState('');
   const [tRole, setTRole] = useState('');
@@ -298,20 +299,113 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
     localStorage.removeItem('jobsync_admin_logged_in');
   };
 
+  const formatDateForDisplay = (rawDate: string): string => {
+    if (!rawDate || !rawDate.trim()) {
+      return new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(rawDate.trim())) {
+      const [year, month, day] = rawDate.trim().split('-').map(Number);
+      const d = new Date(year, month - 1, day);
+      return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+    return rawDate.trim();
+  };
+
+  const handleStartEditBlog = (blog: BlogPost) => {
+    setEditingBlogId(blog.id);
+    setBlogTitle(blog.title || '');
+    setBlogCategory(blog.category || '');
+    setBlogDate(blog.date || '');
+    setBlogCoverImage(blog.coverImage || '');
+    setBlogGalleryImages(Array.isArray(blog.images) ? blog.images.join(', ') : '');
+    setBlogExcerpt(blog.excerpt || '');
+    setBlogContent(blog.content || '');
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  };
+
+  const handleCancelEditBlog = () => {
+    setEditingBlogId(null);
+    setBlogTitle('');
+    setBlogCategory('');
+    setBlogDate('');
+    setBlogContent('');
+    setBlogExcerpt('');
+    setBlogCoverImage('');
+    setBlogGalleryImages('');
+  };
+
   const handleAddBlog = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!blogTitle.trim() || !blogContent.trim()) return;
+
+    const parsedImages = (() => {
+      if (!blogGalleryImages.trim()) return [];
+      const matches = blogGalleryImages.match(/https?:\/\/[^\s,]+/gi);
+      if (matches && matches.length > 0) return matches.map(u => u.trim());
+      return blogGalleryImages.split(/[\n,\r]+/).flatMap(s => s.trim().split(/\s+/)).map(s => s.trim()).filter(Boolean);
+    })();
+
+    const formattedDate = formatDateForDisplay(blogDate);
+    const categoryName = blogCategory.trim() || 'General';
+
+    if (editingBlogId) {
+      // UPDATE EXISTING POST
+      const existing = blogs.find(b => b.id === editingBlogId);
+      const wordCount = blogContent.trim().split(/\s+/).length;
+      const estimatedReadTime = Math.max(1, Math.ceil(wordCount / 200)) + ' min read';
+
+      const updatedPost: BlogPost = {
+        id: editingBlogId,
+        title: blogTitle.trim(),
+        slug: blogTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
+        category: categoryName,
+        author: '',
+        date: blogDate.trim() ? formattedDate : (existing?.date || formattedDate),
+        readTime: estimatedReadTime,
+        coverImage: blogCoverImage.trim(),
+        images: parsedImages,
+        excerpt: blogExcerpt.trim() || blogContent.slice(0, 120) + '...',
+        content: blogContent.trim()
+      };
+
+      const updatedList = blogs.map(b => b.id === editingBlogId ? updatedPost : b);
+      setBlogs(updatedList);
+      localStorage.setItem('jobsync_blogs_data', JSON.stringify(updatedList));
+
+      try {
+        const res = await fetch(`/api/blogs/${editingBlogId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedPost)
+        });
+        const data = await res.json();
+        if (data.success && data.data) {
+          const synced = blogs.map(b => b.id === editingBlogId ? data.data : b);
+          setBlogs(synced);
+          localStorage.setItem('jobsync_blogs_data', JSON.stringify(synced));
+        }
+      } catch (err) {}
+
+      setBlogSuccess('Article updated successfully!');
+      handleCancelEditBlog();
+      setTimeout(() => setBlogSuccess(''), 3000);
+      return;
+    }
+
+    // CREATE NEW POST
+    const wordCount = blogContent.trim().split(/\s+/).length;
+    const estimatedReadTime = Math.max(1, Math.ceil(wordCount / 200)) + ' min read';
 
     const newPost = {
       id: Date.now().toString(),
       title: blogTitle.trim(),
       slug: blogTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-      category: blogCategory,
-      author: blogAuthor.trim() || adminUser?.name || 'The Jobsync Team',
-      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-      readTime: '4 min read',
+      category: categoryName,
+      author: '',
+      date: formattedDate,
+      readTime: estimatedReadTime,
       coverImage: blogCoverImage.trim() ? blogCoverImage.trim() : '',
-      images: blogGalleryImages.trim() ? blogGalleryImages.split(',').map(s => s.trim()).filter(Boolean) : [],
+      images: parsedImages,
       excerpt: blogExcerpt.trim() || blogContent.slice(0, 120) + '...',
       content: blogContent.trim()
     };
@@ -333,13 +427,9 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
         localStorage.setItem('jobsync_blogs_data', JSON.stringify(synced));
       }
     } catch (err) {}
+
     setBlogSuccess('Article published successfully!');
-    setBlogTitle('');
-    setBlogContent('');
-    setBlogExcerpt('');
-    setBlogCoverImage('');
-    setBlogGalleryImages('');
-    setBlogAuthor('');
+    handleCancelEditBlog();
     setTimeout(() => setBlogSuccess(''), 3000);
   };
 
@@ -347,6 +437,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
     try {
       await fetch(`/api/blogs/${id}`, { method: 'DELETE' });
     } catch (err) {}
+    if (editingBlogId === id) handleCancelEditBlog();
     const filtered = blogs.filter(b => b.id !== id);
     setBlogs(filtered);
     localStorage.setItem('jobsync_blogs_data', JSON.stringify(filtered));
@@ -448,7 +539,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
   // UNAUTHENTICATED LOGIN SCREEN
   if (!isAuthenticated) {
     return (
-      <div style={{ minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <div style={{ minHeight: '100vh', background: 'var(--navy-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
         <div style={{ background: '#ffffff', borderRadius: '16px', width: '100%', maxWidth: '440px', padding: '36px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}>
 
           <div style={{ textAlign: 'center', marginBottom: '28px' }}>
@@ -575,7 +666,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8fafc' }}>
 
       {/* Sidebar Navigation */}
-      <aside style={{ width: '270px', background: '#0f172a', color: '#ffffff', padding: '24px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderRight: '1px solid #1e293b' }}>
+      <aside style={{ width: '270px', background: 'var(--navy-gradient)', color: '#ffffff', padding: '24px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderRight: '1px solid rgba(43, 182, 180, 0.2)' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '0 12px 24px 12px', borderBottom: '1px solid #1e293b', marginBottom: '24px' }}>
             <div style={{ width: '38px', height: '38px', background: 'var(--primary-cyan)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: '900', fontSize: '18px' }}>J</div>
@@ -837,7 +928,17 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
             {blogSuccess && <div style={{ background: '#ecfdf5', color: '#047857', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px', fontWeight: '600' }}>{blogSuccess}</div>}
 
             <div style={{ background: '#ffffff', borderRadius: '14px', padding: '28px', border: '1px solid #e2e8f0', marginBottom: '36px' }}>
-              <h3 style={{ fontSize: '18px', color: '#0f172a', marginBottom: '18px' }}>Create New Blog Article</h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                <h3 style={{ fontSize: '18px', color: '#0f172a', margin: 0 }}>
+                  {editingBlogId ? '✏️ Edit Blog Article' : '➕ Create New Blog Article'}
+                </h3>
+                {editingBlogId && (
+                  <span style={{ fontSize: '12px', background: '#eff6ff', color: '#2563eb', padding: '4px 10px', borderRadius: '20px', fontWeight: '700' }}>
+                    Editing Mode Active
+                  </span>
+                )}
+              </div>
+
               <form onSubmit={handleAddBlog}>
                 <div style={{ marginBottom: '16px' }}>
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Article Title *</label>
@@ -853,28 +954,24 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Category</label>
-                    <select
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Category / Tag Name *</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. On-Campus Drive, Cloud Solutions, Tech Summit"
                       value={blogCategory}
                       onChange={(e) => setBlogCategory(e.target.value)}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', background: 'white' }}
-                    >
-                      <option value="Cloud Solutions">Cloud Solutions</option>
-                      <option value="Cybersecurity">Cybersecurity</option>
-                      <option value="IT Consulting">IT Consulting</option>
-                      <option value="AI & Automation">AI & Automation</option>
-                      <option value="Custom Software">Custom Software</option>
-                    </select>
+                      required
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
+                    />
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Author Name</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Event / Article Date (Optional)</label>
                     <input
-                      type="text"
-                      placeholder="e.g. Alex Morgan"
-                      value={blogAuthor}
-                      onChange={(e) => setBlogAuthor(e.target.value)}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
+                      type="date"
+                      value={blogDate}
+                      onChange={(e) => setBlogDate(e.target.value)}
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', background: 'white' }}
                     />
                   </div>
                 </div>
@@ -892,14 +989,15 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Additional Gallery Images (Comma-separated URLs)</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Additional Gallery Images (Comma, space, or newline separated URLs)</label>
                     <input
                       type="text"
-                      placeholder="https://img1.com/a.jpg, https://img2.com/b.jpg"
+                      placeholder="https://images.unsplash.com/photo-1..., https://images.unsplash.com/photo-2..."
                       value={blogGalleryImages}
                       onChange={(e) => setBlogGalleryImages(e.target.value)}
                       style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
                     />
+                    <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', display: 'block' }}>Ensure URLs link directly to image files (ending in .jpg, .png, or direct CDN links).</span>
                   </div>
                 </div>
 
@@ -926,9 +1024,20 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
                   />
                 </div>
 
-                <button type="submit" className="btn-solid" style={{ padding: '12px 24px', fontSize: '14px', borderRadius: '8px' }}>
-                  Publish Article Live &rarr;
-                </button>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  <button type="submit" className="btn-solid" style={{ padding: '12px 24px', fontSize: '14px', borderRadius: '8px' }}>
+                    {editingBlogId ? 'Update Article Live ↵' : 'Publish Article Live →'}
+                  </button>
+                  {editingBlogId && (
+                    <button
+                      type="button"
+                      onClick={handleCancelEditBlog}
+                      style={{ padding: '12px 20px', fontSize: '14px', borderRadius: '8px', background: '#f1f5f9', color: '#475569', border: '1px solid #cbd5e1', cursor: 'pointer', fontWeight: '600' }}
+                    >
+                      Cancel Editing
+                    </button>
+                  )}
+                </div>
               </form>
             </div>
 
@@ -937,15 +1046,20 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
               <h3 style={{ fontSize: '18px', color: '#0f172a', marginBottom: '20px' }}>Published Articles</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {blogs.map((b) => (
-                  <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                  <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', background: editingBlogId === b.id ? '#f0f9ff' : '#f8fafc', borderRadius: '10px', border: editingBlogId === b.id ? '1.5px solid #0ea5e9' : '1px solid #e2e8f0' }}>
                     <div>
                       <span style={{ fontSize: '11px', background: 'rgba(14, 165, 233, 0.1)', color: 'var(--primary-cyan)', padding: '2px 8px', borderRadius: '10px', fontWeight: '800' }}>{b.category}</span>
                       <h4 style={{ margin: '6px 0 2px 0', fontSize: '16px', color: '#0f172a' }}>{b.title}</h4>
-                      <span style={{ fontSize: '12px', color: '#64748b' }}>By {b.author} • {b.date}</span>
+                      <span style={{ fontSize: '12px', color: '#64748b' }}>📅 {b.date}</span>
                     </div>
-                    <button onClick={() => handleDeleteBlog(b.id)} style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
-                      Delete
-                    </button>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <button onClick={() => handleStartEditBlog(b)} style={{ background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
+                        ✏️ Edit
+                      </button>
+                      <button onClick={() => handleDeleteBlog(b.id)} style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
+                        🗑️ Delete
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
