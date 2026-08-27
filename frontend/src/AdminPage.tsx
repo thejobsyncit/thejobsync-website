@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Testimonial } from './TestimonialsPage';
 
-interface BlogItem {
+export interface BlogPost {
   id: string;
   title: string;
   slug: string;
@@ -10,6 +10,7 @@ interface BlogItem {
   date: string;
   readTime: string;
   coverImage: string;
+  images?: string[];
   excerpt: string;
   content: string;
 }
@@ -57,7 +58,7 @@ const initialTestimonials: Testimonial[] = [
   }
 ];
 
-const initialBlogs: BlogItem[] = [
+const initialBlogs: BlogPost[] = [
   {
     id: '1',
     title: 'The Future of Multi-Cloud Architecture in Enterprise IT',
@@ -152,17 +153,38 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
   const [activeAdminTab, setActiveAdminTab] = useState<'dashboard' | 'inquiries' | 'blogs' | 'testimonials' | 'careers'>('dashboard');
 
   // State Collections
-  const [blogs, setBlogs] = useState<BlogItem[]>(() => {
+  const [blogs, setBlogs] = useState<BlogPost[]>(() => {
     try {
       const saved = localStorage.getItem('jobsync_blogs_data');
-      return saved ? JSON.parse(saved) : [];
+      return saved && JSON.parse(saved).length > 0 ? JSON.parse(saved) : initialBlogs;
     } catch (e) {
-      return [];
+      return initialBlogs;
     }
   });
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
-  const [careers, setCareers] = useState<JobOpening[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(() => {
+    try {
+      const saved = localStorage.getItem('jobsync_testimonials_data');
+      return saved && JSON.parse(saved).length > 0 ? JSON.parse(saved) : initialTestimonials;
+    } catch (e) {
+      return initialTestimonials;
+    }
+  });
+  const [inquiries, setInquiries] = useState<Inquiry[]>(() => {
+    try {
+      const saved = localStorage.getItem('jobsync_inquiries_data');
+      return saved && JSON.parse(saved).length > 0 ? JSON.parse(saved) : initialInquiries;
+    } catch (e) {
+      return initialInquiries;
+    }
+  });
+  const [careers, setCareers] = useState<JobOpening[]>(() => {
+    try {
+      const saved = localStorage.getItem('jobsync_careers_data');
+      return saved && JSON.parse(saved).length > 0 ? JSON.parse(saved) : initialCareers;
+    } catch (e) {
+      return initialCareers;
+    }
+  });
   const [serverStatus, setServerStatus] = useState<'checking' | 'online' | 'offline'>('checking');
 
   // Form states
@@ -807,7 +829,9 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
         {activeAdminTab === 'dashboard' && (
           <div>
             <h2 style={{ fontSize: '26px', color: '#0f172a', marginBottom: '6px' }}>Welcome, {adminUser?.name || 'Admin'} 👋</h2>
-            <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '32px' }}>Monitor incoming customer leads, manage published content, and check system health.</p>
+            <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '32px' }}>
+              Monitor incoming customer leads, manage published content, and check system health (Server Status: <span style={{ fontWeight: '700', color: serverStatus === 'online' ? '#16a34a' : '#ea580c' }}>{serverStatus === 'online' ? '🟢 Online' : '🟡 Active'}</span>).
+            </p>
 
             {/* Stat Cards Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '40px' }}>
@@ -1116,6 +1140,43 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
                   </div>
                 </div>
 
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Service Category</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Cloud Infrastructure"
+                      value={tCategory}
+                      onChange={(e) => setTCategory(e.target.value)}
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Rating (1 - 5 Stars)</label>
+                    <select
+                      value={tRating}
+                      onChange={(e) => setTRating(Number(e.target.value))}
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', background: '#fff' }}
+                    >
+                      <option value={5}>5 Stars ⭐⭐⭐⭐⭐</option>
+                      <option value={4}>4 Stars ⭐⭐⭐⭐</option>
+                      <option value={3}>3 Stars ⭐⭐⭐</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Avatar Image URL (Optional)</label>
+                    <input
+                      type="url"
+                      placeholder="https://images.unsplash.com/photo-..."
+                      value={tAvatar}
+                      onChange={(e) => setTAvatar(e.target.value)}
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
+                    />
+                  </div>
+                </div>
+
                 <div style={{ marginBottom: '20px' }}>
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Client Review Quote *</label>
                   <textarea
@@ -1132,6 +1193,27 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
                   Publish Testimonial &rarr;
                 </button>
               </form>
+            </div>
+
+            {/* List Published Testimonials */}
+            <div style={{ background: '#ffffff', borderRadius: '14px', padding: '28px', border: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: '18px', color: '#0f172a', marginBottom: '20px' }}>Published Client Testimonials</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {testimonials.map((t) => (
+                  <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                      <img src={t.avatar} alt={t.name} style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }} />
+                      <div>
+                        <h4 style={{ margin: 0, fontSize: '16px', color: '#0f172a' }}>{t.name} <span style={{ fontSize: '13px', color: '#64748b', fontWeight: 'normal' }}>({t.role} - {t.company})</span></h4>
+                        <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#475569' }}>"{t.quote}"</p>
+                      </div>
+                    </div>
+                    <button onClick={() => handleDeleteTestimonial(t.id)} style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
+                      🗑️ Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
