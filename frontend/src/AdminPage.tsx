@@ -376,7 +376,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
       localStorage.setItem('jobsync_blogs_data', JSON.stringify(updatedList));
 
       try {
-        const res = await fetch(`/api/blogs/${editingBlogId}`, {
+        const res = await fetch(`${getApiUrl()}/api/blogs/${editingBlogId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatedPost)
@@ -418,7 +418,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
     localStorage.setItem('jobsync_blogs_data', JSON.stringify(updatedList));
 
     try {
-      const res = await fetch('/api/blogs', {
+      const res = await fetch(`${getApiUrl()}/api/blogs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newPost)
@@ -438,7 +438,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
 
   const handleDeleteBlog = async (id: string) => {
     try {
-      await fetch(`/api/blogs/${id}`, { method: 'DELETE' });
+      await fetch(`${getApiUrl()}/api/blogs/${id}`, { method: 'DELETE' });
     } catch (err) {}
     if (editingBlogId === id) handleCancelEditBlog();
     const filtered = blogs.filter(b => b.id !== id);
@@ -462,7 +462,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
     };
 
     try {
-      await fetch('/api/testimonials', {
+      await fetch(`${getApiUrl()}/api/testimonials`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newT)
@@ -481,14 +481,14 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
 
   const handleDeleteTestimonial = async (id: number) => {
     try {
-      await fetch(`/api/testimonials/${id}`, { method: 'DELETE' });
+      await fetch(`${getApiUrl()}/api/testimonials/${id}`, { method: 'DELETE' });
     } catch (err) {}
     setTestimonials(testimonials.filter(t => t.id !== id));
   };
 
   const handleUpdateInquiryStatus = async (id: string, newStatus: Inquiry['status']) => {
     try {
-      await fetch(`/api/inquiries/${id}/status`, {
+      await fetch(`${getApiUrl()}/api/inquiries/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
@@ -499,7 +499,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
 
   const handleDeleteInquiry = async (id: string) => {
     try {
-      await fetch(`/api/inquiries/${id}`, { method: 'DELETE' });
+      await fetch(`${getApiUrl()}/api/inquiries/${id}`, { method: 'DELETE' });
     } catch (err) {}
     setInquiries(inquiries.filter(i => i.id !== id));
   };
@@ -519,7 +519,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
     };
 
     try {
-      await fetch('/api/careers', {
+      await fetch(`${getApiUrl()}/api/careers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newJob)
@@ -534,7 +534,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
 
   const handleDeleteJob = async (id: string) => {
     try {
-      await fetch(`/api/careers/${id}`, { method: 'DELETE' });
+      await fetch(`${getApiUrl()}/api/careers/${id}`, { method: 'DELETE' });
     } catch (err) {}
     setCareers(careers.filter(c => c.id !== id));
   };
