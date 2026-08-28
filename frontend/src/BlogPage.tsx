@@ -443,8 +443,13 @@ export const BlogSection = ({ setActiveTab }: { setActiveTab: (tab: string) => v
   const [blogs, setBlogs] = useState<BlogPost[]>(getStoredBlogs);
   const [previewPost, setPreviewPost] = useState<BlogPost | null>(null);
 
+  const getApiUrl = () => {
+    if (import.meta.env.VITE_API_BASE_URL !== undefined) return import.meta.env.VITE_API_BASE_URL;
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+  };
+
   useEffect(() => {
-    fetch('/api/blogs')
+    fetch(`${getApiUrl()}/api/blogs`)
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
@@ -550,8 +555,13 @@ export const BlogPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void
   const [previewPost, setPreviewPost] = useState<BlogPost | null>(null);
   const [activeGalleryImg, setActiveGalleryImg] = useState<{ url: string; index: number } | null>(null);
 
+  const getApiUrl = () => {
+    if (import.meta.env.VITE_API_BASE_URL !== undefined) return import.meta.env.VITE_API_BASE_URL;
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+  };
+
   useEffect(() => {
-    fetch('/api/blogs')
+    fetch(`${getApiUrl()}/api/blogs`)
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {

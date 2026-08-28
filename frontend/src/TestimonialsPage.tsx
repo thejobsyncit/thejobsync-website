@@ -78,8 +78,13 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
   const [items, setItems] = useState<Testimonial[]>(testimonialsData);
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
+  const getApiUrl = () => {
+    if (import.meta.env.VITE_API_BASE_URL !== undefined) return import.meta.env.VITE_API_BASE_URL;
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+  };
+
   useEffect(() => {
-    fetch('/api/testimonials')
+    fetch(`${getApiUrl()}/api/testimonials`)
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data) && data.data.length > 0) {
