@@ -79,8 +79,14 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
   const getApiUrl = () => {
-    if (import.meta.env.VITE_API_BASE_URL !== undefined) return import.meta.env.VITE_API_BASE_URL;
-    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+    let url = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '';
+    if (!url) {
+      url = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+    }
+    if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
+      url = `https://${url}`;
+    }
+    return url.replace(/\/+$/, '');
   };
 
   useEffect(() => {
