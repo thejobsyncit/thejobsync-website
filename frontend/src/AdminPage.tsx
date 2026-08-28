@@ -399,10 +399,11 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
     const wordCount = blogContent.trim().split(/\s+/).length;
     const estimatedReadTime = Math.max(1, Math.ceil(wordCount / 200)) + ' min read';
 
+    const tempId = 'temp-' + Date.now();
     const newPost = {
-      id: Date.now().toString(),
+      id: tempId,
       title: blogTitle.trim(),
-      slug: blogTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+      slug: blogTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
       category: categoryName,
       author: '',
       date: formattedDate,
@@ -413,10 +414,6 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
       content: blogContent.trim()
     };
 
-    const updatedList = [newPost, ...blogs];
-    setBlogs(updatedList);
-    localStorage.setItem('jobsync_blogs_data', JSON.stringify(updatedList));
-
     try {
       const res = await fetch(`${getApiUrl()}/api/blogs`, {
         method: 'POST',
@@ -424,10 +421,12 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
         body: JSON.stringify(newPost)
       });
       const data = await res.json();
-      if (data.success && data.data) {
-        const synced = [data.data, ...blogs.filter(b => b.id !== data.data.id)];
-        setBlogs(synced);
-        localStorage.setItem('jobsync_blogs_data', JSON.stringify(synced));
+      if (res.ok && data.success && data.data) {
+        const refetched = await fetch(`${getApiUrl()}/api/blogs`).then(r => r.json());
+        if (refetched.success && Array.isArray(refetched.data)) {
+          setBlogs(refetched.data);
+          localStorage.setItem('jobsync_blogs_data', JSON.stringify(refetched.data));
+        }
       }
     } catch (err) {}
 
@@ -436,12 +435,31 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
     setTimeout(() => setBlogSuccess(''), 3000);
   };
 
-  const handleDeleteBlog = async (id: string) => {
+  const handleDeleteBlog = async (post: BlogPost) => {
     try {
-      await fetch(`${getApiUrl()}/api/blogs/${id}`, { method: 'DELETE' });
+      if (post.id) {
+        await fetch(`${getApiUrl()}/api/blogs/${encodeURIComponent(post.id)}`, { method: 'DELETE' });
+      }
+      if (post.slug && post.slug !== post.id) {
+        await fetch(`${getApiUrl()}/api/blogs/${encodeURIComponent(post.slug)}`, { method: 'DELETE' });
+      }
+      if (post.title) {
+        await fetch(`${getApiUrl()}/api/blogs/${encodeURIComponent(post.title)}`, { method: 'DELETE' });
+      }
     } catch (err) {}
-    if (editingBlogId === id) handleCancelEditBlog();
-    const filtered = blogs.filter(b => b.id !== id);
+
+    try {
+      const refetched = await fetch(`${getApiUrl()}/api/blogs`).then(r => r.json());
+      if (refetched.success && Array.isArray(refetched.data)) {
+        setBlogs(refetched.data);
+        localStorage.setItem('jobsync_blogs_data', JSON.stringify(refetched.data));
+        if (editingBlogId === post.id) handleCancelEditBlog();
+        return;
+      }
+    } catch (e) {}
+
+    if (editingBlogId === post.id) handleCancelEditBlog();
+    const filtered = blogs.filter(b => b.id !== post.id && b.slug !== post.slug && b.title !== post.title);
     setBlogs(filtered);
     localStorage.setItem('jobsync_blogs_data', JSON.stringify(filtered));
   };
@@ -1061,7 +1079,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
                       <button onClick={() => handleStartEditBlog(b)} style={{ background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
                         ✏️ Edit
                       </button>
-                      <button onClick={() => handleDeleteBlog(b.id)} style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
+                      <button onClick={() => handleDeleteBlog(b)} style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', padding: '8px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
                         🗑️ Delete
                       </button>
                     </div>

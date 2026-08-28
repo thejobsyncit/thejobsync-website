@@ -132,14 +132,22 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/blogs/:id
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
-  const isUuid = UUID_RE.test(id);
+  const decodedId = decodeURIComponent(id).trim();
+  const isUuid = UUID_RE.test(decodedId);
+
   let query = supabase.from('blogs').delete();
-  query = isUuid ? query.eq('id', id) : query.eq('slug', id);
+  if (isUuid) {
+    query = query.eq('id', decodedId);
+  } else {
+    query = query.or(`slug.eq.${decodedId},id.eq.${decodedId},title.ilike.${decodedId}`);
+  }
+
   const { error } = await query;
   if (error) {
     console.error('Supabase error during blog delete:', error);
     return res.status(500).json({ success: false, error: error.message });
   }
+
   res.json({ success: true, message: 'Blog post deleted successfully' });
 });
 
