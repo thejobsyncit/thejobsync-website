@@ -115,8 +115,8 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
   // Auth Inputs
-  const [loginEmail, setLoginEmail] = useState('admin@thejobsync.com');
-  const [loginPassword, setLoginPassword] = useState('admin123');
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
@@ -189,9 +189,14 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
   const [jobExp, setJobExp] = useState('2+ Years');
   const [jobSuccess, setJobSuccess] = useState('');
 
+  const getApiUrl = () => {
+    if (import.meta.env.VITE_API_BASE_URL !== undefined) return import.meta.env.VITE_API_BASE_URL;
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
+  };
+
   useEffect(() => {
     // Health Check
-    fetch('/api/health')
+    fetch(`${getApiUrl()}/api/health`)
       .then(res => res.json())
       .then(data => {
         if (data.status === 'ok') setServerStatus('online');
@@ -199,51 +204,28 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
       })
       .catch(() => setServerStatus('offline'));
 
-    // Fetch Initial Data with auto-sync to MongoDB Atlas
-    fetch('/api/blogs')
+    // Fetch Initial Data
+    fetch(`${getApiUrl()}/api/blogs`)
       .then(res => res.json())
-      .then(async (d) => {
+      .then(d => {
         if (d.success && Array.isArray(d.data)) {
-          if (d.data.length > 0) {
-            setBlogs(d.data);
-            localStorage.setItem('jobsync_blogs_data', JSON.stringify(d.data));
-          } else {
-            const savedLocal = localStorage.getItem('jobsync_blogs_data');
-            if (savedLocal) {
-              try {
-                const parsed: BlogPost[] = JSON.parse(savedLocal);
-                if (parsed.length > 0) {
-                  for (const post of parsed) {
-                    await fetch('/api/blogs', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify(post)
-                    });
-                  }
-                  const refetched = await fetch('/api/blogs').then(r => r.json());
-                  if (refetched.success && Array.isArray(refetched.data) && refetched.data.length > 0) {
-                    setBlogs(refetched.data);
-                    localStorage.setItem('jobsync_blogs_data', JSON.stringify(refetched.data));
-                  }
-                }
-              } catch (e) {}
-            }
-          }
+          setBlogs(d.data);
+          localStorage.setItem('jobsync_blogs_data', JSON.stringify(d.data));
         }
       })
       .catch(() => {});
 
-    fetch('/api/testimonials')
+    fetch(`${getApiUrl()}/api/testimonials`)
       .then(res => res.json())
       .then(d => d.success && setTestimonials(d.data))
       .catch(() => {});
 
-    fetch('/api/inquiries')
+    fetch(`${getApiUrl()}/api/inquiries`)
       .then(res => res.json())
       .then(d => d.success && setInquiries(d.data))
       .catch(() => {});
 
-    fetch('/api/careers')
+    fetch(`${getApiUrl()}/api/careers`)
       .then(res => res.json())
       .then(d => d.success && setCareers(d.data))
       .catch(() => {});
@@ -252,15 +234,16 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError('');
+    setAuthSuccess('');
     setIsAuthSubmitting(true);
     try {
-      const res = await fetch('/api/admin/login', {
+      const res = await fetch(`${getApiUrl()}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: loginEmail, password: loginPassword })
       });
       const data = await res.json();
-      if (data.success) {
+      if (res.ok && data.success) {
         setAdminUser(data.user);
         setIsAuthenticated(true);
         localStorage.setItem('jobsync_admin_logged_in', 'true');
@@ -269,15 +252,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
         setAuthError(data.error || 'Invalid admin credentials');
       }
     } catch (err) {
-      if (loginEmail === 'admin@thejobsync.com' && loginPassword === 'admin123') {
-        const user = { name: 'Master Admin', email: loginEmail, role: 'Super Admin' };
-        setAdminUser(user);
-        setIsAuthenticated(true);
-        localStorage.setItem('jobsync_admin_logged_in', 'true');
-        localStorage.setItem('jobsync_admin_user', JSON.stringify(user));
-      } else {
-        setAuthError('Invalid credentials. Default: admin@thejobsync.com / admin123');
-      }
+      setAuthError('Connection error: Failed to reach backend server.');
     } finally {
       setIsAuthSubmitting(false);
     }
@@ -286,34 +261,29 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError('');
+    setAuthSuccess('');
     setIsAuthSubmitting(true);
     try {
-      const res = await fetch('/api/admin/register', {
+      const res = await fetch(`${getApiUrl()}/api/admin/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: regName, email: regEmail, password: regPassword })
       });
       const data = await res.json();
-      if (data.success) {
-        setAuthSuccess('🎉 Account registered! Logging you in...');
+      if (res.ok && data.success) {
+        setAuthSuccess('🎉 Account registered successfully in database! Please sign in with your email and password.');
+        setRegName('');
+        setRegEmail('');
+        setRegPassword('');
         setTimeout(() => {
-          setAdminUser(data.user);
-          setIsAuthenticated(true);
-          localStorage.setItem('jobsync_admin_logged_in', 'true');
-          localStorage.setItem('jobsync_admin_user', JSON.stringify(data.user));
-        }, 1000);
+          setAuthMode('login');
+          setAuthSuccess('');
+        }, 2000);
       } else {
         setAuthError(data.error || 'Failed to register account');
       }
     } catch (err) {
-      const user = { name: regName || 'Admin User', email: regEmail, role: 'Administrator' };
-      setAuthSuccess('🎉 Account registered! Logging you in...');
-      setTimeout(() => {
-        setAdminUser(user);
-        setIsAuthenticated(true);
-        localStorage.setItem('jobsync_admin_logged_in', 'true');
-        localStorage.setItem('jobsync_admin_user', JSON.stringify(user));
-      }, 1000);
+      setAuthError('Connection error: Failed to reach backend server.');
     } finally {
       setIsAuthSubmitting(false);
     }
@@ -321,7 +291,9 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    setAdminUser(null);
     localStorage.removeItem('jobsync_admin_logged_in');
+    localStorage.removeItem('jobsync_admin_user');
   };
 
   const formatDateForDisplay = (rawDate: string): string => {

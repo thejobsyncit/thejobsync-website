@@ -56,23 +56,18 @@ router.post('/login', async (req, res) => {
 
   const normalizedEmail = email.trim().toLowerCase();
 
-  let { data: admin } = await supabase
+  const { data: admin, error } = await supabase
     .from('admin_users')
     .select('*')
     .eq('email', normalizedEmail)
     .maybeSingle();
 
-  if (!admin && normalizedEmail === 'admin@thejobsync.com') {
-    const { data: created } = await supabase
-      .from('admin_users')
-      .insert({ name: 'Master Admin', email: 'admin@thejobsync.com', password: 'admin123', role: 'Super Admin' })
-      .select()
-      .single();
-    admin = created;
+  if (error) {
+    console.error('Supabase error during login:', error);
+    return res.status(500).json({ success: false, error: 'Database authentication error.' });
   }
 
-  const passwordOk = admin && (admin.password === password || password === 'admin123' || password === 'admin');
-  if (!passwordOk) {
+  if (!admin || admin.password !== password) {
     return res.status(401).json({ success: false, error: 'Invalid email or password.' });
   }
 
