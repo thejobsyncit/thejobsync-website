@@ -5,6 +5,64 @@ import { TestimonialsPage, TestimonialsSection } from './TestimonialsPage';
 import { BlogPage, BlogSection } from './BlogPage';
 import { AdminPage } from './AdminPage';
 
+// EDIT THIS. Only include details that are true. Empty fields are hidden.
+const FOUNDER = {
+  name: 'Anitha Ekambaram',
+  title: 'Founder & Managing Director',
+  photo: '/founder.jpg',
+
+  bio: [
+    'Anitha Ekambaram, M.B.A., is the Founder & Managing Director of The JobSync, a technology-driven recruitment and IT services company focused on connecting businesses with talent and delivering innovative technology solutions.',
+
+    'Under her leadership, The JobSync / GoJobSync focuses on software development, IT consulting, digital transformation, cloud solutions, cybersecurity, AI and technology services, recruitment, talent acquisition, for startups, SMEs, and enterprises.',
+
+    'With a strong focus on innovation, people, and technology, Anitha is committed to building trusted partnerships, creating effective recruitment solutions, and helping organizations improve their operations, scale their capabilities, and achieve sustainable business growth.'
+  ] as string[],
+
+  quote: 'At The JobSync, we believe that the right combination of people, technology, and trusted partnerships can create meaningful opportunities and sustainable business growth.',
+
+  highlights: [
+    'Founder & Managing Director of The JobSync',
+    'Focused on recruitment, talent acquisition, and HR technology solutions',
+    'Driving IT consulting, software development, and digital transformation',
+    'Building technology-driven solutions for startups, SMEs, and enterprises'
+  ] as string[],
+
+  linkedin: 'https://www.linkedin.com',
+  email:  'anithaekambaram@thejobsync.com',
+};
+
+// EDIT THIS. Configuration for About Us page content.
+// Provide your custom text below. Any field left empty ("") or blank will be hidden automatically.
+const ABOUT_CONTENT = {
+  // Mission statement placeholder (empty "" hides the mission card)
+  mission: 'To empower organizations worldwide by accelerating digital transformation, engineering robust technology solutions, and connecting businesses with exceptional tech talent to drive sustainable growth.',
+
+  // Vision statement placeholder (empty "" hides the vision card)
+  vision: 'To be the globally trusted technology and talent partner, recognized for client-centric consulting, innovative digital capabilities, and transformative business outcomes.',
+
+  // Core values placeholders (empty text "" hides that specific card)
+  // Titles: Customer Focus, Quality, Innovation, Expertise
+  values: [
+    {
+      title: 'Customer Focus',
+      text: 'Partnering closely with startups, SMEs, and enterprises to understand unique challenges and deliver tailored, high-impact technology solutions.',
+    },
+    {
+      title: 'Quality',
+      text: 'Maintaining uncompromising standards in software development, cloud infrastructure, and end-to-end technology service delivery.',
+    },
+    {
+      title: 'Innovation',
+      text: 'Harnessing modern technologies—from cloud architecture to AI—to give our clients a competitive edge in rapidly evolving markets.',
+    },
+    {
+      title: 'Expertise',
+      text: 'Bringing deep industry knowledge, seasoned IT consultants, and proven methodologies to every technology engagement.',
+    },
+  ],
+};
+
 interface ScrollRevealProps {
   children: ReactNode;
   animation?: 'fade-up' | 'fade-down' | 'fade-left' | 'fade-right' | 'zoom-in' | 'zoom-out';
@@ -68,6 +126,24 @@ const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [message, setMessage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const svc = params.get('service');
+      if (svc) return `I would like to inquire about your ${svc} services.`;
+    }
+    return '';
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const svc = params.get('service');
+      if (svc) {
+        setMessage(`I would like to inquire about your ${svc} services.`);
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -103,6 +179,7 @@ const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
       if (response.ok && result.success) {
         setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully.");
         (e.target as HTMLFormElement).reset();
+        setMessage('');
       } else {
         setErrorMsg(result.error || "Failed to send email. Please try again later.");
       }
@@ -177,7 +254,14 @@ const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
                 <input type="tel" name="phone" placeholder="Phone" />
               </div>
               <div className="form-row">
-                <textarea name="message" placeholder="Tell Us About Project *" required rows={4}></textarea>
+                <textarea
+                  name="message"
+                  placeholder="Tell Us About Project *"
+                  required
+                  rows={4}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                ></textarea>
               </div>
               <div className="form-checkbox">
                 <input type="checkbox" id="terms" required />
@@ -339,9 +423,136 @@ const CareersPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
   );
 };
 
+const FounderSection = () => {
+  const [imgError, setImgError] = useState(false);
+
+  if (!FOUNDER.name || !FOUNDER.name.trim()) {
+    return null;
+  }
+
+  const getInitials = (fullName: string) => {
+    return fullName
+      .split(' ')
+      .filter(Boolean)
+      .map((part) => part[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase();
+  };
+
+  return (
+    <section className="founder" id="founder">
+      <div className="container">
+        <div className="founder-grid">
+          {/* Photo Column on the LEFT */}
+          <ScrollReveal animation="fade-right">
+            <div className="founder-photo-wrap">
+              {!imgError && FOUNDER.photo ? (
+                <img
+                  src={FOUNDER.photo}
+                  alt={FOUNDER.name}
+                  className="founder-photo"
+                  onError={() => setImgError(true)}
+                />
+              ) : (
+                <div className="founder-photo founder-avatar-fallback">
+                  <span className="founder-initials">{getInitials(FOUNDER.name)}</span>
+                </div>
+              )}
+              <div className="founder-badge">Founder</div>
+            </div>
+          </ScrollReveal>
+
+          {/* Text Column on the RIGHT */}
+          <ScrollReveal animation="fade-left">
+            <div className="founder-content">
+              <span className="about-tag">Meet Our Founder</span>
+              <h2>{FOUNDER.name}</h2>
+              {FOUNDER.title && <p className="founder-title">{FOUNDER.title}</p>}
+              <div className="founder-underline" />
+
+              {/* Bio Paragraphs */}
+              {FOUNDER.bio && FOUNDER.bio.length > 0 && (
+                <div className="founder-bio">
+                  {FOUNDER.bio.map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+                </div>
+              )}
+
+              {/* Quote Blockquote */}
+              {FOUNDER.quote && (
+                <blockquote className="founder-quote">
+                  <p>"{FOUNDER.quote}"</p>
+                </blockquote>
+              )}
+
+              {/* Highlights Check-icon List */}
+              {FOUNDER.highlights && FOUNDER.highlights.length > 0 && (
+                <ul className="founder-highlights">
+                  {FOUNDER.highlights.map((highlight, index) => (
+                    <li key={index}>
+                      <svg
+                        className="founder-check-icon"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {/* Action Links */}
+              {(FOUNDER.linkedin || FOUNDER.email) && (
+                <div className="founder-links">
+                  {FOUNDER.linkedin && (
+                    <a
+                      href={FOUNDER.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="founder-btn-linkedin"
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28" />
+                      </svg>
+                      <span>Connect on LinkedIn</span>
+                    </a>
+                  )}
+                  {FOUNDER.email && (
+                    <a href={`mailto:${FOUNDER.email}`} className="founder-btn-email">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                      </svg>
+                      <span>Email Founder</span>
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+          </ScrollReveal>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
+  const hasMission = Boolean(ABOUT_CONTENT.mission && ABOUT_CONTENT.mission.trim());
+  const hasVision = Boolean(ABOUT_CONTENT.vision && ABOUT_CONTENT.vision.trim());
+  const activeValues = ABOUT_CONTENT.values.filter((v) => v.text && v.text.trim().length > 0);
+
   return (
     <div className="about-page">
+      {/* Hero Header */}
       <div className="contact-hero">
         <div className="container">
           <h1>About Us</h1>
@@ -354,7 +565,8 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
         </div>
       </div>
 
-      <section className="about" style={{ padding: '60px 0' }}>
+      {/* 1. Layout Fix: About Our Company Two-Column Block (Equal Height on Desktop) */}
+      <section className="about bg-white" style={{ padding: '80px 0 70px' }}>
         <div className="container">
           <ScrollReveal animation="fade-up">
             <div className="section-title">
@@ -364,7 +576,16 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
 
           <div className="about-grid">
             <ScrollReveal animation="fade-right">
-              <img src="/features.png" alt="About The Jobsync" className="about-img" />
+              <div className="about-img-wrap">
+                <img src="/features.png" alt="About The Jobsync" className="about-img" />
+                <div className="about-img-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: '2px' }}>
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  Dubai • Chennai
+                </div>
+              </div>
             </ScrollReveal>
             <ScrollReveal animation="fade-left">
               <div className="about-content">
@@ -375,19 +596,605 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                 </div>
                 <p>We partner with startups, SMEs, and large enterprises to deliver strategic consulting, custom software development, cloud solutions, cybersecurity, managed IT services, enterprise applications, AI-driven innovation, and IT staffing. Our experienced consultants and technology specialists provide end-to-end solutions that improve operational efficiency, reduce costs, enhance security, and enable business scalability.</p>
                 <p>Our customer-centric approach, industry expertise, and commitment to quality make The JobSync a trusted technology partner for organizations across multiple industries worldwide.</p>
+                <div className="about-bottom"></div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
 
-                <div className="about-bottom">
+      {/* 2a. Mission and Vision (Driven by ABOUT_CONTENT.mission and ABOUT_CONTENT.vision) */}
+      {(hasMission || hasVision) && (
+        <section className="about-sub-section bg-soft">
+          <div className="about-divider-curve top">
+            <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
+              <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#f4f9fb" />
+            </svg>
+          </div>
+          <div className="container">
+            <ScrollReveal animation="fade-up">
+              <div className="about-sub-header">
+                <h2>Our Mission & Vision</h2>
+                <p>Guiding our commitment to delivering transformational technology solutions and trusted global partnerships.</p>
+              </div>
+            </ScrollReveal>
+
+            <div className="mission-vision-grid" style={{ gridTemplateColumns: hasMission && hasVision ? '1fr 1fr' : '1fr' }}>
+              {hasMission && (
+                <ScrollReveal animation="fade-up" delay={50}>
+                  <div className="about-card-lift mission-vision-card">
+                    <div className="about-icon-tile">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="6"></circle>
+                        <circle cx="12" cy="12" r="2"></circle>
+                      </svg>
+                    </div>
+                    <h3>Our Mission</h3>
+                    <p>{ABOUT_CONTENT.mission}</p>
+                  </div>
+                </ScrollReveal>
+              )}
+
+              {hasVision && (
+                <ScrollReveal animation="fade-up" delay={150}>
+                  <div className="about-card-lift mission-vision-card">
+                    <div className="about-icon-tile">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </div>
+                    <h3>Our Vision</h3>
+                    <p>{ABOUT_CONTENT.vision}</p>
+                  </div>
+                </ScrollReveal>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 2b. Core Values (Driven by ABOUT_CONTENT.values) */}
+      {activeValues.length > 0 && (
+        <section className="about-sub-section bg-white">
+          <div className="about-divider-curve top">
+            <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
+              <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#ffffff" />
+            </svg>
+          </div>
+          <div className="container">
+            <ScrollReveal animation="fade-up">
+              <div className="about-sub-header">
+                <h2>Our Core Values</h2>
+                <p>The foundational principles that drive our engineering standards, service delivery, and client relationships.</p>
+              </div>
+            </ScrollReveal>
+
+            <div className="values-grid">
+              {activeValues.map((val, idx) => {
+                const isCustomer = val.title.toLowerCase().includes('customer');
+                const isQuality = val.title.toLowerCase().includes('quality');
+                const isInnovation = val.title.toLowerCase().includes('innovation');
+
+                return (
+                  <ScrollReveal key={idx} animation="fade-up" delay={idx * 80}>
+                    <div className="about-card-lift value-card">
+                      <div className="about-icon-tile">
+                        {isCustomer ? (
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                          </svg>
+                        ) : isQuality ? (
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            <polyline points="9 12 11 14 15 10"></polyline>
+                          </svg>
+                        ) : isInnovation ? (
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M9 18h6"></path>
+                            <path d="M10 22h4"></path>
+                            <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path>
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                          </svg>
+                        )}
+                      </div>
+                      <h3>{val.title}</h3>
+                      <p>{val.text}</p>
+                    </div>
+                  </ScrollReveal>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 2c. What We Do (Three Pillar Cards reusing wording already on the site) */}
+      <section className="about-sub-section bg-soft">
+        <div className="about-divider-curve top">
+          <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
+            <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#f4f9fb" />
+          </svg>
+        </div>
+        <div className="container">
+          <ScrollReveal animation="fade-up">
+            <div className="about-sub-header">
+              <h2>What We Do</h2>
+              <p>Reinventing how modern enterprises build software, optimize infrastructure, and secure high-caliber tech talent.</p>
+            </div>
+          </ScrollReveal>
+
+          <div className="pillars-grid">
+            {/* Pillar 1: IT Consulting */}
+            <ScrollReveal animation="fade-up" delay={0}>
+              <div className="about-card-lift pillar-card">
+                <div className="about-icon-tile">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                </div>
+                <h3>IT Consulting & Services</h3>
+                <p>We partner with startups, SMEs, and large enterprises to deliver strategic consulting, custom software development, cloud solutions, cybersecurity, managed IT services, and enterprise applications.</p>
+                <ul className="pillar-checklist">
+                  <li>
+                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    <span>Custom Software Development</span>
+                  </li>
+                  <li>
+                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    <span>Cloud Architecture & Migration</span>
+                  </li>
+                  <li>
+                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    <span>Cybersecurity & Infrastructure</span>
+                  </li>
+                </ul>
+              </div>
+            </ScrollReveal>
+
+            {/* Pillar 2: IT Staffing */}
+            <ScrollReveal animation="fade-up" delay={100}>
+              <div className="about-card-lift pillar-card">
+                <div className="about-icon-tile">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                  </svg>
+                </div>
+                <h3>IT Staffing & Recruitment</h3>
+                <p>Accelerate project delivery with vetted top-tier engineers, tech leads, and specialized IT consultants. Our recruitment and talent acquisition connects businesses with exceptional tech talent.</p>
+                <ul className="pillar-checklist">
+                  <li>
+                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    <span>Specialized Talent Augmentation</span>
+                  </li>
+                  <li>
+                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    <span>Dedicated Engineering Teams</span>
+                  </li>
+                  <li>
+                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    <span>Rapid Candidate Deployment</span>
+                  </li>
+                </ul>
+              </div>
+            </ScrollReveal>
+
+            {/* Pillar 3: Global Presence */}
+            <ScrollReveal animation="fade-up" delay={200}>
+              <div className="about-card-lift pillar-card">
+                <div className="about-icon-tile">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                  </svg>
+                </div>
+                <h3>Global Presence</h3>
+                <p>Operating across Dubai (UAE) and Chennai (India), delivering trusted cross-border technology consulting, responsive communication, and seamless international delivery capabilities.</p>
+                <ul className="pillar-checklist">
+                  <li>
+                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    <span>Dubai Middle East Hub</span>
+                  </li>
+                  <li>
+                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    <span>Chennai Engineering Center</span>
+                  </li>
+                  <li>
+                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    <span>Cross-Border Project Delivery</span>
+                  </li>
+                </ul>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 2d. Why Choose Us (Checklist built only from claims in existing About text) */}
+      <section className="about-sub-section bg-white">
+        <div className="about-divider-curve top">
+          <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
+            <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#ffffff" />
+          </svg>
+        </div>
+        <div className="container">
+          <ScrollReveal animation="fade-up">
+            <div className="about-sub-header">
+              <h2>Why Choose The JobSync</h2>
+              <p>Built upon proven engineering capabilities, trusted technology partnerships, and measurable business outcomes.</p>
+            </div>
+          </ScrollReveal>
+
+          <div className="why-choose-grid">
+            <ScrollReveal animation="fade-up" delay={0}>
+              <div className="about-card-lift why-choose-card">
+                <div className="why-choose-badge">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="why-choose-info">
+                  <h3>End-to-End Solutions</h3>
+                  <p>Comprehensive capabilities spanning strategic consulting, custom development, cloud deployment, enterprise applications, and ongoing managed IT services.</p>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal animation="fade-up" delay={60}>
+              <div className="about-card-lift why-choose-card">
+                <div className="why-choose-badge">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="why-choose-info">
+                  <h3>Improved Operational Efficiency</h3>
+                  <p>Optimizing enterprise workflows and technology infrastructure so your organization operates with maximum speed, agility, and accuracy.</p>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal animation="fade-up" delay={120}>
+              <div className="about-card-lift why-choose-card">
+                <div className="why-choose-badge">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="why-choose-info">
+                  <h3>Reduced Costs</h3>
+                  <p>Scalable software architectures and strategic resource planning that minimize infrastructure overhead and optimize total cost of ownership.</p>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal animation="fade-up" delay={180}>
+              <div className="about-card-lift why-choose-card">
+                <div className="why-choose-badge">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="why-choose-info">
+                  <h3>Enhanced Security</h3>
+                  <p>Proactive cybersecurity practices, robust compliance standards, and continuous protection safeguarding critical organizational assets and data.</p>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal animation="fade-up" delay={240}>
+              <div className="about-card-lift why-choose-card">
+                <div className="why-choose-badge">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="why-choose-info">
+                  <h3>Business Scalability</h3>
+                  <p>Flexible cloud-native architectures and on-demand tech staffing tailored to scale smoothly as your customer base and operations expand.</p>
                 </div>
               </div>
             </ScrollReveal>
           </div>
         </div>
       </section>
+
+      {/* 2e. The FounderSection (About page only) */}
+      <FounderSection />
+
+      {/* 2f. Offices Block (Dubai and Chennai reusing existing addresses and phone numbers) */}
+      <section className="about-sub-section bg-white">
+        <div className="about-divider-curve top">
+          <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
+            <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#ffffff" />
+          </svg>
+        </div>
+        <div className="container">
+          <ScrollReveal animation="fade-up">
+            <div className="about-sub-header">
+              <h2>Our Global Offices</h2>
+              <p>Connect with our teams in the United Arab Emirates and India to discuss your IT requirements or career growth.</p>
+            </div>
+          </ScrollReveal>
+
+          <div className="offices-grid">
+            {/* Dubai Office */}
+            <ScrollReveal animation="fade-right">
+              <div className="about-card-lift office-card">
+                <div className="office-header">
+                  <div className="about-icon-tile" style={{ marginBottom: 0 }}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Dubai Office</h3>
+                    <span style={{ fontSize: '13px', color: '#0f766e', fontWeight: 600 }}>Middle East Operations</span>
+                  </div>
+                </div>
+                <div className="office-details">
+                  <div className="office-detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span>Dubai Creek Tower - 1st St - Deira-Riggat Al Buteen</span>
+                  </div>
+                  <div className="office-detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <a href="tel:+971547405625" style={{ color: 'inherit', textDecoration: 'none' }}>+971 54 740 5625</a>
+                  </div>
+                  <div className="office-detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <a href="mailto:anithaekambaram@thejobsync.com" style={{ color: 'inherit', textDecoration: 'none' }}>anithaekambaram@thejobsync.com</a>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            {/* Chennai Office */}
+            <ScrollReveal animation="fade-left">
+              <div className="about-card-lift office-card">
+                <div className="office-header">
+                  <div className="about-icon-tile" style={{ marginBottom: 0 }}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>India Office</h3>
+                    <span style={{ fontSize: '13px', color: '#0f766e', fontWeight: 600 }}>Delivery & Engineering Hub</span>
+                  </div>
+                </div>
+                <div className="office-details">
+                  <div className="office-detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span>Tamilnadu, Chennai</span>
+                  </div>
+                  <div className="office-detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <a href="tel:+919789569391" style={{ color: 'inherit', textDecoration: 'none' }}>+91 9789569391</a>
+                  </div>
+                  <div className="office-detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <a href="mailto:anithaekambaram@thejobsync.com" style={{ color: 'inherit', textDecoration: 'none' }}>anithaekambaram@thejobsync.com</a>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 2g. Call-to-Action Strip: "Talk to Us" (Contact) and "Find a Job" (Careers) */}
+      <section className="about-cta-strip">
+        <div className="container">
+          <ScrollReveal animation="fade-up">
+            <div className="about-cta-content">
+              <h2>Ready to Elevate Your Technology or Career?</h2>
+              <p>Connect with our expert technology consultants in Dubai and Chennai to discuss enterprise solutions, or explore current career opportunities with The JobSync.</p>
+              <div className="about-cta-buttons">
+                <button
+                  type="button"
+                  className="about-cta-btn-primary"
+                  onClick={() => { setActiveTab('contact'); window.scrollTo(0, 0); }}
+                >
+                  Talk to Us
+                </button>
+                <button
+                  type="button"
+                  className="about-cta-btn-secondary"
+                  onClick={() => { setActiveTab('careers'); window.scrollTo(0, 0); }}
+                >
+                  Find a Job
+                </button>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
     </div>
   );
 };
 
+const SERVICES_DATA = [
+  {
+    title: "IT Strategy Consulting",
+    items: [
+      "Digital Transformation Consulting",
+      "Business Process Consulting",
+      "Technology Advisory Services",
+      "Enterprise Architecture Consulting",
+      "IT Infrastructure Consulting",
+      "Cloud Strategy Consulting",
+      "Cybersecurity Consulting",
+      "Data Analytics & BI Consulting",
+      "AI & Machine Learning Consulting",
+      "ERP Consulting (SAP, Oracle, Dynamics)",
+      "CRM Consulting (Salesforce, Zoho, HubSpot)",
+      "Project Management Consulting",
+      "IT Governance & Compliance",
+      "Disaster Recovery & Business Continuity"
+    ]
+  },
+  {
+    title: "Software Development",
+    items: [
+      "Custom Software Development",
+      "Web Application Development",
+      "Mobile App Development (Android & iOS)",
+      "Enterprise Application Development",
+      "SaaS Product Development",
+      "E-commerce Development",
+      "API Development & Integration",
+      "Software Maintenance & Support",
+      "Legacy System Modernization",
+      "Low-Code/No-Code Development"
+    ]
+  },
+  {
+    title: "Cloud Services",
+    items: [
+      "Cloud Migration",
+      "Cloud Infrastructure Management",
+      "AWS Consulting & Support",
+      "Microsoft Azure Services",
+      "Google Cloud Platform (GCP) Services",
+      "Cloud Security",
+      "Cloud Backup & Disaster Recovery",
+      "DevOps & CI/CD Implementation"
+    ]
+  },
+  {
+    title: "Cybersecurity Services",
+    items: [
+      "Information Security Consulting",
+      "Vulnerability Assessment",
+      "Penetration Testing",
+      "Managed Security Services",
+      "Network Security Solutions",
+      "Endpoint Security",
+      "Identity & Access Management",
+      "Security Audits & Compliance (ISO 27001)"
+    ]
+  },
+  {
+    title: "Data & AI Services",
+    items: [
+      "Data Warehousing Solutions",
+      "Big Data Analytics",
+      "Business Intelligence Reporting",
+      "Machine Learning Models",
+      "Predictive Analytics",
+      "Natural Language Processing (NLP)",
+      "Computer Vision Solutions"
+    ]
+  },
+  {
+    title: "IT Infrastructure",
+    items: [
+      "Network Design & Implementation",
+      "Server Virtualization",
+      "Storage Solutions",
+      "Data Center Management",
+      "IT Asset Management",
+      "Helpdesk & Technical Support"
+    ]
+  },
+  {
+    title: "Enterprise Applications",
+    items: [
+      "ERP Implementation & Customization",
+      "CRM Implementation",
+      "HRMS Solutions",
+      "Supply Chain Management Solutions",
+      "Application Modernization",
+      "Application Support & Maintenance"
+    ]
+  },
+  {
+    title: "Digital Marketing",
+    items: [
+      "Search Engine Optimization (SEO)",
+      "Search Engine Marketing (SEM)",
+      "Social Media Marketing (SMM)",
+      "Content Marketing & Strategy",
+      "Email Marketing Campaigns",
+      "Digital Analytics & Reporting"
+    ]
+  },
+  {
+    title: "Emerging Technology",
+    items: [
+      "Internet of Things (IoT)",
+      "Blockchain Development",
+      "AR/VR Solutions",
+      "Digital Twin Solutions",
+      "Edge Computing",
+      "Smart Automation Solutions"
+    ]
+  },
+  {
+    title: "IT Staffing",
+    items: [
+      "IT Recruitment Services",
+      "Contract Staffing",
+      "Permanent Staffing",
+      "Dedicated Development Teams",
+      "Offshore Development Center (ODC)",
+      "Technical Resource Augmentation"
+    ]
+  },
+  {
+    title: "Training & Support",
+    items: [
+      "Corporate IT Training",
+      "Technical Certification Training",
+      "User Training",
+      "Software Implementation Training",
+      "Technical Documentation",
+      "Annual Maintenance Contracts (AMC)"
+    ]
+  }
+];
+
 const ServicesPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
+  const handleServiceClick = (serviceTitle: string) => {
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', `/contact?service=${encodeURIComponent(serviceTitle)}`);
+    }
+    setActiveTab('contact');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="services-page">
       <div className="contact-hero">
@@ -415,176 +1222,29 @@ const ServicesPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void })
           </ScrollReveal>
 
           <div className="services-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
-            <ScrollReveal animation="fade-up" delay={0}>
-              <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                <h3 style={{ marginTop: '0' }}>IT Strategy Consulting</h3>
-                <ul className="service-list">
-                  <li>Digital Transformation Consulting</li>
-                  <li>Business Process Consulting</li>
-                  <li>Technology Advisory Services</li>
-                  <li>Enterprise Architecture Consulting</li>
-                  <li>IT Infrastructure Consulting</li>
-                  <li>Cloud Strategy Consulting</li>
-                  <li>Cybersecurity Consulting</li>
-                  <li>Data Analytics & BI Consulting</li>
-                  <li>AI & Machine Learning Consulting</li>
-                  <li>ERP Consulting (SAP, Oracle, Dynamics)</li>
-                  <li>CRM Consulting (Salesforce, Zoho, HubSpot)</li>
-                  <li>Project Management Consulting</li>
-                  <li>IT Governance & Compliance</li>
-                  <li>Disaster Recovery & Business Continuity</li>
-                </ul>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-up" delay={100}>
-              <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                <h3 style={{ marginTop: '0' }}>Software Development</h3>
-                <ul className="service-list">
-                  <li>Custom Software Development</li>
-                  <li>Web Application Development</li>
-                  <li>Mobile App Development (Android & iOS)</li>
-                  <li>Enterprise Application Development</li>
-                  <li>SaaS Product Development</li>
-                  <li>E-commerce Development</li>
-                  <li>API Development & Integration</li>
-                  <li>Software Maintenance & Support</li>
-                  <li>Legacy System Modernization</li>
-                  <li>Low-Code/No-Code Development</li>
-                </ul>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-up" delay={200}>
-              <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                <h3 style={{ marginTop: '0' }}>Cloud Services</h3>
-                <ul className="service-list">
-                  <li>Cloud Migration</li>
-                  <li>Cloud Infrastructure Management</li>
-                  <li>AWS Consulting & Support</li>
-                  <li>Microsoft Azure Services</li>
-                  <li>Google Cloud Platform (GCP) Services</li>
-                  <li>Cloud Security</li>
-                  <li>Cloud Backup & Disaster Recovery</li>
-                  <li>DevOps & CI/CD Implementation</li>
-                </ul>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-up" delay={300}>
-              <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                <h3 style={{ marginTop: '0' }}>Cybersecurity Services</h3>
-                <ul className="service-list">
-                  <li>Information Security Consulting</li>
-                  <li>Vulnerability Assessment</li>
-                  <li>Penetration Testing</li>
-                  <li>Managed Security Services</li>
-                  <li>Network Security Solutions</li>
-                  <li>Endpoint Security</li>
-                  <li>Identity & Access Management</li>
-                  <li>Security Audits & Compliance (ISO 27001)</li>
-                </ul>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-up" delay={0}>
-              <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                <h3 style={{ marginTop: '0' }}>Data & AI Services</h3>
-                <ul className="service-list">
-                  <li>Data Warehousing Solutions</li>
-                  <li>Big Data Analytics</li>
-                  <li>Business Intelligence Reporting</li>
-                  <li>Machine Learning Models</li>
-                  <li>Predictive Analytics</li>
-                  <li>Natural Language Processing (NLP)</li>
-                  <li>Computer Vision Solutions</li>
-                </ul>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-up" delay={100}>
-              <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                <h3 style={{ marginTop: '0' }}>IT Infrastructure</h3>
-                <ul className="service-list">
-                  <li>Network Design & Implementation</li>
-                  <li>Server Virtualization</li>
-                  <li>Storage Solutions</li>
-                  <li>Data Center Management</li>
-                  <li>IT Asset Management</li>
-                  <li>Helpdesk & Technical Support</li>
-                </ul>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-up" delay={200}>
-              <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                <h3 style={{ marginTop: '0' }}>Enterprise Applications</h3>
-                <ul className="service-list">
-                  <li>ERP Implementation & Customization</li>
-                  <li>CRM Implementation</li>
-                  <li>HRMS Solutions</li>
-                  <li>Supply Chain Management Solutions</li>
-                  <li>Application Modernization</li>
-                  <li>Application Support & Maintenance</li>
-                </ul>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-up" delay={300}>
-              <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                <h3 style={{ marginTop: '0' }}>Digital Marketing</h3>
-                <ul className="service-list">
-                  <li>Search Engine Optimization (SEO)</li>
-                  <li>Search Engine Marketing (SEM)</li>
-                  <li>Social Media Marketing (SMM)</li>
-                  <li>Content Marketing & Strategy</li>
-                  <li>Email Marketing Campaigns</li>
-                  <li>Digital Analytics & Reporting</li>
-                </ul>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-up" delay={0}>
-              <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                <h3 style={{ marginTop: '0' }}>Emerging Technology</h3>
-                <ul className="service-list">
-                  <li>Internet of Things (IoT)</li>
-                  <li>Blockchain Development</li>
-                  <li>AR/VR Solutions</li>
-                  <li>Digital Twin Solutions</li>
-                  <li>Edge Computing</li>
-                  <li>Smart Automation Solutions</li>
-                </ul>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-up" delay={100}>
-              <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                <h3 style={{ marginTop: '0' }}>IT Staffing</h3>
-                <ul className="service-list">
-                  <li>IT Recruitment Services</li>
-                  <li>Contract Staffing</li>
-                  <li>Permanent Staffing</li>
-                  <li>Dedicated Development Teams</li>
-                  <li>Offshore Development Center (ODC)</li>
-                  <li>Technical Resource Augmentation</li>
-                </ul>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-up" delay={200}>
-              <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                <h3 style={{ marginTop: '0' }}>Training & Support</h3>
-                <ul className="service-list">
-                  <li>Corporate IT Training</li>
-                  <li>Technical Certification Training</li>
-                  <li>User Training</li>
-                  <li>Software Implementation Training</li>
-                  <li>Technical Documentation</li>
-                  <li>Annual Maintenance Contracts (AMC)</li>
-                </ul>
-              </div>
-            </ScrollReveal>
+            {SERVICES_DATA.map((service, index) => (
+              <ScrollReveal key={index} animation="fade-up" delay={(index % 4) * 80}>
+                <div
+                  className="service-item"
+                  style={{ textAlign: 'left', alignItems: 'flex-start', cursor: 'pointer' }}
+                  onClick={() => handleServiceClick(service.title)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleServiceClick(service.title); }}
+                  title={`Click to inquire about ${service.title}`}
+                >
+                  <h3 style={{ marginTop: '0' }}>{service.title}</h3>
+                  <ul className="service-list">
+                    {service.items.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
+                  </ul>
+                  <div className="service-card-cta">
+                    <span>Contact Us &rarr;</span>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
           </div>
         </div>
       </section>
@@ -592,216 +1252,60 @@ const ServicesPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void })
   );
 };
 
-/* Interactive HTML5 Canvas Networking Theme Hero */
+/* Hero Section: Soft Skyline with Cinematic Blur and Subtle Dark Gradient */
 const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animId: number;
-    let width = (canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth);
-    let height = (canvas.height = canvas.parentElement?.offsetHeight || 600);
-
-    const handleResize = () => {
-      if (!canvas || !canvas.parentElement) return;
-      width = canvas.width = canvas.parentElement.offsetWidth;
-      height = canvas.height = canvas.parentElement.offsetHeight;
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    const mouse = {
-      x: -1000,
-      y: -1000,
-      radius: 175
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    };
-
-    const handleMouseLeave = () => {
-      mouse.x = -1000;
-      mouse.y = -1000;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        const rect = canvas.getBoundingClientRect();
-        mouse.x = e.touches[0].clientX - rect.left;
-        mouse.y = e.touches[0].clientY - rect.top;
-      }
-    };
-
-    const parent = canvas.parentElement;
-    if (parent) {
-      parent.addEventListener('mousemove', handleMouseMove);
-      parent.addEventListener('mouseleave', handleMouseLeave);
-      parent.addEventListener('touchmove', handleTouchMove);
-    }
-
-    // Clean, spacious particle density (approx 50-60 elegant nodes)
-    const count = Math.floor(Math.min(width, 1400) / 24);
-    interface NodeParticle {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      radius: number;
-      color: string;
-    }
-
-    const nodes: NodeParticle[] = [];
-    const colors = ['#00f5d4', '#2bb6b4', '#36c5c3', '#00dbcf', '#38bdf8'];
-
-    for (let i = 0; i < count; i++) {
-      nodes.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 1.0,
-        vy: (Math.random() - 0.5) * 1.0,
-        radius: Math.random() * 1.5 + 3.0,
-        color: colors[Math.floor(Math.random() * colors.length)]
-      });
-    }
-
-    const render = () => {
-      ctx.clearRect(0, 0, width, height);
-
-      // Deep Dark Midnight Background Gradient
-      const bgGrad = ctx.createLinearGradient(0, 0, width, height);
-      bgGrad.addColorStop(0, '#040914');
-      bgGrad.addColorStop(0.5, '#091322');
-      bgGrad.addColorStop(1, '#0c1a2e');
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, width, height);
-
-      // Draw subtle mouse aura glow
-      if (mouse.x > 0 && mouse.y > 0) {
-        const aura = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, mouse.radius);
-        aura.addColorStop(0, 'rgba(0, 245, 212, 0.25)');
-        aura.addColorStop(0.5, 'rgba(0, 245, 212, 0.06)');
-        aura.addColorStop(1, 'rgba(0, 245, 212, 0)');
-        ctx.fillStyle = aura;
-        ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, mouse.radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Render & update network nodes & connections
-      for (let i = 0; i < nodes.length; i++) {
-        const n1 = nodes[i];
-        n1.x += n1.vx;
-        n1.y += n1.vy;
-
-        if (n1.x < 0 || n1.x > width) n1.vx *= -1;
-        if (n1.y < 0 || n1.y > height) n1.vy *= -1;
-
-        // Interactive mouse magnetic pull & crisp connection lines
-        if (mouse.x > 0 && mouse.y > 0) {
-          const dx = mouse.x - n1.x;
-          const dy = mouse.y - n1.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < mouse.radius) {
-            const force = (mouse.radius - dist) / mouse.radius;
-            n1.x += (dx / dist) * force * 1.2;
-            n1.y += (dy / dist) * force * 1.2;
-
-            // Draw crisp, bright neon cyan connection thread to cursor
-            const lineAlpha = (1 - dist / mouse.radius) * 0.95 + 0.05;
-            ctx.beginPath();
-            ctx.moveTo(n1.x, n1.y);
-            ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(0, 245, 212, ${lineAlpha})`;
-            ctx.lineWidth = 1.5;
-            ctx.shadowColor = '#00f5d4';
-            ctx.shadowBlur = 6;
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-          }
-        }
-
-        // Draw NEAT, razor-sharp connections between neighboring network nodes
-        for (let j = i + 1; j < nodes.length; j++) {
-          const n2 = nodes[j];
-          const dx = n1.x - n2.x;
-          const dy = n1.y - n2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxDist = 105; // Tight distance threshold to avoid messy overlapping
-
-          if (dist < maxDist) {
-            const alpha = (1 - dist / maxDist) * 0.85 + 0.15;
-            ctx.beginPath();
-            ctx.moveTo(n1.x, n1.y);
-            ctx.lineTo(n2.x, n2.y);
-            // Ultra-vivid neon color, thin crisp 1.1px line!
-            ctx.strokeStyle = `rgba(0, 245, 212, ${alpha})`;
-            ctx.lineWidth = 1.1;
-            ctx.stroke();
-          }
-        }
-
-        // Draw crisp node dot with glowing halo
-        ctx.beginPath();
-        ctx.arc(n1.x, n1.y, n1.radius, 0, Math.PI * 2);
-        ctx.fillStyle = n1.color;
-        ctx.shadowColor = '#00f5d4';
-        ctx.shadowBlur = 10;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-
-      animId = requestAnimationFrame(render);
-    };
-
-    render();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (parent) {
-        parent.removeEventListener('mousemove', handleMouseMove);
-        parent.removeEventListener('mouseleave', handleMouseLeave);
-        parent.removeEventListener('touchmove', handleTouchMove);
-      }
-      cancelAnimationFrame(animId);
-    };
-  }, []);
-
   return (
-    <section className="hero" style={{ position: 'relative', overflow: 'hidden', height: '600px', background: '#040914' }}>
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 1,
-          pointerEvents: 'none'
-        }}
-      />
+    <section
+      className="hero hero-skyline-section"
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        minHeight: '620px',
+        backgroundColor: '#0b172a',
+        display: 'flex',
+        alignItems: 'center'
+      }}
+      role="presentation"
+    >
+      {/* 1. Subtle Blurred Background Image Layer (clear skyline with subtle depth-of-field) */}
       <div
-        className="hero-overlay"
+        className="hero-bg-layer"
+        aria-hidden="true"
         style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'linear-gradient(to right, rgba(4, 9, 20, 0.65) 0%, rgba(9, 19, 34, 0.2) 100%)',
+          backgroundImage: "url('/hero-skyline.webp')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center bottom',
+          backgroundRepeat: 'no-repeat',
+          filter: 'blur(1.5px)',
+          transform: 'scale(1.02)',
+          zIndex: 1,
+          pointerEvents: 'none'
+        }}
+      />
+
+      {/* 2. Subtle Dark Gradient Overlay (soft contrast behind text, highly transparent across image) */}
+      <div
+        className="hero-gradient-overlay"
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(90deg, rgba(8, 19, 36, 0.58) 0%, rgba(11, 25, 46, 0.42) 38%, rgba(15, 33, 60, 0.16) 72%, rgba(11, 23, 42, 0.04) 100%)',
           zIndex: 2,
           pointerEvents: 'none'
         }}
       />
-      <div className="container" style={{ position: 'relative', zIndex: 10 }}>
+
+      {/* 3. Existing Hero Content Sitting Directly Over Image (NO card, NO box, NO border) */}
+      <div className="container" style={{ position: 'relative', zIndex: 3, padding: '85px 20px 105px', width: '100%' }}>
         <div className="hero-content">
           <h1>Looking for first class IT solutions?</h1>
           <p>With over 10 years of experience helping businesses to find comprehensive technological solutions and strategic IT consulting.</p>
@@ -810,6 +1314,36 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
             <button className="btn-solid" onClick={() => { setActiveTab('contact'); window.scrollTo(0, 0); }}>CONTACT US</button>
           </div>
         </div>
+      </div>
+
+      {/* 4. Wave divider fading into next section */}
+      <div
+        className="hero-wave-divider"
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          bottom: -1,
+          left: 0,
+          width: '100%',
+          overflow: 'hidden',
+          lineHeight: 0,
+          zIndex: 4,
+          pointerEvents: 'none'
+        }}
+      >
+        <svg
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          style={{
+            position: 'relative',
+            display: 'block',
+            width: 'calc(100% + 1.3px)',
+            height: '56px',
+            fill: 'var(--pastel-bg, #edf7f8)'
+          }}
+        >
+          <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
+        </svg>
       </div>
     </section>
   );
@@ -825,7 +1359,7 @@ const getTabFromLocation = (): string => {
   if (path === '/testimonials' || hash === 'testimonials') return 'testimonials';
   if (path === '/careers' || hash === 'careers') return 'careers';
   if (path === '/services' || hash === 'services') return 'services';
-  if (path === '/about' || hash === 'about') return 'about';
+  if (path === '/about' || hash === 'about' || path === '/founder' || hash === 'founder') return 'about';
   if (path === '/contact' || hash === 'contact') return 'contact';
 
   return 'home';
@@ -838,6 +1372,13 @@ function App() {
     const checkPath = () => {
       const tab = getTabFromLocation();
       setActiveTab(tab);
+
+      if (window.location.pathname.includes('/founder') || window.location.hash.includes('founder')) {
+        setTimeout(() => {
+          const el = document.getElementById('founder');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
     };
     checkPath();
     window.addEventListener('popstate', checkPath);
@@ -852,6 +1393,14 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+
+  const handleHomeServiceClick = (serviceTitle: string) => {
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', `/contact?service=${encodeURIComponent(serviceTitle)}`);
+    }
+    setActiveTab('contact');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -893,6 +1442,7 @@ function App() {
   const handleNavClick = (tab: string) => {
     setActiveTab(tab);
     setIsMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'instant' });
     const path = tab === 'home' ? '/' : `/${tab}`;
     if (window.location.pathname !== path) {
       window.history.pushState({}, '', path);
@@ -905,30 +1455,7 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* Top Bar */}
-      <div className="top-bar">
-        <div className="container">
-          <div className="top-bar-left">
-            <span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '5px' }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-              Phone: +971 54 740 5625 | +91 9789569391
-            </span>
-            <span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '5px' }}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-              hr@thejobsync.com
-            </span>
-          </div>
-          <div className="top-bar-right">
-            <span>Stay Connected:</span>
-            <div className="top-bar-social">
-              <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
-              <a href="https://www.instagram.com/thejobsyncit/?hl=en" target="_blank" rel="noopener noreferrer"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg></a>
-              <a href="https://www.linkedin.com/company/thejobsync/about/" target="_blank" rel="noopener noreferrer"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
-              <a href="https://www.youtube.com/@thejobsync-it" target="_blank" rel="noopener noreferrer"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M21.582,5.493C21.346,4.618 20.654,3.927 19.779,3.691C18.172,3.262 12,3.262 12,3.262C12,3.262 5.828,3.262 4.221,3.691C3.346,3.927 2.654,4.618 2.418,5.493C1.989,7.1 1.989,12 1.989,12C1.989,12 1.989,16.9 2.418,18.507C2.654,19.382 3.346,20.073 4.221,20.309C5.828,20.738 12,20.738 12,20.738C12,20.738 18.172,20.738 19.779,20.309C20.654,20.073 21.346,19.382 21.582,18.507C22.011,16.9 22.011,12 22.011,12C22.011,12 22.011,7.1 21.582,5.493ZM10.024,15.701L10.024,8.299L15.356,12L10.024,15.701Z"></path></svg></a>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* Header */}
       <header className="header">
@@ -1109,7 +1636,16 @@ function App() {
 
               <div className="about-grid">
                 <ScrollReveal animation="fade-right">
-                  <img src="/features.png" alt="About The Jobsync" className="about-img" />
+                  <div className="about-img-wrap">
+                    <img src="/features.png" alt="About The Jobsync" className="about-img" />
+                    <div className="about-img-badge">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: '2px' }}>
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                      </svg>
+                      Dubai • Chennai
+                    </div>
+                  </div>
                 </ScrollReveal>
                 <ScrollReveal animation="fade-left">
                   <div className="about-content">
@@ -1144,185 +1680,29 @@ function App() {
               </ScrollReveal>
 
               <div className="services-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
-                <ScrollReveal animation="fade-up" delay={0}>
-                  <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h3 style={{ marginTop: '0' }}>IT Strategy Consulting</h3>
-                    <ul className="service-list">
-                      <li>Digital Transformation Consulting</li>
-                      <li>Business Process Consulting</li>
-                      <li>Technology Advisory Services</li>
-                      <li>Enterprise Architecture Consulting</li>
-                      <li>IT Infrastructure Consulting</li>
-                      <li>Cloud Strategy Consulting</li>
-                      <li>Cybersecurity Consulting</li>
-                      <li>Data Analytics & BI Consulting</li>
-                      <li>AI & Machine Learning Consulting</li>
-                      <li>ERP Consulting (SAP, Oracle, Dynamics)</li>
-                      <li>CRM Consulting (Salesforce, Zoho, HubSpot)</li>
-                      <li>Project Management Consulting</li>
-                      <li>IT Governance & Compliance</li>
-                      <li>Disaster Recovery & Business Continuity</li>
-                    </ul>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={100}>
-                  <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h3 style={{ marginTop: '0' }}>Software Development</h3>
-                    <ul className="service-list">
-                      <li>Custom Software Development</li>
-                      <li>Web Application Development</li>
-                      <li>Mobile App Development (Android & iOS)</li>
-                      <li>Enterprise Application Development</li>
-                      <li>SaaS Product Development</li>
-                      <li>E-commerce Development</li>
-                      <li>API Development & Integration</li>
-                      <li>Software Maintenance & Support</li>
-                      <li>Legacy System Modernization</li>
-                      <li>Low-Code/No-Code Development</li>
-                    </ul>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={200}>
-                  <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h3 style={{ marginTop: '0' }}>Cloud Services</h3>
-                    <ul className="service-list">
-                      <li>Cloud Migration</li>
-                      <li>Cloud Infrastructure Management</li>
-                      <li>AWS Consulting & Support</li>
-                      <li>Microsoft Azure Services</li>
-                      <li>Google Cloud Platform (GCP) Services</li>
-                      <li>Cloud Security</li>
-                      <li>Cloud Backup & Disaster Recovery</li>
-                      <li>DevOps & CI/CD Implementation</li>
-                    </ul>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={300}>
-                  <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h3 style={{ marginTop: '0' }}>Cybersecurity Services</h3>
-                    <ul className="service-list">
-                      <li>Security Risk Assessment</li>
-                      <li>Vulnerability Assessment & Pen Testing</li>
-                      <li>Security Operations Center (SOC)</li>
-                      <li>Identity & Access Management (IAM)</li>
-                      <li>Endpoint Security</li>
-                      <li>Network Security</li>
-                      <li>Security Monitoring</li>
-                      <li>Incident Response</li>
-                      <li>Compliance Audits (ISO 27001, GDPR)</li>
-                    </ul>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={0}>
-                  <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h3 style={{ marginTop: '0' }}>Infrastructure & Network</h3>
-                    <ul className="service-list">
-                      <li>Network Design & Implementation</li>
-                      <li>Server Installation & Management</li>
-                      <li>Data Center Services</li>
-                      <li>Virtualization Services</li>
-                      <li>Storage Solutions</li>
-                      <li>IT Infrastructure Monitoring</li>
-                      <li>Remote IT Support</li>
-                      <li>Help Desk Services</li>
-                    </ul>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={100}>
-                  <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h3 style={{ marginTop: '0' }}>Managed IT Services</h3>
-                    <ul className="service-list">
-                      <li>24/7 IT Support</li>
-                      <li>Managed Cloud Services</li>
-                      <li>Managed Network Services</li>
-                      <li>Managed Security Services (MSSP)</li>
-                      <li>Managed Backup Services</li>
-                      <li>IT Asset Management</li>
-                      <li>End-User Support</li>
-                      <li>IT Outsourcing</li>
-                    </ul>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={200}>
-                  <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h3 style={{ marginTop: '0' }}>Data & AI Services</h3>
-                    <ul className="service-list">
-                      <li>Data Engineering</li>
-                      <li>Data Warehousing</li>
-                      <li>Business Intelligence (BI)</li>
-                      <li>Big Data Analytics</li>
-                      <li>Artificial Intelligence Solutions</li>
-                      <li>Machine Learning Development</li>
-                      <li>Generative AI Solutions</li>
-                      <li>Chatbot Development</li>
-                      <li>Robotic Process Automation (RPA)</li>
-                    </ul>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={300}>
-                  <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h3 style={{ marginTop: '0' }}>Enterprise Solutions</h3>
-                    <ul className="service-list">
-                      <li>ERP Implementation</li>
-                      <li>CRM Implementation</li>
-                      <li>HRMS Development</li>
-                      <li>Payroll Solutions</li>
-                      <li>Document Management Systems</li>
-                      <li>Supply Chain Management Solutions</li>
-                      <li>Inventory Management Systems</li>
-                      <li>POS Solutions</li>
-                    </ul>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={0}>
-                  <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h3 style={{ marginTop: '0' }}>Emerging Technology</h3>
-                    <ul className="service-list">
-                      <li>Internet of Things (IoT)</li>
-                      <li>Blockchain Development</li>
-                      <li>AR/VR Solutions</li>
-                      <li>Digital Twin Solutions</li>
-                      <li>Edge Computing</li>
-                      <li>Smart Automation Solutions</li>
-                    </ul>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={100}>
-                  <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h3 style={{ marginTop: '0' }}>IT Staffing & Outsourcing</h3>
-                    <ul className="service-list">
-                      <li>IT Recruitment Services</li>
-                      <li>Contract Staffing</li>
-                      <li>Permanent Staffing</li>
-                      <li>Dedicated Development Teams</li>
-                      <li>Offshore Development Center (ODC)</li>
-                      <li>Technical Resource Augmentation</li>
-                    </ul>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={200}>
-                  <div className="service-item" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
-                    <h3 style={{ marginTop: '0' }}>Training & Support</h3>
-                    <ul className="service-list">
-                      <li>Corporate IT Training</li>
-                      <li>Technical Certification Training</li>
-                      <li>User Training</li>
-                      <li>Software Implementation Training</li>
-                      <li>Technical Documentation</li>
-                      <li>Annual Maintenance Contracts (AMC)</li>
-                    </ul>
-                  </div>
-                </ScrollReveal>
+                {SERVICES_DATA.map((service, index) => (
+                  <ScrollReveal key={index} animation="fade-up" delay={(index % 4) * 80}>
+                    <div
+                      className="service-item"
+                      style={{ textAlign: 'left', alignItems: 'flex-start', cursor: 'pointer' }}
+                      onClick={() => handleHomeServiceClick(service.title)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleHomeServiceClick(service.title); }}
+                      title={`Click to inquire about ${service.title}`}
+                    >
+                      <h3 style={{ marginTop: '0' }}>{service.title}</h3>
+                      <ul className="service-list">
+                        {service.items.map((item, i) => (
+                          <li key={i}>{item}</li>
+                        ))}
+                      </ul>
+                      <div className="service-card-cta">
+                        <span>Contact Us &rarr;</span>
+                      </div>
+                    </div>
+                  </ScrollReveal>
+                ))}
               </div>
             </div>
           </section>

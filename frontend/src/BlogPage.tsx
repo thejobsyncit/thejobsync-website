@@ -471,7 +471,7 @@ export const BlogSection = ({ setActiveTab }: { setActiveTab: (tab: string) => v
   }
 
   return (
-    <section className="blog-section" style={{ padding: '80px 0', backgroundColor: '#f8fafc' }}>
+    <section className="blog-section" style={{ padding: '80px 0', backgroundColor: 'var(--pastel-bg-alt, #e3eff1)' }}>
       <div className="container">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px', flexWrap: 'wrap', gap: '20px' }}>
           <div>
@@ -587,22 +587,33 @@ export const BlogPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void
   return (
     <div className="blog-page">
 
-      {/* Hero Header */}
-      <div style={{ background: 'var(--navy-gradient)', color: 'white', padding: '75px 0', textAlign: 'center', borderBottom: '3px solid var(--primary-cyan)' }}>
-        <div className="container">
-          <span style={{ background: 'rgba(43, 182, 180, 0.15)', color: 'var(--primary-cyan)', padding: '8px 20px', borderRadius: '30px', fontWeight: '800', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1.5px', display: 'inline-block', marginBottom: '16px', border: '1px solid rgba(43, 182, 180, 0.3)' }}>
-            LATEST INSIGHTS & ARTICLES
-          </span>
-          <h1 style={{ fontSize: '38px', fontWeight: '900', color: '#ffffff', marginBottom: '12px' }}>
-            The Jobsync Technology Blog
-          </h1>
-          <p style={{ maxWidth: '720px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: '1.6' }}>
-            Explore industry insights, technology trends, and architectural best practices from our cloud, cybersecurity, and software experts.
-          </p>
+      <div style={{ background: 'linear-gradient(135deg, #040914 0%, #091322 50%, #0c1a2e 100%)', color: '#ffffff', padding: '60px 0 75px', position: 'relative', borderBottom: '1px solid rgba(43, 182, 180, 0.25)' }}>
+        <div className="container" style={{ position: 'relative' }}>
+          <div className="breadcrumb" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255, 255, 255, 0.08)', padding: '6px 18px', borderRadius: '30px', fontSize: '13px', border: '1px solid rgba(43, 182, 180, 0.3)', marginBottom: '24px' }}>
+            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('home'); }} style={{ color: '#cbd5e1', textDecoration: 'none', fontWeight: '600' }}>
+              Home
+            </a>
+            <span style={{ color: '#cbd5e1', opacity: 0.6, fontSize: '12px' }}>/</span>
+            <span style={{ color: '#38bdf8', fontWeight: '700' }}>
+              Blog
+            </span>
+          </div>
+
+          <div style={{ textAlign: 'center' }}>
+            <span style={{ background: 'rgba(43, 182, 180, 0.18)', color: '#00f5d4', padding: '8px 22px', borderRadius: '30px', fontWeight: '800', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1.5px', display: 'inline-block', marginBottom: '18px', border: '1px solid rgba(43, 182, 180, 0.4)', boxShadow: '0 4px 15px rgba(0, 245, 212, 0.15)' }}>
+              LATEST INSIGHTS & ARTICLES
+            </span>
+            <h1 style={{ fontSize: '42px', fontWeight: '900', color: '#ffffff', marginBottom: '14px', letterSpacing: '-0.5px' }}>
+              Insights & <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Tech Innovation</span>
+            </h1>
+            <p style={{ maxWidth: '720px', margin: '0 auto', color: '#e2e8f0', fontSize: '17px', lineHeight: '1.6', fontWeight: '400' }}>
+              Stay ahead of the curve with expert analysis, industry trends, and technology insights from The JobSync.
+            </p>
+          </div>
         </div>
       </div>
 
-      <div style={{ padding: '60px 0 90px', backgroundColor: '#f8fafc' }}>
+      <div style={{ padding: '60px 0 90px', background: 'transparent' }}>
         <div className="container">
           {selectedPost ? (
             /* DETAILED POST READER VIEW */
@@ -727,11 +738,11 @@ export const BlogPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void
                       <article
                         key={post.id}
                         style={{
-                          background: '#ffffff',
+                          background: 'var(--pastel-card, #f4fbfb)',
                           borderRadius: '20px',
                           overflow: 'hidden',
-                          boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                          border: '1px solid #e2e8f0',
+                          boxShadow: '0 10px 30px rgba(22,43,76,0.06)',
+                          border: '1px solid var(--pastel-border, rgba(43, 182, 180, 0.22))',
                           display: 'flex',
                           flexDirection: 'column',
                           justifyContent: 'space-between',
