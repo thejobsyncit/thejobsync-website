@@ -36,29 +36,32 @@ const FOUNDER = {
 // Provide your custom text below. Any field left empty ("") or blank will be hidden automatically.
 const ABOUT_CONTENT = {
   // Mission statement placeholder (empty "" hides the mission card)
-  mission: 'To empower organizations worldwide by accelerating digital transformation, engineering robust technology solutions, and connecting businesses with exceptional tech talent to drive sustainable growth.',
-
+  mission: 'To help organizations grow with reliable technology and the right talent. We deliver practical IT consulting, software, and staffing solutions that solve real business problems and create lasting value for our clients.',
   // Vision statement placeholder (empty "" hides the vision card)
-  vision: 'To be the globally trusted technology and talent partner, recognized for client-centric consulting, innovative digital capabilities, and transformative business outcomes.',
+  vision: 'To be a trusted global technology and talent partner, known for quality, integrity, and long-term relationships with the businesses and professionals we serve.',
 
   // Core values placeholders (empty text "" hides that specific card)
   // Titles: Customer Focus, Quality, Innovation, Expertise
   values: [
     {
       title: 'Customer Focus',
-      text: 'Partnering closely with startups, SMEs, and enterprises to understand unique challenges and deliver tailored, high-impact technology solutions.',
+      text: 'We start with your goals and build solutions around your business, not ours.',
     },
     {
       title: 'Quality',
-      text: 'Maintaining uncompromising standards in software development, cloud infrastructure, and end-to-end technology service delivery.',
+      text: 'We hold our work to a high standard, from the first consultation to ongoing support.',
     },
     {
       title: 'Innovation',
-      text: 'Harnessing modern technologies—from cloud architecture to AI—to give our clients a competitive edge in rapidly evolving markets.',
+      text: 'We use modern technology thoughtfully to help businesses improve and scale.',
     },
     {
       title: 'Expertise',
-      text: 'Bringing deep industry knowledge, seasoned IT consultants, and proven methodologies to every technology engagement.',
+      text: 'Our consultants and specialists bring hands-on knowledge across many technology areas.',
+    },
+    {
+      title: 'Integrity',
+      text: 'We communicate openly and deliver what we promise.',
     },
   ],
 };
@@ -122,7 +125,7 @@ const ScrollReveal = ({
   );
 };
 
-const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
+const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: string) => void }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -151,15 +154,33 @@ const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
     setSuccessMsg('');
     setErrorMsg('');
 
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const data = {
-      name: formData.get('name') as string,
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string,
-      message: formData.get('message') as string,
+      name: (formData.get('name') as string || '').trim(),
+      email: (formData.get('email') as string || '').trim(),
+      phone: (formData.get('phone') as string || '').trim(),
+      message: (formData.get('message') as string || '').trim(),
     };
 
     try {
+      const web3Key = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'a7cd1aa3-f5a4-4f75-8c7d-0e6d032a3a13';
+      if (web3Key) {
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: web3Key,
+            subject: `Website Inquiry from ${data.name}`,
+            from_name: 'The JobSync Website',
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            message: data.message,
+          }),
+        }).catch((err) => console.warn('Web3Forms dispatch note:', err));
+      }
+
       let apiUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '';
       if (!apiUrl) {
         apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
@@ -168,23 +189,24 @@ const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
         apiUrl = `https://${apiUrl}`;
       }
       apiUrl = apiUrl.replace(/\/+$/, '');
+
       const response = await fetch(`${apiUrl}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({}));
 
-      if (response.ok && result.success) {
-        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully.");
-        (e.target as HTMLFormElement).reset();
+      if (response.ok && (result.success || response.status === 200)) {
+        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsyn.com.");
+        form.reset();
         setMessage('');
       } else {
-        setErrorMsg(result.error || "Failed to send email. Please try again later.");
+        setErrorMsg(result.error || "Failed to submit inquiry. Please try again.");
       }
     } catch (error) {
-      setErrorMsg("Failed to send email. Please try again later.");
+      setErrorMsg("Network error: Unable to connect to server. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -192,19 +214,74 @@ const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
 
   return (
     <div className="contact-page">
-      <div className="contact-hero">
-        <div className="container">
-          <h1>Contact Us</h1>
-          <div className="breadcrumb">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
-            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('home'); }} style={{ color: 'white', textDecoration: 'none' }}>Home</a>
-            <span className="separator">&gt;</span>
-            <span>Contact</span>
-          </div>
+      {/* Hero Header - Merged seamlessly with the page */}
+      <div
+        className="contact-hero contact-hero-merged"
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          padding: '70px 0 90px',
+          borderBottom: 'none',
+          background: 'radial-gradient(circle at 50% 20%, rgba(43, 182, 180, 0.15) 0%, transparent 60%), linear-gradient(135deg, #071224 0%, #0b1a30 50%, #102442 100%)',
+          textAlign: 'center'
+        }}
+      >
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <span
+            style={{
+              background: 'rgba(43, 182, 180, 0.16)',
+              color: '#2bb6b4',
+              padding: '6px 20px',
+              borderRadius: '30px',
+              fontWeight: 800,
+              fontSize: '12px',
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              display: 'inline-block',
+              marginBottom: '16px',
+              border: '1px solid rgba(43, 182, 180, 0.35)'
+            }}
+          >
+            GET IN TOUCH
+          </span>
+          <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#ffffff', marginBottom: '12px', letterSpacing: '-0.5px' }}>
+            Contact <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Us</span>
+          </h1>
+          <p style={{ maxWidth: '640px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
+            Have questions or a project in mind? Reach out to our global teams in Dubai and Chennai.
+          </p>
+        </div>
+
+        {/* Seamless Wave Divider Merging into the section below */}
+        <div
+          className="hero-wave-divider"
+          style={{
+            position: 'absolute',
+            bottom: -1,
+            left: 0,
+            right: 0,
+            lineHeight: 0,
+            pointerEvents: 'none',
+            zIndex: 3
+          }}
+        >
+          <svg
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+            style={{
+              position: 'relative',
+              display: 'block',
+              width: 'calc(100% + 1.3px)',
+              height: '52px',
+              fill: 'var(--pastel-bg, #edf7f8)'
+            }}
+          >
+            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
+          </svg>
         </div>
       </div>
 
-      <div className="contact-page-body container">
+      <div className="contact-page-body container" style={{ padding: '45px 0 80px' }}>
         <ScrollReveal animation="fade-right">
           <div className="contact-left">
             <h2>Connect with us</h2>
@@ -235,7 +312,7 @@ const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
               </div>
               <div>
                 <h3>Mail Id</h3>
-                <p>hr@thejobsync.com</p>
+                <p><a href="mailto:hr@thejobsyn.com" style={{ color: 'inherit', textDecoration: 'none' }}>hr@thejobsyn.com</a></p>
               </div>
             </div>
           </div>
@@ -283,7 +360,7 @@ const ContactPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
   );
 };
 
-const CareersPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
+const CareersPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: string) => void }) => {
   const jobs = [
     {
       title: "HR Recruiter",
@@ -373,19 +450,74 @@ const CareersPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) 
 
   return (
     <div className="careers-page">
-      <div className="contact-hero">
-        <div className="container">
-          <h1>Careers</h1>
-          <div className="breadcrumb">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
-            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('home'); }} style={{ color: 'white', textDecoration: 'none' }}>Home</a>
-            <span className="separator">&gt;</span>
-            <span>Careers</span>
-          </div>
+      {/* Hero Header - Merged seamlessly with the page */}
+      <div
+        className="contact-hero careers-hero-merged"
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          padding: '70px 0 90px',
+          borderBottom: 'none',
+          background: 'radial-gradient(circle at 50% 20%, rgba(43, 182, 180, 0.15) 0%, transparent 60%), linear-gradient(135deg, #071224 0%, #0b1a30 50%, #102442 100%)',
+          textAlign: 'center'
+        }}
+      >
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <span
+            style={{
+              background: 'rgba(43, 182, 180, 0.16)',
+              color: '#2bb6b4',
+              padding: '6px 20px',
+              borderRadius: '30px',
+              fontWeight: 800,
+              fontSize: '12px',
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              display: 'inline-block',
+              marginBottom: '16px',
+              border: '1px solid rgba(43, 182, 180, 0.35)'
+            }}
+          >
+            CAREERS & OPPORTUNITIES
+          </span>
+          <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#ffffff', marginBottom: '12px', letterSpacing: '-0.5px' }}>
+            Explore <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Careers</span>
+          </h1>
+          <p style={{ maxWidth: '640px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
+            Join a dynamic global team shaping the future of IT consulting, software engineering, and digital solutions.
+          </p>
+        </div>
+
+        {/* Seamless Wave Divider Merging into the section below */}
+        <div
+          className="hero-wave-divider"
+          style={{
+            position: 'absolute',
+            bottom: -1,
+            left: 0,
+            right: 0,
+            lineHeight: 0,
+            pointerEvents: 'none',
+            zIndex: 3
+          }}
+        >
+          <svg
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+            style={{
+              position: 'relative',
+              display: 'block',
+              width: 'calc(100% + 1.3px)',
+              height: '52px',
+              fill: 'var(--pastel-bg, #edf7f8)'
+            }}
+          >
+            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
+          </svg>
         </div>
       </div>
 
-      <div className="container" style={{ padding: '60px 0' }}>
+      <div className="container" style={{ padding: '45px 0 70px' }}>
         <ScrollReveal animation="fade-up">
           <div className="careers-intro">
             <h2>Join The JobSync</h2>
@@ -511,30 +643,19 @@ const FounderSection = () => {
               )}
 
               {/* Action Links */}
-              {(FOUNDER.linkedin || FOUNDER.email) && (
+              {FOUNDER.linkedin && (
                 <div className="founder-links">
-                  {FOUNDER.linkedin && (
-                    <a
-                      href={FOUNDER.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="founder-btn-linkedin"
-                    >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28" />
-                      </svg>
-                      <span>Connect on LinkedIn</span>
-                    </a>
-                  )}
-                  {FOUNDER.email && (
-                    <a href={`mailto:${FOUNDER.email}`} className="founder-btn-email">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                        <polyline points="22,6 12,13 2,6" />
-                      </svg>
-                      <span>Email Founder</span>
-                    </a>
-                  )}
+                  <a
+                    href={FOUNDER.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="founder-btn-linkedin"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28" />
+                    </svg>
+                    <span>Connect on LinkedIn</span>
+                  </a>
                 </div>
               )}
             </div>
@@ -552,21 +673,75 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
 
   return (
     <div className="about-page">
-      {/* Hero Header */}
-      <div className="contact-hero">
-        <div className="container">
-          <h1>About Us</h1>
-          <div className="breadcrumb">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
-            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('home'); }} style={{ color: 'white', textDecoration: 'none' }}>Home</a>
-            <span className="separator">&gt;</span>
-            <span>About Us</span>
-          </div>
+      {/* Hero Header - Merged seamlessly with the page */}
+      <div
+        className="contact-hero about-hero-merged"
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          padding: '70px 0 90px',
+          borderBottom: 'none',
+          background: 'radial-gradient(circle at 50% 20%, rgba(43, 182, 180, 0.15) 0%, transparent 60%), linear-gradient(135deg, #071224 0%, #0b1a30 50%, #102442 100%)',
+          textAlign: 'center'
+        }}
+      >
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <span
+            style={{
+              background: 'rgba(43, 182, 180, 0.16)',
+              color: '#2bb6b4',
+              padding: '6px 20px',
+              borderRadius: '30px',
+              fontWeight: 800,
+              fontSize: '12px',
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              display: 'inline-block',
+              marginBottom: '16px',
+              border: '1px solid rgba(43, 182, 180, 0.35)'
+            }}
+          >
+            WHO WE ARE
+          </span>
+          <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#ffffff', marginBottom: '12px', letterSpacing: '-0.5px' }}>
+            About <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Us</span>
+          </h1>
+          <p style={{ maxWidth: '640px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
+            Empowering global organizations with modern technology consulting and premier engineering talent.
+          </p>
+        </div>
+
+        {/* Seamless Wave Divider Merging into the section below */}
+        <div
+          className="hero-wave-divider"
+          style={{
+            position: 'absolute',
+            bottom: -1,
+            left: 0,
+            right: 0,
+            lineHeight: 0,
+            pointerEvents: 'none',
+            zIndex: 3
+          }}
+        >
+          <svg
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+            style={{
+              position: 'relative',
+              display: 'block',
+              width: 'calc(100% + 1.3px)',
+              height: '52px',
+              fill: 'var(--pastel-bg, #edf7f8)'
+            }}
+          >
+            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
+          </svg>
         </div>
       </div>
 
       {/* 1. Layout Fix: About Our Company Two-Column Block (Equal Height on Desktop) */}
-      <section className="about bg-white" style={{ padding: '80px 0 70px' }}>
+      <section className="about bg-white" style={{ padding: '45px 0 70px' }}>
         <div className="container">
           <ScrollReveal animation="fade-up">
             <div className="section-title">
@@ -743,7 +918,7 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                   </svg>
                 </div>
                 <h3>IT Consulting & Services</h3>
-                <p>We partner with startups, SMEs, and large enterprises to deliver strategic consulting, custom software development, cloud solutions, cybersecurity, managed IT services, and enterprise applications.</p>
+                <p>We help startups, SMEs, and large enterprises plan and build technology that fits their business. Our services cover consulting, custom software, cloud, cybersecurity, managed IT, and enterprise applications.</p>
                 <ul className="pillar-checklist">
                   <li>
                     <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
@@ -751,11 +926,11 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                   </li>
                   <li>
                     <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Cloud Architecture & Migration</span>
+                    <span>Cloud Solution & Migration</span>
                   </li>
                   <li>
                     <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Cybersecurity & Infrastructure</span>
+                    <span>Cybersecurity & Managed IT</span>
                   </li>
                 </ul>
               </div>
@@ -773,7 +948,7 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                   </svg>
                 </div>
                 <h3>IT Staffing & Recruitment</h3>
-                <p>Accelerate project delivery with vetted top-tier engineers, tech leads, and specialized IT consultants. Our recruitment and talent acquisition connects businesses with exceptional tech talent.</p>
+                <p>We connect businesses with skilled engineers, technical leads, and IT specialists through contract, permanent, and dedicated-team hiring. We also help professionals find the right opportunities with leading employers.</p>
                 <ul className="pillar-checklist">
                   <li>
                     <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
@@ -781,11 +956,11 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                   </li>
                   <li>
                     <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Dedicated Engineering Teams</span>
+                    <span>Dedicated Development Teams</span>
                   </li>
                   <li>
                     <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Rapid Candidate Deployment</span>
+                    <span>Technical Resource Augmentation</span>
                   </li>
                 </ul>
               </div>
@@ -802,15 +977,15 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                   </svg>
                 </div>
                 <h3>Global Presence</h3>
-                <p>Operating across Dubai (UAE) and Chennai (India), delivering trusted cross-border technology consulting, responsive communication, and seamless international delivery capabilities.</p>
+                <p>With offices in Dubai (UAE) and Chennai (India), we support clients and candidates across India, the UAE, Singapore, and other international markets, keeping communication clear and projects moving.</p>
                 <ul className="pillar-checklist">
                   <li>
                     <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Dubai Middle East Hub</span>
+                    <span>Dubai Office, UAE</span>
                   </li>
                   <li>
                     <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Chennai Engineering Center</span>
+                    <span>Chennai Office, India</span>
                   </li>
                   <li>
                     <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
@@ -1046,25 +1221,7 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
 };
 
 const SERVICES_DATA = [
-  {
-    title: "IT Strategy Consulting",
-    items: [
-      "Digital Transformation Consulting",
-      "Business Process Consulting",
-      "Technology Advisory Services",
-      "Enterprise Architecture Consulting",
-      "IT Infrastructure Consulting",
-      "Cloud Strategy Consulting",
-      "Cybersecurity Consulting",
-      "Data Analytics & BI Consulting",
-      "AI & Machine Learning Consulting",
-      "ERP Consulting (SAP, Oracle, Dynamics)",
-      "CRM Consulting (Salesforce, Zoho, HubSpot)",
-      "Project Management Consulting",
-      "IT Governance & Compliance",
-      "Disaster Recovery & Business Continuity"
-    ]
-  },
+  
   {
     title: "Software Development",
     items: [
@@ -1127,6 +1284,25 @@ const SERVICES_DATA = [
       "Data Center Management",
       "IT Asset Management",
       "Helpdesk & Technical Support"
+    ]
+  },
+  {
+    title: "IT Strategy Consulting",
+    items: [
+      "Digital Transformation Consulting",
+      "Business Process Consulting",
+      "Technology Advisory Services",
+      "Enterprise Architecture Consulting",
+      "IT Infrastructure Consulting",
+      "Cloud Strategy Consulting",
+      "Cybersecurity Consulting",
+      "Data Analytics & BI Consulting",
+      "AI & Machine Learning Consulting",
+      "ERP Consulting (SAP, Oracle, Dynamics)",
+      "CRM Consulting (Salesforce, Zoho, HubSpot)",
+      "Project Management Consulting",
+      "IT Governance & Compliance",
+      "Disaster Recovery & Business Continuity"
     ]
   },
   {
@@ -1197,50 +1373,126 @@ const ServicesPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void })
 
   return (
     <div className="services-page">
-      <div className="contact-hero">
-        <div className="container">
-          <h1>Our Services</h1>
-          <div className="breadcrumb">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
-            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('home'); }} style={{ color: 'white', textDecoration: 'none' }}>Home</a>
-            <span className="separator">&gt;</span>
-            <span>Services</span>
-          </div>
+      {/* Hero Header - Merged seamlessly with the page */}
+      <div
+        className="contact-hero services-hero-merged"
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          padding: '70px 0 90px',
+          borderBottom: 'none',
+          background: 'radial-gradient(circle at 50% 20%, rgba(43, 182, 180, 0.15) 0%, transparent 60%), linear-gradient(135deg, #071224 0%, #0b1a30 50%, #102442 100%)',
+          textAlign: 'center'
+        }}
+      >
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <span
+            style={{
+              background: 'rgba(43, 182, 180, 0.16)',
+              color: '#2bb6b4',
+              padding: '6px 20px',
+              borderRadius: '30px',
+              fontWeight: 800,
+              fontSize: '12px',
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              display: 'inline-block',
+              marginBottom: '16px',
+              border: '1px solid rgba(43, 182, 180, 0.35)'
+            }}
+          >
+            WHAT WE OFFER
+          </span>
+          <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#ffffff', marginBottom: '12px', letterSpacing: '-0.5px' }}>
+            Our <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Services</span>
+          </h1>
+          <p style={{ maxWidth: '640px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
+            Comprehensive technology consulting, enterprise software engineering, and strategic IT solutions tailored to your business.
+          </p>
+        </div>
+
+        {/* Seamless Wave Divider Merging into the section below */}
+        <div
+          className="hero-wave-divider"
+          style={{
+            position: 'absolute',
+            bottom: -1,
+            left: 0,
+            right: 0,
+            lineHeight: 0,
+            pointerEvents: 'none',
+            zIndex: 3
+          }}
+        >
+          <svg
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+            style={{
+              position: 'relative',
+              display: 'block',
+              width: 'calc(100% + 1.3px)',
+              height: '52px',
+              fill: 'var(--pastel-bg, #edf7f8)'
+            }}
+          >
+            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
+          </svg>
         </div>
       </div>
 
-      <section className="services" style={{ padding: '60px 0' }}>
+      <section className="services" style={{ padding: '45px 0 80px' }}>
         <div className="container">
           <ScrollReveal animation="fade-up">
-            <div className="services-header">
-              <h2>Comprehensive IT Solutions</h2>
-              <div>
-                <span style={{ marginRight: '10px', cursor: 'pointer' }}>&lt;</span>
-                <span style={{ cursor: 'pointer' }}>&gt;</span>
-              </div>
+            <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 45px' }}>
+              <span
+                style={{
+                  background: 'rgba(43, 182, 180, 0.12)',
+                  color: '#0f766e',
+                  padding: '6px 18px',
+                  borderRadius: '30px',
+                  fontWeight: 800,
+                  fontSize: '12px',
+                  letterSpacing: '1.5px',
+                  textTransform: 'uppercase',
+                  display: 'inline-block',
+                  marginBottom: '14px',
+                  border: '1px solid rgba(43, 182, 180, 0.3)'
+                }}
+              >
+                END-TO-END CAPABILITIES
+              </span>
+              <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '14px' }}>
+                Comprehensive IT Solutions
+              </h2>
+              <p style={{ color: '#64748b', fontSize: '16px', lineHeight: 1.6 }}>
+                Explore our full spectrum of technology consulting, custom software engineering, cloud architectures, and dedicated tech talent to accelerate your digital transformation.
+              </p>
             </div>
           </ScrollReveal>
 
-          <div className="services-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
+          <div className="services-grid">
             {SERVICES_DATA.map((service, index) => (
-              <ScrollReveal key={index} animation="fade-up" delay={(index % 4) * 80}>
+              <ScrollReveal key={index} animation="fade-up" delay={(index % 3) * 80}>
                 <div
                   className="service-item"
-                  style={{ textAlign: 'left', alignItems: 'flex-start', cursor: 'pointer' }}
                   onClick={() => handleServiceClick(service.title)}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleServiceClick(service.title); }}
                   title={`Click to inquire about ${service.title}`}
                 >
-                  <h3 style={{ marginTop: '0' }}>{service.title}</h3>
-                  <ul className="service-list">
-                    {service.items.map((item, i) => (
-                      <li key={i}>{item}</li>
-                    ))}
-                  </ul>
+                  <h3>{service.title}</h3>
+
+                  <div className="service-list-wrap">
+                    <ul className="service-list">
+                      {service.items.map((item, i) => (
+                        <li key={i}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
                   <div className="service-card-cta">
-                    <span>Contact Us &rarr;</span>
+                    <span>CONTACT US &rarr;</span>
                   </div>
                 </div>
               </ScrollReveal>
@@ -1267,7 +1519,7 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
       }}
       role="presentation"
     >
-      {/* 1. Subtle Blurred Background Image Layer (clear skyline with subtle depth-of-field) */}
+      {/* 1. Subtle Faded Background Image Layer (clear skyline faded into dark theme) */}
       <div
         className="hero-bg-layer"
         aria-hidden="true"
@@ -1281,8 +1533,7 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
           backgroundSize: 'cover',
           backgroundPosition: 'center bottom',
           backgroundRepeat: 'no-repeat',
-          filter: 'blur(1.5px)',
-          transform: 'scale(1.02)',
+          opacity: 0.72,
           zIndex: 1,
           pointerEvents: 'none'
         }}
@@ -1408,15 +1659,33 @@ function App() {
     setSuccessMsg('');
     setErrorMsg('');
 
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const data = {
-      name: formData.get('name') as string,
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string,
-      message: formData.get('message') as string,
+      name: (formData.get('name') as string || '').trim(),
+      email: (formData.get('email') as string || '').trim(),
+      phone: (formData.get('phone') as string || '').trim(),
+      message: (formData.get('message') as string || '').trim(),
     };
 
     try {
+      const web3Key = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'a7cd1aa3-f5a4-4f75-8c7d-0e6d032a3a13';
+      if (web3Key) {
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: web3Key,
+            subject: `Website Inquiry from ${data.name}`,
+            from_name: 'The JobSync Website',
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            message: data.message,
+          }),
+        }).catch((err) => console.warn('Web3Forms dispatch note:', err));
+      }
+
       const apiUrl = import.meta.env.VITE_API_BASE_URL !== undefined ? import.meta.env.VITE_API_BASE_URL : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '');
       const response = await fetch(`${apiUrl}/api/contact`, {
         method: 'POST',
@@ -1424,16 +1693,16 @@ function App() {
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({}));
 
-      if (response.ok && result.success) {
-        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully.");
-        (e.target as HTMLFormElement).reset();
+      if (response.ok && (result.success || response.status === 200)) {
+        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsyn.com.");
+        form.reset();
       } else {
-        setErrorMsg(result.error || "Failed to send email. Please try again later.");
+        setErrorMsg(result.error || "Failed to submit inquiry. Please try again.");
       }
     } catch (error) {
-      setErrorMsg("Failed to send email. Please try again later.");
+      setErrorMsg("Network error: Unable to connect to server. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -1461,7 +1730,7 @@ function App() {
       <header className="header">
         <div className="container">
           <div className="logo" onClick={() => handleNavClick('home')} style={{ cursor: 'pointer' }}>
-            <img src="/jobsync-logo.jpg" alt="The Jobsync Logo" width="45" height="45" style={{ marginRight: '10px', objectFit: 'contain' }} />
+            <img src="/jobsync-logo.png" alt="The Jobsync Logo" width="45" height="45" className="logo-img" style={{ marginRight: '10px', objectFit: 'contain' }} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span className="logo-text">The Jobsync</span>
               <span style={{ fontSize: '9px', color: '#94a3b8', letterSpacing: '1px' }}>IT CONSULTING & SERVICES</span>
@@ -1520,7 +1789,7 @@ function App() {
                     <div className="welcome-card-img-wrapper">
                       <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=1000&auto=format&fit=crop&q=90" alt="Software Engineering" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
-                        <span className="welcome-badge">💻 SOFTWARE ENGINEERING</span>
+                        <span className="welcome-badge">  SOFTWARE ENGINEERING</span>
                       </div>
                     </div>
                     <div className="welcome-card-content">
@@ -1538,7 +1807,7 @@ function App() {
                     <div className="welcome-card-img-wrapper">
                       <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1000&auto=format&fit=crop&q=90" alt="Cloud Infrastructure" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
-                        <span className="welcome-badge">☁️ CLOUD ARCHITECTURE</span>
+                        <span className="welcome-badge">  CLOUD ARCHITECTURE</span>
                       </div>
                     </div>
                     <div className="welcome-card-content">
@@ -1556,7 +1825,7 @@ function App() {
                     <div className="welcome-card-img-wrapper">
                       <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1000&auto=format&fit=crop&q=90" alt="Cybersecurity SOC" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
-                        <span className="welcome-badge">🛡️ CYBERSECURITY & SOC</span>
+                        <span className="welcome-badge">  CYBERSECURITY & SOC</span>
                       </div>
                     </div>
                     <div className="welcome-card-content">
@@ -1574,7 +1843,7 @@ function App() {
                     <div className="welcome-card-img-wrapper">
                       <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1000&auto=format&fit=crop&q=90" alt="Data Analytics & AI" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
-                        <span className="welcome-badge">🤖 DATA & AI SYSTEMS</span>
+                        <span className="welcome-badge">  DATA & AI SYSTEMS</span>
                       </div>
                     </div>
                     <div className="welcome-card-content">
@@ -1592,7 +1861,7 @@ function App() {
                     <div className="welcome-card-img-wrapper">
                       <img src="https://images.unsplash.com/photo-1531497865144-0464ef8fb9a9?w=1000&auto=format&fit=crop&q=90" alt="Enterprise Systems" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
-                        <span className="welcome-badge">📊 ENTERPRISE SYSTEMS</span>
+                        <span className="welcome-badge">  ENTERPRISE SYSTEMS</span>
                       </div>
                     </div>
                     <div className="welcome-card-content">
@@ -1610,7 +1879,7 @@ function App() {
                     <div className="welcome-card-img-wrapper">
                       <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1000&auto=format&fit=crop&q=90" alt="IT Talent Augmentation" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
-                        <span className="welcome-badge">👥 TALENT AUGMENTATION</span>
+                        <span className="welcome-badge">  TALENT AUGMENTATION</span>
                       </div>
                     </div>
                     <div className="welcome-card-content">
@@ -1650,12 +1919,12 @@ function App() {
                 <ScrollReveal animation="fade-left">
                   <div className="about-content">
                     <span className="about-tag">About The JobSync</span>
-                    <h3>IT Consulting & Services</h3>
+                    <h3>Where Technology Meets Talent</h3>
                     <div className="about-highlight">
-                      The JobSync is a global IT consulting and technology services company committed to helping organizations accelerate digital transformation, optimize business operations, and achieve sustainable growth through innovative technology solutions.
+                      The Jobsync is a global IT consulting and staffing company. We help organizations choose the right technology and build the right teams, from our offices in Dubai and Chennai.
                     </div>
-                    <p>We partner with startups, SMEs, and large enterprises to deliver strategic consulting, custom software development, cloud solutions, cybersecurity, managed IT services, enterprise applications, AI-driven innovation, and IT staffing. Our experienced consultants and technology specialists provide end-to-end solutions that improve operational efficiency, reduce costs, enhance security, and enable business scalability.</p>
-                    <p>Our customer-centric approach, industry expertise, and commitment to quality make The JobSync a trusted technology partner for organizations across multiple industries worldwide.</p>
+                    <p>Whether you are a startup, a growing business, or a large enterprise, we bring together technical expertise and recruitment experience under one roof. </p>
+                    <p>From cloud and cybersecurity to custom software and dedicated teams, we focus on solutions that fit your goals and your budget. </p>
 
                     <div className="about-bottom">
                       <button className="btn-solid" style={{ padding: '10px 25px' }} onClick={(e) => { e.preventDefault(); setActiveTab('about'); window.scrollTo(0, 0); }}>READ MORE</button>
@@ -1667,38 +1936,59 @@ function App() {
           </section>
 
           {/* Services Section */}
-          <section className="services" id="services">
+          <section className="services" id="services" style={{ padding: '60px 0 85px' }}>
             <div className="container">
               <ScrollReveal animation="fade-up">
-                <div className="services-header">
-                  <h2>Our Services</h2>
-                  <div>
-                    <span style={{ marginRight: '10px', cursor: 'pointer' }}>&lt;</span>
-                    <span style={{ cursor: 'pointer' }}>&gt;</span>
-                  </div>
+                <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 45px' }}>
+                  <span
+                    style={{
+                      background: 'rgba(43, 182, 180, 0.12)',
+                      color: '#0f766e',
+                      padding: '6px 18px',
+                      borderRadius: '30px',
+                      fontWeight: 800,
+                      fontSize: '12px',
+                      letterSpacing: '1.5px',
+                      textTransform: 'uppercase',
+                      display: 'inline-block',
+                      marginBottom: '14px',
+                      border: '1px solid rgba(43, 182, 180, 0.3)'
+                    }}
+                  >
+                    OUR CAPABILITIES
+                  </span>
+                  <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '14px' }}>
+                    Our Services
+                  </h2>
+                  <p style={{ color: '#64748b', fontSize: '16px', lineHeight: 1.6 }}>
+                    From strategic IT consulting to enterprise cloud transformations, discover how we empower organizations to innovate and scale.
+                  </p>
                 </div>
               </ScrollReveal>
 
-              <div className="services-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
+              <div className="services-grid">
                 {SERVICES_DATA.map((service, index) => (
-                  <ScrollReveal key={index} animation="fade-up" delay={(index % 4) * 80}>
+                  <ScrollReveal key={index} animation="fade-up" delay={(index % 3) * 80}>
                     <div
                       className="service-item"
-                      style={{ textAlign: 'left', alignItems: 'flex-start', cursor: 'pointer' }}
                       onClick={() => handleHomeServiceClick(service.title)}
                       role="button"
                       tabIndex={0}
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleHomeServiceClick(service.title); }}
                       title={`Click to inquire about ${service.title}`}
                     >
-                      <h3 style={{ marginTop: '0' }}>{service.title}</h3>
-                      <ul className="service-list">
-                        {service.items.map((item, i) => (
-                          <li key={i}>{item}</li>
-                        ))}
-                      </ul>
+                      <h3>{service.title}</h3>
+
+                      <div className="service-list-wrap">
+                        <ul className="service-list">
+                          {service.items.map((item, i) => (
+                            <li key={i}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+
                       <div className="service-card-cta">
-                        <span>Contact Us &rarr;</span>
+                        <span>CONTACT US &rarr;</span>
                       </div>
                     </div>
                   </ScrollReveal>
@@ -1732,7 +2022,7 @@ function App() {
                       </div>
                       <div>
                         <h3>India Office</h3>
-                        <p>Tamilnadu, Chennai<br />+91 9789569391</p>
+                        <p> Tamilnadu, Chennai<br />+91 9789569391</p>
                       </div>
                     </div>
                     
@@ -1742,7 +2032,7 @@ function App() {
                       </div>
                       <div>
                         <h3>Mail Id</h3>
-                        <p>hr@thejobsync.com</p>
+                        <p>hr@thejobsyn.com</p>
                       </div>
                     </div>
                   </div>
@@ -1801,7 +2091,7 @@ function App() {
           <div className="footer-grid">
             <div className="footer-col">
               <div className="logo" style={{ marginBottom: '20px' }}>
-                <img src="/jobsync-logo.jpg" alt="The Jobsync Logo" width="45" height="45" style={{ marginRight: '10px', objectFit: 'contain' }} />
+                <img src="/jobsync-logo.png" alt="The Jobsync Logo" width="45" height="45" className="logo-img" style={{ marginRight: '10px', objectFit: 'contain' }} />
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <span className="logo-text" style={{ color: 'white' }}>The Jobsync</span>
                   <span style={{ fontSize: '9px', color: '#94a3b8', letterSpacing: '1px' }}>IT CONSULTING & SERVICES</span>
@@ -1867,7 +2157,7 @@ function App() {
                 
                 <li style={{marginTop: '15px'}}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                  hr@thejobsync.com
+                  hr@thejobsyn.com
                 </li>
               </ul>
             </div>

@@ -586,34 +586,73 @@ export const BlogPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void
 
   return (
     <div className="blog-page">
+      {/* Hero Header - Merged seamlessly with the page */}
+      <div
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          padding: '70px 0 90px',
+          borderBottom: 'none',
+          background: 'radial-gradient(circle at 50% 20%, rgba(43, 182, 180, 0.15) 0%, transparent 60%), linear-gradient(135deg, #071224 0%, #0b1a30 50%, #102442 100%)',
+          textAlign: 'center'
+        }}
+      >
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <span
+            style={{
+              background: 'rgba(43, 182, 180, 0.16)',
+              color: '#2bb6b4',
+              padding: '6px 20px',
+              borderRadius: '30px',
+              fontWeight: 800,
+              fontSize: '12px',
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              display: 'inline-block',
+              marginBottom: '16px',
+              border: '1px solid rgba(43, 182, 180, 0.35)'
+            }}
+          >
+            LATEST INSIGHTS & ARTICLES
+          </span>
+          <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#ffffff', marginBottom: '14px', letterSpacing: '-0.5px' }}>
+            Insights & <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Tech Innovation</span>
+          </h1>
+          <p style={{ maxWidth: '720px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
+            Stay ahead of the curve with expert analysis, industry trends, and technology insights from The JobSync.
+          </p>
+        </div>
 
-      <div style={{ background: 'linear-gradient(135deg, #040914 0%, #091322 50%, #0c1a2e 100%)', color: '#ffffff', padding: '60px 0 75px', position: 'relative', borderBottom: '1px solid rgba(43, 182, 180, 0.25)' }}>
-        <div className="container" style={{ position: 'relative' }}>
-          <div className="breadcrumb" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255, 255, 255, 0.08)', padding: '6px 18px', borderRadius: '30px', fontSize: '13px', border: '1px solid rgba(43, 182, 180, 0.3)', marginBottom: '24px' }}>
-            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('home'); }} style={{ color: '#cbd5e1', textDecoration: 'none', fontWeight: '600' }}>
-              Home
-            </a>
-            <span style={{ color: '#cbd5e1', opacity: 0.6, fontSize: '12px' }}>/</span>
-            <span style={{ color: '#38bdf8', fontWeight: '700' }}>
-              Blog
-            </span>
-          </div>
-
-          <div style={{ textAlign: 'center' }}>
-            <span style={{ background: 'rgba(43, 182, 180, 0.18)', color: '#00f5d4', padding: '8px 22px', borderRadius: '30px', fontWeight: '800', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1.5px', display: 'inline-block', marginBottom: '18px', border: '1px solid rgba(43, 182, 180, 0.4)', boxShadow: '0 4px 15px rgba(0, 245, 212, 0.15)' }}>
-              LATEST INSIGHTS & ARTICLES
-            </span>
-            <h1 style={{ fontSize: '42px', fontWeight: '900', color: '#ffffff', marginBottom: '14px', letterSpacing: '-0.5px' }}>
-              Insights & <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Tech Innovation</span>
-            </h1>
-            <p style={{ maxWidth: '720px', margin: '0 auto', color: '#e2e8f0', fontSize: '17px', lineHeight: '1.6', fontWeight: '400' }}>
-              Stay ahead of the curve with expert analysis, industry trends, and technology insights from The JobSync.
-            </p>
-          </div>
+        {/* Seamless Wave Divider Merging into the section below */}
+        <div
+          className="hero-wave-divider"
+          style={{
+            position: 'absolute',
+            bottom: -1,
+            left: 0,
+            right: 0,
+            lineHeight: 0,
+            pointerEvents: 'none',
+            zIndex: 3
+          }}
+        >
+          <svg
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+            style={{
+              position: 'relative',
+              display: 'block',
+              width: 'calc(100% + 1.3px)',
+              height: '52px',
+              fill: 'var(--pastel-bg, #edf7f8)'
+            }}
+          >
+            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
+          </svg>
         </div>
       </div>
 
-      <div style={{ padding: '60px 0 90px', background: 'transparent' }}>
+      <div style={{ padding: '45px 0 90px', background: 'transparent' }}>
         <div className="container">
           {selectedPost ? (
             /* DETAILED POST READER VIEW */

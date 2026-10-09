@@ -82,7 +82,7 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setSuccessMsg('🎉 Thank you for your feedback! Your review is now live.');
+        setSuccessMsg('Thank you for your feedback! Your review has been submitted.');
         setFName('');
         setFRole('');
         setFCompany('');
@@ -115,8 +115,19 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
 
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <span style={{ color: 'var(--primary-cyan)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1.5px', fontSize: '13px', background: 'rgba(43, 182, 180, 0.1)', padding: '6px 16px', borderRadius: '20px', border: '1px solid rgba(43, 182, 180, 0.2)' }}>
-            ⭐ CLIENT REVIEWS & FEEDBACK
+          <span style={{
+            color: '#0f766e',
+            fontWeight: '700',
+            textTransform: 'uppercase',
+            letterSpacing: '1.5px',
+            fontSize: '12px',
+            background: 'rgba(15, 118, 110, 0.08)',
+            padding: '6px 16px',
+            borderRadius: '20px',
+            border: '1px solid rgba(15, 118, 110, 0.2)',
+            display: 'inline-block'
+          }}>
+            Client Testimonials
           </span>
           <h2 style={{ fontSize: '36px', color: 'var(--logo-navy-primary)', fontWeight: '900', marginTop: '14px', marginBottom: '12px' }}>
             What Our Partners & Clients Say
@@ -126,11 +137,11 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
           </p>
         </div>
 
-        {/* Catchy Feedback Submission Banner */}
+        {/* Feedback Submission Banner */}
         <div style={{
           background: 'var(--bg-card)',
-          borderRadius: '20px',
-          padding: '32px 36px',
+          borderRadius: '16px',
+          padding: '28px 36px',
           marginBottom: '45px',
           color: 'var(--text-main)',
           display: 'flex',
@@ -139,17 +150,25 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
           flexWrap: 'wrap',
           gap: '20px',
           border: '1px solid var(--card-border)',
-          boxShadow: 'var(--card-shadow)'
+          boxShadow: '0 4px 20px rgba(15, 23, 42, 0.04)'
         }}>
           <div style={{ maxWidth: '620px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(43, 182, 180, 0.12)', color: 'var(--primary-cyan)', padding: '5px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: '800', marginBottom: '10px', border: '1px solid rgba(43, 182, 180, 0.3)' }}>
-              <span>💬</span> SHARE YOUR EXPERIENCE
-            </div>
+            <span style={{
+              display: 'inline-block',
+              color: '#0f766e',
+              fontSize: '12px',
+              fontWeight: '700',
+              textTransform: 'uppercase',
+              letterSpacing: '1.2px',
+              marginBottom: '8px'
+            }}>
+              Share Your Experience
+            </span>
             <h3 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', margin: '0 0 6px 0' }}>
-              Worked with The Jobsync? We'd Love Your Feedback!
+              Worked with The Jobsync? We'd love your feedback
             </h3>
             <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6' }}>
-              Your testimonial helps us continuously elevate our IT solutions. Submit your review and join our featured partner stories.
+              Your review helps us maintain high delivery standards and guides teams looking for the right technology partner.
             </p>
           </div>
 
@@ -157,16 +176,22 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
             className="btn-solid"
             onClick={() => setShowFeedbackModal(true)}
             style={{
-              padding: '14px 30px',
-              fontSize: '15px',
-              borderRadius: '30px',
-              fontWeight: '800',
-              letterSpacing: '0.5px',
-              boxShadow: '0 10px 25px rgba(43, 182, 180, 0.3)',
-              whiteSpace: 'nowrap'
+              padding: '12px 24px',
+              fontSize: '14px',
+              borderRadius: '8px',
+              fontWeight: '700',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              whiteSpace: 'nowrap',
+              cursor: 'pointer'
             }}
           >
-            ✨ Submit Client Feedback
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+            Share Feedback
           </button>
         </div>
 
@@ -198,18 +223,20 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
 
         {/* Testimonial Cards Grid or Empty State */}
         {filteredTestimonials.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', background: '#f8fafc', borderRadius: '20px', border: '1px solid #e2e8f0', maxWidth: '600px', margin: '0 auto 50px' }}>
-            <div style={{ fontSize: '48px', marginBottom: '12px' }}>💬</div>
-            <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#0f172a', marginBottom: '8px' }}>Be the First to Share Your Feedback!</h3>
+          <div style={{ textAlign: 'center', padding: '60px 20px', background: '#f8fafc', borderRadius: '16px', border: '1px solid #e2e8f0', maxWidth: '600px', margin: '0 auto 50px' }}>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '12px' }} aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#0f172a', marginBottom: '8px' }}>Be the First to Share Your Feedback</h3>
             <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '24px', lineHeight: '1.6' }}>
               No client reviews published in this category yet. Click below to submit your experience with The Jobsync.
             </p>
             <button
               className="btn-solid"
               onClick={() => setShowFeedbackModal(true)}
-              style={{ padding: '12px 30px', borderRadius: '30px', fontSize: '14px', fontWeight: '700' }}
+              style={{ padding: '12px 28px', borderRadius: '8px', fontSize: '14px', fontWeight: '700' }}
             >
-              Submit Client Feedback &rarr;
+              Share Feedback &rarr;
             </button>
           </div>
         ) : (
@@ -350,12 +377,27 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
             </button>
 
             <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-              <div style={{ fontSize: '32px', marginBottom: '6px' }}>⭐</div>
+              <div style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                background: 'rgba(15, 118, 110, 0.1)',
+                color: '#0f766e',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 12px'
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+              </div>
               <h3 style={{ fontSize: '22px', fontWeight: '800', color: '#0f172a', margin: '0 0 6px 0' }}>
-                Share Your Experience
+                Share Your Feedback
               </h3>
               <p style={{ color: '#64748b', fontSize: '14px', margin: 0 }}>
-                We value your partnership! Submit your feedback below to be featured on our website.
+                We value your partnership. Submit your feedback below to help us continuously improve our services.
               </p>
             </div>
 
@@ -430,9 +472,9 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                     onChange={(e) => setFRating(Number(e.target.value))}
                     style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', background: '#ffffff' }}
                   >
-                    <option value={5}>⭐⭐⭐⭐⭐ (5 / 5 Stars)</option>
-                    <option value={4}>⭐⭐⭐⭐ (4 / 5 Stars)</option>
-                    <option value={3}>⭐⭐⭐ (3 / 5 Stars)</option>
+                    <option value={5}>5 Stars (Excellent)</option>
+                    <option value={4}>4 Stars (Very Good)</option>
+                    <option value={3}>3 Stars (Good)</option>
                   </select>
                 </div>
               </div>
@@ -488,30 +530,69 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
 export const TestimonialsPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
   return (
     <div className="testimonials-page">
+      {/* Hero Header - Merged seamlessly with the page */}
+      <div
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          padding: '70px 0 90px',
+          borderBottom: 'none',
+          background: 'radial-gradient(circle at 50% 20%, rgba(43, 182, 180, 0.15) 0%, transparent 60%), linear-gradient(135deg, #071224 0%, #0b1a30 50%, #102442 100%)',
+          textAlign: 'center'
+        }}
+      >
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <span
+            style={{
+              background: 'rgba(43, 182, 180, 0.16)',
+              color: '#2bb6b4',
+              padding: '6px 20px',
+              borderRadius: '30px',
+              fontWeight: 800,
+              fontSize: '12px',
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              display: 'inline-block',
+              marginBottom: '16px',
+              border: '1px solid rgba(43, 182, 180, 0.35)'
+            }}
+          >
+            VERIFIED CLIENT REVIEWS
+          </span>
+          <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#ffffff', marginBottom: '14px', letterSpacing: '-0.5px' }}>
+            What Our Clients <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Say About Us</span>
+          </h1>
+          <p style={{ maxWidth: '720px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
+            Read real feedback from CTOs, Directors, and Tech Leaders who rely on The JobSync for cloud infrastructure, custom software engineering, and strategic IT consulting.
+          </p>
+        </div>
 
-      <div style={{ background: 'linear-gradient(135deg, #040914 0%, #091322 50%, #0c1a2e 100%)', color: '#ffffff', padding: '60px 0 75px', position: 'relative', borderBottom: '1px solid rgba(43, 182, 180, 0.25)' }}>
-        <div className="container" style={{ position: 'relative' }}>
-          <div className="breadcrumb" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255, 255, 255, 0.08)', padding: '6px 18px', borderRadius: '30px', fontSize: '13px', border: '1px solid rgba(43, 182, 180, 0.3)', marginBottom: '24px' }}>
-            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('home'); }} style={{ color: '#cbd5e1', textDecoration: 'none', fontWeight: '600' }}>
-              Home
-            </a>
-            <span style={{ color: '#cbd5e1', opacity: 0.6, fontSize: '12px' }}>/</span>
-            <span style={{ color: '#38bdf8', fontWeight: '700' }}>
-              Testimonials
-            </span>
-          </div>
-
-          <div style={{ textAlign: 'center' }}>
-            <span style={{ background: 'rgba(43, 182, 180, 0.18)', color: '#00f5d4', padding: '8px 22px', borderRadius: '30px', fontWeight: '800', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1.5px', display: 'inline-block', marginBottom: '18px', border: '1px solid rgba(43, 182, 180, 0.4)', boxShadow: '0 4px 15px rgba(0, 245, 212, 0.15)' }}>
-              VERIFIED CLIENT REVIEWS
-            </span>
-            <h1 style={{ fontSize: '42px', fontWeight: '900', color: '#ffffff', marginBottom: '14px', letterSpacing: '-0.5px' }}>
-              What Our Clients <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Say About Us</span>
-            </h1>
-            <p style={{ maxWidth: '720px', margin: '0 auto', color: '#e2e8f0', fontSize: '17px', lineHeight: '1.6', fontWeight: '400' }}>
-              Read real feedback from CTOs, Directors, and Tech Leaders who rely on The JobSync for cloud infrastructure, custom software engineering, and strategic IT consulting.
-            </p>
-          </div>
+        {/* Seamless Wave Divider Merging into the section below */}
+        <div
+          className="hero-wave-divider"
+          style={{
+            position: 'absolute',
+            bottom: -1,
+            left: 0,
+            right: 0,
+            lineHeight: 0,
+            pointerEvents: 'none',
+            zIndex: 3
+          }}
+        >
+          <svg
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+            style={{
+              position: 'relative',
+              display: 'block',
+              width: 'calc(100% + 1.3px)',
+              height: '52px',
+              fill: 'var(--pastel-bg, #edf7f8)'
+            }}
+          >
+            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
+          </svg>
         </div>
       </div>
 
