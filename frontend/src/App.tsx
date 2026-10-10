@@ -1599,7 +1599,7 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
       style={{
         position: 'relative',
         overflow: 'hidden',
-        minHeight: '620px',
+        minHeight: 'clamp(730px, 88vh, 900px)',
         backgroundColor: '#0b172a',
         display: 'flex',
         alignItems: 'center'
@@ -1643,7 +1643,7 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
       />
 
       {/* 3. Existing Hero Content Sitting Directly Over Image (NO card, NO box, NO border) */}
-      <div className="container" style={{ position: 'relative', zIndex: 3, padding: '85px 20px 105px', width: '100%' }}>
+      <div className="container" style={{ position: 'relative', zIndex: 3, padding: '100px 20px 125px', width: '100%' }}>
         <div className="hero-content">
           <h1>Looking for first class IT solutions?</h1>
           <p>With over 10 years of experience helping businesses to find comprehensive technological solutions and strategic IT consulting.</p>
@@ -1676,7 +1676,7 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
             position: 'relative',
             display: 'block',
             width: 'calc(100% + 1.3px)',
-            height: '56px',
+            height: '42px',
             fill: 'var(--pastel-bg, #edf7f8)'
           }}
         >
