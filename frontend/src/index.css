@@ -631,10 +631,10 @@ a {
 .about-img-wrap {
   position: relative;
   width: 100%;
-  max-width: 490px;
+  max-width: 500px;
   height: 100%;
   min-height: 480px;
-  max-height: 560px;
+  max-height: 570px;
   margin: 0 auto;
   border-radius: 24px;
   overflow: hidden;
@@ -648,17 +648,27 @@ a {
 .about-img-wrap::before {
   display: none;
 }
-.about-img {
+.about-img-ambient-bg {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: -15%;
+  left: -15%;
+  width: 130%;
+  height: 130%;
+  object-fit: cover;
+  filter: blur(28px) brightness(0.95);
+  opacity: 0.55;
+  z-index: 0;
+  pointer-events: none;
+}
+.about-img {
+  position: relative;
   z-index: 1;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 32%;
+  object-fit: contain;
   display: block;
   transition: transform 0.4s ease;
+  filter: drop-shadow(0 12px 24px rgba(15, 23, 42, 0.2));
 }
 .about-img-wrap:hover .about-img {
   transform: scale(1.02);
