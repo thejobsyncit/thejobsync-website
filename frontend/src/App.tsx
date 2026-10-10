@@ -1889,7 +1889,7 @@ function App() {
                 <ScrollReveal animation="fade-up" delay={0}>
                   <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=1000&auto=format&fit=crop&q=90" alt="Software Engineering" className="welcome-card-img" />
+                      <img src="/custom-software.jpg" alt="Custom Software" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
                         <span className="welcome-badge">  SOFTWARE ENGINEERING</span>
                       </div>
