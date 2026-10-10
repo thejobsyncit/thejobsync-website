@@ -769,7 +769,7 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
               <div className="about-img-wrap">
                 <img src="/about.jpg" alt="About The Jobsync" className="about-img" />
                 <div className="about-img-badge">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: '2px' }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: '2px' }}>
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                     <circle cx="12" cy="10" r="3"></circle>
                   </svg>
@@ -2007,7 +2007,7 @@ function App() {
               <div className="about-grid">
                 <ScrollReveal animation="fade-right">
                   <div className="about-img-wrap">
-                    <img src="/features.png" alt="About The Jobsync" className="about-img" />
+                    <img src="/about.jpg" alt="About The Jobsync" className="about-img" />
                     <div className="about-img-badge">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: '2px' }}>
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
