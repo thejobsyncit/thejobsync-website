@@ -1925,7 +1925,7 @@ function App() {
                 <ScrollReveal animation="fade-up" delay={200}>
                   <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1000&auto=format&fit=crop&q=90" alt="Cybersecurity SOC" className="welcome-card-img" />
+                      <img src="/cybersecurity.jpg" alt="Cybersecurity" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
                         <span className="welcome-badge">  CYBERSECURITY & SOC</span>
                       </div>
