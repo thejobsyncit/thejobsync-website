@@ -1961,7 +1961,7 @@ function App() {
                 <ScrollReveal animation="fade-up" delay={100}>
                   <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="https://images.unsplash.com/photo-1531497865144-0464ef8fb9a9?w=1000&auto=format&fit=crop&q=90" alt="Enterprise Systems" className="welcome-card-img" />
+                      <img src="/enterprise-solution.jpg" alt="Enterprise Systems" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
                         <span className="welcome-badge">  ENTERPRISE SYSTEMS</span>
                       </div>
@@ -1979,7 +1979,7 @@ function App() {
                 <ScrollReveal animation="fade-up" delay={200}>
                   <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1000&auto=format&fit=crop&q=90" alt="IT Talent Augmentation" className="welcome-card-img" />
+                      <img src="/it-staffing.jpg" alt="IT Talent Augmentation" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
                         <span className="welcome-badge">  TALENT AUGMENTATION</span>
                       </div>
