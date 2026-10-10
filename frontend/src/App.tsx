@@ -767,7 +767,7 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
           <div className="about-grid">
             <ScrollReveal animation="fade-right">
               <div className="about-img-wrap">
-                <img src="/features.png" alt="About The Jobsync" className="about-img" />
+                <img src="/about.jpg" alt="About The Jobsync" className="about-img" />
                 <div className="about-img-badge">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: '2px' }}>
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -823,15 +823,15 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                     </p>
                     <ul className="mission-pillars-list">
                       <li className="mission-pillar-item">
-                        <span className="mission-pillar-bullet">✓</span>
+                        {/* <span className="mission-pillar-bullet"></span> */}
                         <span><strong>Business-Aligned Tech:</strong> Tailoring cloud, software, and systems to real commercial goals.</span>
                       </li>
                       <li className="mission-pillar-item">
-                        <span className="mission-pillar-bullet">✓</span>
+                        {/* <span className="mission-pillar-bullet"></span> */}
                         <span><strong>Verified Engineering Talent:</strong> Connecting enterprises with vetted developers and specialists.</span>
                       </li>
                       <li className="mission-pillar-item">
-                        <span className="mission-pillar-bullet">✓</span>
+                        {/* <span className="mission-pillar-bullet"></span> */}
                         <span><strong>Long-Term Delivery:</strong> Maintaining high standards from architecture through post-launch support.</span>
                       </li>
                     </ul>
@@ -856,15 +856,15 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                     </p>
                     <ul className="mission-pillars-list">
                       <li className="mission-pillar-item">
-                        <span className="mission-pillar-bullet">★</span>
+                        {/* <span className="mission-pillar-bullet"></span> */}
                         <span><strong>Cross-Border Bridges:</strong> Connecting talent and enterprises between the Middle East and South Asia.</span>
                       </li>
                       <li className="mission-pillar-item">
-                        <span className="mission-pillar-bullet">★</span>
+                        {/* <span className="mission-pillar-bullet"></span> */}
                         <span><strong>Relationship Over Transaction:</strong> Fostering high-retention client trust and career growth.</span>
                       </li>
                       <li className="mission-pillar-item">
-                        <span className="mission-pillar-bullet">★</span>
+                        {/* <span className="mission-pillar-bullet"></span> */}
                         <span><strong>Sustainable Innovation:</strong> Thoughtfully adopting AI, cloud, and security frameworks built to scale.</span>
                       </li>
                     </ul>
@@ -930,7 +930,7 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                     <div className="value-card-modern">
                       <div className="value-card-top">
                         <span className="value-card-num">{numStr}</span>
-                        <span className="value-tag-pill">PRINCIPLE</span>
+                        {/* <span className="value-tag-pill">PRINCIPLE</span> */}
                       </div>
                       <h3>{val.title}</h3>
                       <p>{val.text}</p>
