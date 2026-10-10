@@ -943,194 +943,229 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
         </section>
       )}
 
-      {/* 2c. What We Do (Three Pillar Cards reusing wording already on the site) */}
-      <section className="about-sub-section bg-soft">
-        <div className="about-divider-curve top">
-          <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
-            <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#f4f9fb" />
-          </svg>
-        </div>
+      {/* 2c & 2d. Unified Capabilities & Why Choose Us Section */}
+      <section className="capabilities-why-section">
         <div className="container">
+          {/* Part 1: What We Do */}
           <ScrollReveal animation="fade-up">
-            <div className="about-sub-header">
-              <h2>What We Do</h2>
-              <p>Reinventing how modern enterprises build software, optimize infrastructure, and secure high-caliber tech talent.</p>
+            <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 16px' }}>
+              <span className="about-header-pill">OUR PRACTICE AREAS</span>
+              <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
+                What We Do
+              </h2>
+              <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6 }}>
+                Reinventing how modern enterprises build software, optimize infrastructure, and secure high-caliber tech talent across global markets.
+              </p>
             </div>
           </ScrollReveal>
 
-          <div className="pillars-grid">
-            {/* Pillar 1: IT Consulting */}
+          <div className="practice-grid-modern">
+            {/* Practice 1: IT Consulting & Engineering */}
             <ScrollReveal animation="fade-up" delay={0}>
-              <div className="about-card-lift pillar-card">
-                <div className="about-icon-tile">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <polyline points="16 18 22 12 16 6"></polyline>
-                    <polyline points="8 6 2 12 8 18"></polyline>
-                  </svg>
+              <div className="practice-card-modern card-consulting">
+                <div className="practice-card-top">
+                  <span className="practice-chip">PRACTICE 01 • ENGINEERING</span>
+                  <span className="practice-number">01</span>
                 </div>
-                <h3>IT Consulting & Services</h3>
-                <p>We help startups, SMEs, and large enterprises plan and build technology that fits their business. Our services cover consulting, custom software, cloud, cybersecurity, managed IT, and enterprise applications.</p>
-                <ul className="pillar-checklist">
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Custom Software Development</span>
+                <h3>IT Consulting &amp; Services</h3>
+                <p>
+                  We help startups, SMEs, and large enterprises plan and build technology that fits their business. Our services cover consulting, custom software, cloud, cybersecurity, managed IT, and enterprise applications.
+                </p>
+                <ul className="practice-deliverables-list">
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Custom Software Development &amp; Modern Web Apps</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Cloud Solution & Migration</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Cloud Architecture, Optimization &amp; Migration</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Cybersecurity & Managed IT</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Cybersecurity Audits &amp; 24/7 Managed IT Support</span>
                   </li>
                 </ul>
+                <div className="practice-card-footer">
+                  <span>ENGAGEMENT MODEL</span>
+                  <span style={{ color: '#0d9488', fontWeight: 800 }}>Full Lifecycle Ownership</span>
+                </div>
               </div>
             </ScrollReveal>
 
-            {/* Pillar 2: IT Staffing */}
-            <ScrollReveal animation="fade-up" delay={100}>
-              <div className="about-card-lift pillar-card">
-                <div className="about-icon-tile">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="8.5" cy="7" r="4"></circle>
-                    <line x1="20" y1="8" x2="20" y2="14"></line>
-                    <line x1="23" y1="11" x2="17" y2="11"></line>
-                  </svg>
+            {/* Practice 2: IT Staffing & Talent Recruitment */}
+            <ScrollReveal animation="fade-up" delay={80}>
+              <div className="practice-card-modern card-staffing">
+                <div className="practice-card-top">
+                  <span className="practice-chip">PRACTICE 02 • TALENT</span>
+                  <span className="practice-number">02</span>
                 </div>
-                <h3>IT Staffing & Recruitment</h3>
-                <p>We connect businesses with skilled engineers, technical leads, and IT specialists through contract, permanent, and dedicated-team hiring. We also help professionals find the right opportunities with leading employers.</p>
-                <ul className="pillar-checklist">
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Specialized Talent Augmentation</span>
+                <h3>IT Staffing &amp; Recruitment</h3>
+                <p>
+                  We connect businesses with skilled engineers, technical leads, and IT specialists through contract, permanent, and dedicated-team hiring. We also help professionals find the right opportunities with leading employers.
+                </p>
+                <ul className="practice-deliverables-list">
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Specialized Engineering Talent Augmentation</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Dedicated Development Teams</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Dedicated Turnkey Development Pods</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Technical Resource Augmentation</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Executive Technical Search &amp; Permanent Hiring</span>
                   </li>
                 </ul>
+                <div className="practice-card-footer">
+                  <span>SPEED TO DEPLOY</span>
+                  <span style={{ color: '#2563eb', fontWeight: 800 }}>48–72h Pre-Vetted Matches</span>
+                </div>
               </div>
             </ScrollReveal>
 
-            {/* Pillar 3: Global Presence */}
-            <ScrollReveal animation="fade-up" delay={200}>
-              <div className="about-card-lift pillar-card">
-                <div className="about-icon-tile">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="2" y1="12" x2="22" y2="12"></line>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                  </svg>
+            {/* Practice 3: Global Presence */}
+            <ScrollReveal animation="fade-up" delay={160}>
+              <div className="practice-card-modern card-global">
+                <div className="practice-card-top">
+                  <span className="practice-chip">PRACTICE 03 • OPERATIONS</span>
+                  <span className="practice-number">03</span>
                 </div>
-                <h3>Global Presence</h3>
-                <p>With offices in Dubai (UAE) and Chennai (India), we support clients and candidates across India, the UAE, Singapore, and other international markets, keeping communication clear and projects moving.</p>
-                <ul className="pillar-checklist">
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Dubai Office, UAE</span>
+                <h3>Global Reach &amp; Local Delivery</h3>
+                <p>
+                  With operational hubs in Dubai (UAE) and Chennai (India), we support clients across India, UAE, Singapore, and international markets, keeping communication crystal-clear and project milestones on track.
+                </p>
+                <ul className="practice-deliverables-list">
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Dubai Creek Tower, UAE (Middle East Regional HQ)</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Chennai Office, India</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Chennai Tech Center, India (Engineering Center)</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Cross-Border Project Delivery</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Cross-Border Follow-the-Sun Project Delivery</span>
                   </li>
                 </ul>
+                <div className="practice-card-footer">
+                  <span>REGIONAL FOOTPRINT</span>
+                  <span style={{ color: '#059669', fontWeight: 800 }}>UAE, India &amp; Singapore</span>
+                </div>
               </div>
             </ScrollReveal>
           </div>
-        </div>
-      </section>
 
-      {/* 2d. Why Choose Us (Checklist built only from claims in existing About text) */}
-      <section className="about-sub-section bg-white">
-        <div className="about-divider-curve top">
-          <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
-            <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#ffffff" />
-          </svg>
-        </div>
-        <div className="container">
+          {/* Section Bridge */}
+          <div className="section-bridge-divider">
+            <div className="section-bridge-line"></div>
+            <div className="section-bridge-pill">
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#2bb6b4', display: 'inline-block' }}></span>
+              <span>The JobSync Advantage</span>
+            </div>
+          </div>
+
+          {/* Part 2: Why Choose The JobSync */}
           <ScrollReveal animation="fade-up">
-            <div className="about-sub-header">
-              <h2>Why Choose The JobSync</h2>
-              <p>Built upon proven engineering capabilities, trusted technology partnerships, and measurable business outcomes.</p>
+            <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 16px' }}>
+              <span className="about-header-pill">MEASURABLE VALUE</span>
+              <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
+                Why Choose The JobSync
+              </h2>
+              <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6 }}>
+                Built upon proven engineering capabilities, trusted technology partnerships, and measurable business outcomes that eliminate guesswork.
+              </p>
             </div>
           </ScrollReveal>
 
-          <div className="why-choose-grid">
+          <div className="why-choose-grid-modern">
+            {/* 01: End-to-End Solutions */}
             <ScrollReveal animation="fade-up" delay={0}>
-              <div className="about-card-lift why-choose-card">
-                <div className="why-choose-badge">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+              <div className="why-choose-card-modern">
+                <div className="why-card-header">
+                  <span className="why-num-tag">01</span>
+                  <span className="why-category-badge">FULL LIFECYCLE</span>
                 </div>
-                <div className="why-choose-info">
-                  <h3>End-to-End Solutions</h3>
-                  <p>Comprehensive capabilities spanning strategic consulting, custom development, cloud deployment, enterprise applications, and ongoing managed IT services.</p>
+                <h3>End-to-End Solutions</h3>
+                <p>
+                  Comprehensive capabilities spanning strategic consulting, custom development, cloud deployment, enterprise applications, and ongoing managed IT services.
+                </p>
+                <div className="why-card-outcome-chip">
+                  <span className="why-card-outcome-dot"></span>
+                  <span>Single Accountability Partner</span>
                 </div>
               </div>
             </ScrollReveal>
 
+            {/* 02: Improved Operational Efficiency */}
             <ScrollReveal animation="fade-up" delay={60}>
-              <div className="about-card-lift why-choose-card">
-                <div className="why-choose-badge">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+              <div className="why-choose-card-modern">
+                <div className="why-card-header">
+                  <span className="why-num-tag">02</span>
+                  <span className="why-category-badge">VELOCITY</span>
                 </div>
-                <div className="why-choose-info">
-                  <h3>Improved Operational Efficiency</h3>
-                  <p>Optimizing enterprise workflows and technology infrastructure so your organization operates with maximum speed, agility, and accuracy.</p>
+                <h3>Improved Operational Efficiency</h3>
+                <p>
+                  Optimizing enterprise workflows and technology infrastructure so your organization operates with maximum speed, agility, and precision.
+                </p>
+                <div className="why-card-outcome-chip">
+                  <span className="why-card-outcome-dot"></span>
+                  <span>Streamlined Digital Operations</span>
                 </div>
               </div>
             </ScrollReveal>
 
+            {/* 03: Reduced Costs */}
             <ScrollReveal animation="fade-up" delay={120}>
-              <div className="about-card-lift why-choose-card">
-                <div className="why-choose-badge">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+              <div className="why-choose-card-modern">
+                <div className="why-card-header">
+                  <span className="why-num-tag">03</span>
+                  <span className="why-category-badge">ROI &amp; EFFICIENCY</span>
                 </div>
-                <div className="why-choose-info">
-                  <h3>Reduced Costs</h3>
-                  <p>Scalable software architectures and strategic resource planning that minimize infrastructure overhead and optimize total cost of ownership.</p>
+                <h3>Reduced Costs</h3>
+                <p>
+                  Scalable software architectures and strategic resource planning that minimize infrastructure overhead and optimize total cost of ownership.
+                </p>
+                <div className="why-card-outcome-chip">
+                  <span className="why-card-outcome-dot"></span>
+                  <span>Zero Tech Waste &amp; Overhead</span>
                 </div>
               </div>
             </ScrollReveal>
 
+            {/* 04: Enhanced Security */}
             <ScrollReveal animation="fade-up" delay={180}>
-              <div className="about-card-lift why-choose-card">
-                <div className="why-choose-badge">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+              <div className="why-choose-card-modern">
+                <div className="why-card-header">
+                  <span className="why-num-tag">04</span>
+                  <span className="why-category-badge">DEFENSE IN DEPTH</span>
                 </div>
-                <div className="why-choose-info">
-                  <h3>Enhanced Security</h3>
-                  <p>Proactive cybersecurity practices, robust compliance standards, and continuous protection safeguarding critical organizational assets and data.</p>
+                <h3>Enhanced Security</h3>
+                <p>
+                  Proactive cybersecurity practices, robust compliance standards, and continuous protection safeguarding critical organizational assets and data.
+                </p>
+                <div className="why-card-outcome-chip">
+                  <span className="why-card-outcome-dot"></span>
+                  <span>Enterprise Data Protection</span>
                 </div>
               </div>
             </ScrollReveal>
 
+            {/* 05: Business Scalability */}
             <ScrollReveal animation="fade-up" delay={240}>
-              <div className="about-card-lift why-choose-card">
-                <div className="why-choose-badge">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+              <div className="why-choose-card-modern">
+                <div className="why-card-header">
+                  <span className="why-num-tag">05</span>
+                  <span className="why-category-badge">ELASTIC CAPACITY</span>
                 </div>
-                <div className="why-choose-info">
-                  <h3>Business Scalability</h3>
-                  <p>Flexible cloud-native architectures and on-demand tech staffing tailored to scale smoothly as your customer base and operations expand.</p>
+                <h3>Business Scalability</h3>
+                <p>
+                  Flexible cloud-native architectures and on-demand tech staffing tailored to scale smoothly as your customer base and operations expand across markets.
+                </p>
+                <div className="why-card-outcome-chip">
+                  <span className="why-card-outcome-dot"></span>
+                  <span>Ready for 10x Business Scale</span>
                 </div>
               </div>
             </ScrollReveal>

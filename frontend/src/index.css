@@ -1127,87 +1127,333 @@ a {
   margin: 0;
 }
 
-/* What We Do Pillars Grid */
-.pillars-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-}
-.pillar-card {
-  padding: 38px 32px;
-  display: flex;
-  flex-direction: column;
-}
-.pillar-card h3 {
-  font-size: 22px;
-  font-weight: 800;
-  color: #0b172a;
-  margin-bottom: 14px;
-}
-.pillar-card p {
-  font-size: 15.5px;
-  color: #1e293b;
-  line-height: 1.65;
-  margin-bottom: 20px;
-}
-.pillar-checklist {
-  list-style: none;
-  padding: 0;
-  margin: auto 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.pillar-checklist li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14.5px;
-  font-weight: 600;
-  color: #0b172a;
-}
-.pillar-check-icon {
-  width: 18px;
-  height: 18px;
-  color: #0f766e;
-  flex-shrink: 0;
+/* ========================================================
+   WHAT WE DO & WHY CHOOSE US - UNIFIED EXECUTIVE SECTION
+   ======================================================== */
+
+.capabilities-why-section {
+  position: relative;
+  padding: 100px 0 110px;
+  background: #f8fafc;
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(43, 182, 180, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(37, 99, 235, 0.07) 0%, transparent 45%),
+    linear-gradient(#f1f5f9 1px, transparent 1px),
+    linear-gradient(90deg, #f1f5f9 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-/* Why Choose Us Grid */
-.why-choose-grid {
+/* Practice Cards (What We Do) */
+.practice-grid-modern {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 48px;
+  margin-bottom: 85px;
 }
-.why-choose-card {
-  padding: 28px 24px;
+
+.practice-card-modern {
+  position: relative;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 36px 30px 28px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.practice-card-modern:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 35px -5px rgba(15, 23, 42, 0.1), 0 10px 15px -5px rgba(15, 23, 42, 0.04);
+  border-color: #cbd5e1;
+}
+
+.practice-card-modern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.practice-card-modern.card-consulting::before {
+  background: linear-gradient(90deg, #2bb6b4 0%, #0284c7 100%);
+}
+
+.practice-card-modern.card-staffing::before {
+  background: linear-gradient(90deg, #2563eb 0%, #7c3aed 100%);
+}
+
+.practice-card-modern.card-global::before {
+  background: linear-gradient(90deg, #0d9488 0%, #059669 100%);
+}
+
+.practice-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.practice-chip {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.card-consulting .practice-chip {
+  background: #e6f7f7;
+  color: #0d9488;
+}
+
+.card-staffing .practice-chip {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.card-global .practice-chip {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.practice-number {
+  font-size: 14px;
+  font-weight: 900;
+  color: #94a3b8;
+  font-family: monospace;
+}
+
+.practice-card-modern h3 {
+  font-size: 21px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 14px;
+  line-height: 1.35;
+}
+
+.practice-card-modern p {
+  font-size: 15px;
+  color: #475569;
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+.practice-deliverables-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.practice-deliverable-item {
   display: flex;
   align-items: flex-start;
-  gap: 18px;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.45;
 }
-.why-choose-badge {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: #eaf6f6;
-  color: #0f766e;
+
+.practice-check-badge {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 1px;
+  font-size: 11px;
+  font-weight: 900;
 }
-.why-choose-info h3 {
-  font-size: 18px;
+
+.card-consulting .practice-check-badge {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.card-staffing .practice-check-badge {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.card-global .practice-check-badge {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.practice-card-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px dashed #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.3px;
+}
+
+/* Connecting Bridge between What We Do and Why Choose */
+.section-bridge-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0 75px;
+  position: relative;
+}
+
+.section-bridge-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #cbd5e1 20%, #cbd5e1 80%, transparent);
+  z-index: 1;
+}
+
+.section-bridge-pill {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 8px 24px;
+  border-radius: 30px;
+  font-size: 12px;
   font-weight: 800;
-  color: #0b172a;
-  margin-bottom: 6px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #0f766e;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.why-choose-info p {
+
+/* Why Choose Us Modern Grid */
+.why-choose-grid-modern {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.why-choose-card-modern {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px 28px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.why-choose-card-modern:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 30px -4px rgba(15, 23, 42, 0.09);
+  border-color: #2bb6b4;
+}
+
+.why-choose-card-modern:nth-child(4) {
+  grid-column: span 1;
+}
+
+.why-choose-card-modern:nth-child(5) {
+  grid-column: span 2;
+}
+
+.why-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.why-num-tag {
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: 900;
+  color: #2bb6b4;
+  letter-spacing: -0.5px;
+}
+
+.why-category-badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.why-choose-card-modern h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 12px;
+  line-height: 1.35;
+}
+
+.why-choose-card-modern p {
   font-size: 15px;
-  color: #1e293b;
+  color: #475569;
   line-height: 1.6;
-  margin: 0;
+  margin-bottom: 22px;
+}
+
+.why-card-outcome-chip {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f766e;
+  background: #e6f7f7;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(43, 182, 180, 0.25);
+}
+
+.why-card-outcome-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2bb6b4;
+}
+
+@media (max-width: 1024px) {
+  .practice-grid-modern {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 60px;
+  }
+  .why-choose-grid-modern {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .why-choose-card-modern:nth-child(5) {
+    grid-column: span 1;
+  }
 }
 
 /* Offices Grid */
