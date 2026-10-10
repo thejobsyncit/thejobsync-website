@@ -53,14 +53,16 @@ router.post('/', async (req, res) => {
   // 1. Always save to local store first so no inquiries are lost
   const localSaved = inquiryStore.saveInquiry(row);
 
-  // 2. Try saving to Supabase if available
+  // 2. Try saving to Supabase if available (with 1s timeout)
   let dbData = localSaved;
   try {
-    const { data, error } = await supabase.from('inquiries').insert(row).select().single();
+    const insertPromise = supabase.from('inquiries').insert(row).select().single();
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Supabase timeout')), 1000)
+    );
+    const { data, error } = await Promise.race([insertPromise, timeoutPromise]);
     if (!error && data) {
       dbData = data;
-    } else if (error) {
-      console.warn('Supabase insert note:', error.message);
     }
   } catch (err) {
     // Supabase optional

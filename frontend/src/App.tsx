@@ -202,6 +202,21 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
         setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsyn.com.");
         form.reset();
         setMessage('');
+
+        // Cache inquiry locally so Admin Dashboard reflects it immediately
+        try {
+          const localEntry = {
+            id: `inq_${Date.now()}`,
+            name: data.name,
+            email: data.email,
+            phone: data.phone || 'N/A',
+            message: data.message,
+            date: new Date().toLocaleString(),
+            status: 'New',
+          };
+          const prev = JSON.parse(localStorage.getItem('jobsync_inquiries_data') || '[]');
+          localStorage.setItem('jobsync_inquiries_data', JSON.stringify([localEntry, ...prev]));
+        } catch (_) {}
       } else {
         setErrorMsg(result.error || "Failed to submit inquiry. Please try again.");
       }
@@ -752,9 +767,10 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
           <div className="about-grid">
             <ScrollReveal animation="fade-right">
               <div className="about-img-wrap">
-                <img src="/features.png" alt="About The Jobsync" className="about-img" />
+                <img src="/about.jpg" alt="" className="about-img-ambient-bg" aria-hidden="true" />
+                <img src="/about.jpg" alt="About The Jobsync" className="about-img" />
                 <div className="about-img-badge">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: '2px' }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: '2px' }}>
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                     <circle cx="12" cy="10" r="3"></circle>
                   </svg>
@@ -778,108 +794,144 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
         </div>
       </section>
 
-      {/* 2a. Mission and Vision (Driven by ABOUT_CONTENT.mission and ABOUT_CONTENT.vision) */}
+      {/* 2a. Mission and Vision (Enhanced Executive Design with Credibility Ribbon) */}
       {(hasMission || hasVision) && (
-        <section className="about-sub-section bg-soft">
-          <div className="about-divider-curve top">
-            <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
-              <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#f4f9fb" />
-            </svg>
-          </div>
+        <section className="mission-vision-section">
           <div className="container">
             <ScrollReveal animation="fade-up">
-              <div className="about-sub-header">
-                <h2>Our Mission & Vision</h2>
-                <p>Guiding our commitment to delivering transformational technology solutions and trusted global partnerships.</p>
+              <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 48px' }}>
+                <span className="about-header-pill">PURPOSE &amp; DIRECTION</span>
+                <h2 style={{ fontSize: '38px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '14px' }}>
+                  Our Mission &amp; Vision
+                </h2>
+                <p style={{ color: '#475569', fontSize: '16.5px', lineHeight: 1.65 }}>
+                  The practical commitment driving our IT consulting, software engineering, and premier talent placement across Dubai and Chennai.
+                </p>
               </div>
             </ScrollReveal>
 
             <div className="mission-vision-grid" style={{ gridTemplateColumns: hasMission && hasVision ? '1fr 1fr' : '1fr' }}>
               {hasMission && (
                 <ScrollReveal animation="fade-up" delay={50}>
-                  <div className="about-card-lift mission-vision-card">
-                    <div className="about-icon-tile">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <circle cx="12" cy="12" r="6"></circle>
-                        <circle cx="12" cy="12" r="2"></circle>
-                      </svg>
+                  <div className="mission-card-modern">
+                    <div className="mission-card-top">
+                      <span className="mission-num-badge">01 • OUR MISSION</span>
+                      <span className="mission-status-tag">ACTIVE COMMITMENT</span>
                     </div>
-                    <h3>Our Mission</h3>
-                    <p>{ABOUT_CONTENT.mission}</p>
+                    <h3 className="mission-card-title">Delivering Practical IT &amp; Scalable Talent</h3>
+                    <p className="mission-card-lead">
+                      "{ABOUT_CONTENT.mission}"
+                    </p>
+                    <ul className="mission-pillars-list">
+                      <li className="mission-pillar-item">
+                        {/* <span className="mission-pillar-bullet"></span> */}
+                        <span><strong>Business-Aligned Tech:</strong> Tailoring cloud, software, and systems to real commercial goals.</span>
+                      </li>
+                      <li className="mission-pillar-item">
+                        {/* <span className="mission-pillar-bullet"></span> */}
+                        <span><strong>Verified Engineering Talent:</strong> Connecting enterprises with vetted developers and specialists.</span>
+                      </li>
+                      <li className="mission-pillar-item">
+                        {/* <span className="mission-pillar-bullet"></span> */}
+                        <span><strong>Long-Term Delivery:</strong> Maintaining high standards from architecture through post-launch support.</span>
+                      </li>
+                    </ul>
+                    <div className="mission-card-footer">
+                      <span>OPERATIONAL SCOPE</span>
+                      <span style={{ color: '#0f766e', fontWeight: 800 }}>UAE • India • Global</span>
+                    </div>
                   </div>
                 </ScrollReveal>
               )}
 
               {hasVision && (
                 <ScrollReveal animation="fade-up" delay={150}>
-                  <div className="about-card-lift mission-vision-card">
-                    <div className="about-icon-tile">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </svg>
+                  <div className="mission-card-modern vision-card">
+                    <div className="mission-card-top">
+                      <span className="mission-num-badge">02 • OUR VISION</span>
+                      <span className="mission-status-tag">LONG-TERM HORIZON</span>
                     </div>
-                    <h3>Our Vision</h3>
-                    <p>{ABOUT_CONTENT.vision}</p>
+                    <h3 className="mission-card-title">The Globally Trusted Technology Partner</h3>
+                    <p className="mission-card-lead">
+                      "{ABOUT_CONTENT.vision}"
+                    </p>
+                    <ul className="mission-pillars-list">
+                      <li className="mission-pillar-item">
+                        {/* <span className="mission-pillar-bullet"></span> */}
+                        <span><strong>Cross-Border Bridges:</strong> Connecting talent and enterprises between the Middle East and South Asia.</span>
+                      </li>
+                      <li className="mission-pillar-item">
+                        {/* <span className="mission-pillar-bullet"></span> */}
+                        <span><strong>Relationship Over Transaction:</strong> Fostering high-retention client trust and career growth.</span>
+                      </li>
+                      <li className="mission-pillar-item">
+                        {/* <span className="mission-pillar-bullet"></span> */}
+                        <span><strong>Sustainable Innovation:</strong> Thoughtfully adopting AI, cloud, and security frameworks built to scale.</span>
+                      </li>
+                    </ul>
+                    <div className="mission-card-footer">
+                      <span>STRATEGIC HUBS</span>
+                      <span style={{ color: '#2563eb', fontWeight: 800 }}>Dubai Creek Tower &amp; Chennai</span>
+                    </div>
                   </div>
                 </ScrollReveal>
               )}
             </div>
+
+            {/* Credibility Impact Ribbon */}
+            <ScrollReveal animation="fade-up" delay={200}>
+              <div className="about-cred-ribbon">
+                <div className="about-cred-item">
+                  <span className="about-cred-num">2</span>
+                  <span className="about-cred-label">Global Tech Hubs</span>
+                  <span className="about-cred-sub">Dubai Creek Tower &amp; Chennai</span>
+                </div>
+                <div className="about-cred-item">
+                  <span className="about-cred-num">100%</span>
+                  <span className="about-cred-label">Vetted IT Talent</span>
+                  <span className="about-cred-sub">Engineers &amp; Consultants</span>
+                </div>
+                <div className="about-cred-item">
+                  <span className="about-cred-num">Full</span>
+                  <span className="about-cred-label">Lifecycle Ownership</span>
+                  <span className="about-cred-sub">From Strategy to Support</span>
+                </div>
+                <div className="about-cred-item">
+                  <span className="about-cred-num">Direct</span>
+                  <span className="about-cred-label">Transparent Delivery</span>
+                  <span className="about-cred-sub">Honest Consulting &amp; No Fluff</span>
+                </div>
+              </div>
+            </ScrollReveal>
           </div>
         </section>
       )}
 
-      {/* 2b. Core Values (Driven by ABOUT_CONTENT.values) */}
+      {/* 2b. Core Values (Modern Human-Crafted Grid) */}
       {activeValues.length > 0 && (
-        <section className="about-sub-section bg-white">
-          <div className="about-divider-curve top">
-            <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
-              <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#ffffff" />
-            </svg>
-          </div>
+        <section className="values-section-modern">
           <div className="container">
             <ScrollReveal animation="fade-up">
-              <div className="about-sub-header">
-                <h2>Our Core Values</h2>
-                <p>The foundational principles that drive our engineering standards, service delivery, and client relationships.</p>
+              <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 20px' }}>
+                <span className="about-header-pill">OUR CULTURE &amp; CODE</span>
+                <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
+                  Our Core Values
+                </h2>
+                <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6 }}>
+                  The practical standards that guide every consulting engagement, candidate placement, and line of code we ship.
+                </p>
               </div>
             </ScrollReveal>
 
-            <div className="values-grid">
+            <div className="values-grid-modern">
               {activeValues.map((val, idx) => {
-                const isCustomer = val.title.toLowerCase().includes('customer');
-                const isQuality = val.title.toLowerCase().includes('quality');
-                const isInnovation = val.title.toLowerCase().includes('innovation');
-
+                const numStr = String(idx + 1).padStart(2, '0');
                 return (
-                  <ScrollReveal key={idx} animation="fade-up" delay={idx * 80}>
-                    <div className="about-card-lift value-card">
-                      <div className="about-icon-tile">
-                        {isCustomer ? (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                          </svg>
-                        ) : isQuality ? (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                            <polyline points="9 12 11 14 15 10"></polyline>
-                          </svg>
-                        ) : isInnovation ? (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <path d="M9 18h6"></path>
-                            <path d="M10 22h4"></path>
-                            <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path>
-                          </svg>
-                        ) : (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                          </svg>
-                        )}
+                  <ScrollReveal key={idx} animation="fade-up" delay={idx * 70}>
+                    <div className="value-card-modern">
+                      <div className="value-card-top">
+                        <span className="value-card-num">{numStr}</span>
+                        {/* <span className="value-tag-pill">PRINCIPLE</span> */}
                       </div>
                       <h3>{val.title}</h3>
                       <p>{val.text}</p>
@@ -892,194 +944,229 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
         </section>
       )}
 
-      {/* 2c. What We Do (Three Pillar Cards reusing wording already on the site) */}
-      <section className="about-sub-section bg-soft">
-        <div className="about-divider-curve top">
-          <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
-            <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#f4f9fb" />
-          </svg>
-        </div>
+      {/* 2c & 2d. Unified Capabilities & Why Choose Us Section */}
+      <section className="capabilities-why-section">
         <div className="container">
+          {/* Part 1: What We Do */}
           <ScrollReveal animation="fade-up">
-            <div className="about-sub-header">
-              <h2>What We Do</h2>
-              <p>Reinventing how modern enterprises build software, optimize infrastructure, and secure high-caliber tech talent.</p>
+            <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 16px' }}>
+              <span className="about-header-pill">OUR PRACTICE AREAS</span>
+              <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
+                What We Do
+              </h2>
+              <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6 }}>
+                Reinventing how modern enterprises build software, optimize infrastructure, and secure high-caliber tech talent across global markets.
+              </p>
             </div>
           </ScrollReveal>
 
-          <div className="pillars-grid">
-            {/* Pillar 1: IT Consulting */}
+          <div className="practice-grid-modern">
+            {/* Practice 1: IT Consulting & Engineering */}
             <ScrollReveal animation="fade-up" delay={0}>
-              <div className="about-card-lift pillar-card">
-                <div className="about-icon-tile">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <polyline points="16 18 22 12 16 6"></polyline>
-                    <polyline points="8 6 2 12 8 18"></polyline>
-                  </svg>
+              <div className="practice-card-modern card-consulting">
+                <div className="practice-card-top">
+                  <span className="practice-chip">PRACTICE 01 • ENGINEERING</span>
+                  <span className="practice-number">01</span>
                 </div>
-                <h3>IT Consulting & Services</h3>
-                <p>We help startups, SMEs, and large enterprises plan and build technology that fits their business. Our services cover consulting, custom software, cloud, cybersecurity, managed IT, and enterprise applications.</p>
-                <ul className="pillar-checklist">
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Custom Software Development</span>
+                <h3>IT Consulting &amp; Services</h3>
+                <p>
+                  We help startups, SMEs, and large enterprises plan and build technology that fits their business. Our services cover consulting, custom software, cloud, cybersecurity, managed IT, and enterprise applications.
+                </p>
+                <ul className="practice-deliverables-list">
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Custom Software Development &amp; Modern Web Apps</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Cloud Solution & Migration</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Cloud Architecture, Optimization &amp; Migration</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Cybersecurity & Managed IT</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Cybersecurity Audits &amp; 24/7 Managed IT Support</span>
                   </li>
                 </ul>
+                <div className="practice-card-footer">
+                  <span>ENGAGEMENT MODEL</span>
+                  <span style={{ color: '#0d9488', fontWeight: 800 }}>Full Lifecycle Ownership</span>
+                </div>
               </div>
             </ScrollReveal>
 
-            {/* Pillar 2: IT Staffing */}
-            <ScrollReveal animation="fade-up" delay={100}>
-              <div className="about-card-lift pillar-card">
-                <div className="about-icon-tile">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="8.5" cy="7" r="4"></circle>
-                    <line x1="20" y1="8" x2="20" y2="14"></line>
-                    <line x1="23" y1="11" x2="17" y2="11"></line>
-                  </svg>
+            {/* Practice 2: IT Staffing & Talent Recruitment */}
+            <ScrollReveal animation="fade-up" delay={80}>
+              <div className="practice-card-modern card-staffing">
+                <div className="practice-card-top">
+                  <span className="practice-chip">PRACTICE 02 • TALENT</span>
+                  <span className="practice-number">02</span>
                 </div>
-                <h3>IT Staffing & Recruitment</h3>
-                <p>We connect businesses with skilled engineers, technical leads, and IT specialists through contract, permanent, and dedicated-team hiring. We also help professionals find the right opportunities with leading employers.</p>
-                <ul className="pillar-checklist">
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Specialized Talent Augmentation</span>
+                <h3>IT Staffing &amp; Recruitment</h3>
+                <p>
+                  We connect businesses with skilled engineers, technical leads, and IT specialists through contract, permanent, and dedicated-team hiring. We also help professionals find the right opportunities with leading employers.
+                </p>
+                <ul className="practice-deliverables-list">
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Specialized Engineering Talent Augmentation</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Dedicated Development Teams</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Dedicated Turnkey Development Pods</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Technical Resource Augmentation</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Executive Technical Search &amp; Permanent Hiring</span>
                   </li>
                 </ul>
+                <div className="practice-card-footer">
+                  <span>SPEED TO DEPLOY</span>
+                  <span style={{ color: '#2563eb', fontWeight: 800 }}>48–72h Pre-Vetted Matches</span>
+                </div>
               </div>
             </ScrollReveal>
 
-            {/* Pillar 3: Global Presence */}
-            <ScrollReveal animation="fade-up" delay={200}>
-              <div className="about-card-lift pillar-card">
-                <div className="about-icon-tile">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="2" y1="12" x2="22" y2="12"></line>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                  </svg>
+            {/* Practice 3: Global Presence */}
+            <ScrollReveal animation="fade-up" delay={160}>
+              <div className="practice-card-modern card-global">
+                <div className="practice-card-top">
+                  <span className="practice-chip">PRACTICE 03 • OPERATIONS</span>
+                  <span className="practice-number">03</span>
                 </div>
-                <h3>Global Presence</h3>
-                <p>With offices in Dubai (UAE) and Chennai (India), we support clients and candidates across India, the UAE, Singapore, and other international markets, keeping communication clear and projects moving.</p>
-                <ul className="pillar-checklist">
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Dubai Office, UAE</span>
+                <h3>Global Reach &amp; Local Delivery</h3>
+                <p>
+                  With operational hubs in Dubai (UAE) and Chennai (India), we support clients across India, UAE, Singapore, and international markets, keeping communication crystal-clear and project milestones on track.
+                </p>
+                <ul className="practice-deliverables-list">
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Dubai Creek Tower, UAE (Middle East Regional HQ)</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Chennai Office, India</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Chennai Tech Center, India (Engineering Center)</span>
                   </li>
-                  <li>
-                    <svg className="pillar-check-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    <span>Cross-Border Project Delivery</span>
+                  <li className="practice-deliverable-item">
+                    <span className="practice-check-badge">✓</span>
+                    <span>Cross-Border Follow-the-Sun Project Delivery</span>
                   </li>
                 </ul>
+                <div className="practice-card-footer">
+                  <span>REGIONAL FOOTPRINT</span>
+                  <span style={{ color: '#059669', fontWeight: 800 }}>UAE, India &amp; Singapore</span>
+                </div>
               </div>
             </ScrollReveal>
           </div>
-        </div>
-      </section>
 
-      {/* 2d. Why Choose Us (Checklist built only from claims in existing About text) */}
-      <section className="about-sub-section bg-white">
-        <div className="about-divider-curve top">
-          <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
-            <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#ffffff" />
-          </svg>
-        </div>
-        <div className="container">
+          {/* Section Bridge */}
+          <div className="section-bridge-divider">
+            <div className="section-bridge-line"></div>
+            <div className="section-bridge-pill">
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#2bb6b4', display: 'inline-block' }}></span>
+              <span>The JobSync Advantage</span>
+            </div>
+          </div>
+
+          {/* Part 2: Why Choose The JobSync */}
           <ScrollReveal animation="fade-up">
-            <div className="about-sub-header">
-              <h2>Why Choose The JobSync</h2>
-              <p>Built upon proven engineering capabilities, trusted technology partnerships, and measurable business outcomes.</p>
+            <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 16px' }}>
+              <span className="about-header-pill">MEASURABLE VALUE</span>
+              <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
+                Why Choose The JobSync
+              </h2>
+              <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6 }}>
+                Built upon proven engineering capabilities, trusted technology partnerships, and measurable business outcomes that eliminate guesswork.
+              </p>
             </div>
           </ScrollReveal>
 
-          <div className="why-choose-grid">
+          <div className="why-choose-grid-modern">
+            {/* 01: End-to-End Solutions */}
             <ScrollReveal animation="fade-up" delay={0}>
-              <div className="about-card-lift why-choose-card">
-                <div className="why-choose-badge">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+              <div className="why-choose-card-modern">
+                <div className="why-card-header">
+                  <span className="why-num-tag">01</span>
+                  <span className="why-category-badge">FULL LIFECYCLE</span>
                 </div>
-                <div className="why-choose-info">
-                  <h3>End-to-End Solutions</h3>
-                  <p>Comprehensive capabilities spanning strategic consulting, custom development, cloud deployment, enterprise applications, and ongoing managed IT services.</p>
+                <h3>End-to-End Solutions</h3>
+                <p>
+                  Comprehensive capabilities spanning strategic consulting, custom development, cloud deployment, enterprise applications, and ongoing managed IT services.
+                </p>
+                <div className="why-card-outcome-chip">
+                  <span className="why-card-outcome-dot"></span>
+                  <span>Single Accountability Partner</span>
                 </div>
               </div>
             </ScrollReveal>
 
+            {/* 02: Improved Operational Efficiency */}
             <ScrollReveal animation="fade-up" delay={60}>
-              <div className="about-card-lift why-choose-card">
-                <div className="why-choose-badge">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+              <div className="why-choose-card-modern">
+                <div className="why-card-header">
+                  <span className="why-num-tag">02</span>
+                  <span className="why-category-badge">VELOCITY</span>
                 </div>
-                <div className="why-choose-info">
-                  <h3>Improved Operational Efficiency</h3>
-                  <p>Optimizing enterprise workflows and technology infrastructure so your organization operates with maximum speed, agility, and accuracy.</p>
+                <h3>Improved Operational Efficiency</h3>
+                <p>
+                  Optimizing enterprise workflows and technology infrastructure so your organization operates with maximum speed, agility, and precision.
+                </p>
+                <div className="why-card-outcome-chip">
+                  <span className="why-card-outcome-dot"></span>
+                  <span>Streamlined Digital Operations</span>
                 </div>
               </div>
             </ScrollReveal>
 
+            {/* 03: Reduced Costs */}
             <ScrollReveal animation="fade-up" delay={120}>
-              <div className="about-card-lift why-choose-card">
-                <div className="why-choose-badge">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+              <div className="why-choose-card-modern">
+                <div className="why-card-header">
+                  <span className="why-num-tag">03</span>
+                  <span className="why-category-badge">ROI &amp; EFFICIENCY</span>
                 </div>
-                <div className="why-choose-info">
-                  <h3>Reduced Costs</h3>
-                  <p>Scalable software architectures and strategic resource planning that minimize infrastructure overhead and optimize total cost of ownership.</p>
+                <h3>Reduced Costs</h3>
+                <p>
+                  Scalable software architectures and strategic resource planning that minimize infrastructure overhead and optimize total cost of ownership.
+                </p>
+                <div className="why-card-outcome-chip">
+                  <span className="why-card-outcome-dot"></span>
+                  <span>Zero Tech Waste &amp; Overhead</span>
                 </div>
               </div>
             </ScrollReveal>
 
+            {/* 04: Enhanced Security */}
             <ScrollReveal animation="fade-up" delay={180}>
-              <div className="about-card-lift why-choose-card">
-                <div className="why-choose-badge">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+              <div className="why-choose-card-modern">
+                <div className="why-card-header">
+                  <span className="why-num-tag">04</span>
+                  <span className="why-category-badge">DEFENSE IN DEPTH</span>
                 </div>
-                <div className="why-choose-info">
-                  <h3>Enhanced Security</h3>
-                  <p>Proactive cybersecurity practices, robust compliance standards, and continuous protection safeguarding critical organizational assets and data.</p>
+                <h3>Enhanced Security</h3>
+                <p>
+                  Proactive cybersecurity practices, robust compliance standards, and continuous protection safeguarding critical organizational assets and data.
+                </p>
+                <div className="why-card-outcome-chip">
+                  <span className="why-card-outcome-dot"></span>
+                  <span>Enterprise Data Protection</span>
                 </div>
               </div>
             </ScrollReveal>
 
+            {/* 05: Business Scalability */}
             <ScrollReveal animation="fade-up" delay={240}>
-              <div className="about-card-lift why-choose-card">
-                <div className="why-choose-badge">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+              <div className="why-choose-card-modern">
+                <div className="why-card-header">
+                  <span className="why-num-tag">05</span>
+                  <span className="why-category-badge">ELASTIC CAPACITY</span>
                 </div>
-                <div className="why-choose-info">
-                  <h3>Business Scalability</h3>
-                  <p>Flexible cloud-native architectures and on-demand tech staffing tailored to scale smoothly as your customer base and operations expand.</p>
+                <h3>Business Scalability</h3>
+                <p>
+                  Flexible cloud-native architectures and on-demand tech staffing tailored to scale smoothly as your customer base and operations expand across markets.
+                </p>
+                <div className="why-card-outcome-chip">
+                  <span className="why-card-outcome-dot"></span>
+                  <span>Ready for 10x Business Scale</span>
                 </div>
               </div>
             </ScrollReveal>
@@ -1512,7 +1599,7 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
       style={{
         position: 'relative',
         overflow: 'hidden',
-        minHeight: '620px',
+        minHeight: 'clamp(730px, 88vh, 900px)',
         backgroundColor: '#0b172a',
         display: 'flex',
         alignItems: 'center'
@@ -1556,7 +1643,7 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
       />
 
       {/* 3. Existing Hero Content Sitting Directly Over Image (NO card, NO box, NO border) */}
-      <div className="container" style={{ position: 'relative', zIndex: 3, padding: '85px 20px 105px', width: '100%' }}>
+      <div className="container" style={{ position: 'relative', zIndex: 3, padding: '100px 20px 125px', width: '100%' }}>
         <div className="hero-content">
           <h1>Looking for first class IT solutions?</h1>
           <p>With over 10 years of experience helping businesses to find comprehensive technological solutions and strategic IT consulting.</p>
@@ -1589,7 +1676,7 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
             position: 'relative',
             display: 'block',
             width: 'calc(100% + 1.3px)',
-            height: '56px',
+            height: '42px',
             fill: 'var(--pastel-bg, #edf7f8)'
           }}
         >
@@ -1698,6 +1785,21 @@ function App() {
       if (response.ok && (result.success || response.status === 200)) {
         setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsyn.com.");
         form.reset();
+
+        // Cache inquiry locally so Admin Dashboard reflects it immediately
+        try {
+          const localEntry = {
+            id: `inq_${Date.now()}`,
+            name: data.name,
+            email: data.email,
+            phone: data.phone || 'N/A',
+            message: data.message,
+            date: new Date().toLocaleString(),
+            status: 'New',
+          };
+          const prev = JSON.parse(localStorage.getItem('jobsync_inquiries_data') || '[]');
+          localStorage.setItem('jobsync_inquiries_data', JSON.stringify([localEntry, ...prev]));
+        } catch (_) {}
       } else {
         setErrorMsg(result.error || "Failed to submit inquiry. Please try again.");
       }
@@ -1787,7 +1889,7 @@ function App() {
                 <ScrollReveal animation="fade-up" delay={0}>
                   <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=1000&auto=format&fit=crop&q=90" alt="Software Engineering" className="welcome-card-img" />
+                      <img src="/custom-software.jpg" alt="Custom Software" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
                         <span className="welcome-badge">  SOFTWARE ENGINEERING</span>
                       </div>
@@ -1805,7 +1907,7 @@ function App() {
                 <ScrollReveal animation="fade-up" delay={100}>
                   <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1000&auto=format&fit=crop&q=90" alt="Cloud Infrastructure" className="welcome-card-img" />
+                      <img src="/cloud-infrastructure.jpg" alt="Cloud Infrastructure" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
                         <span className="welcome-badge">  CLOUD ARCHITECTURE</span>
                       </div>
@@ -1823,7 +1925,7 @@ function App() {
                 <ScrollReveal animation="fade-up" delay={200}>
                   <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1000&auto=format&fit=crop&q=90" alt="Cybersecurity SOC" className="welcome-card-img" />
+                      <img src="/cybersecurity.jpg" alt="Cybersecurity" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
                         <span className="welcome-badge">  CYBERSECURITY & SOC</span>
                       </div>
@@ -1859,7 +1961,7 @@ function App() {
                 <ScrollReveal animation="fade-up" delay={100}>
                   <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="https://images.unsplash.com/photo-1531497865144-0464ef8fb9a9?w=1000&auto=format&fit=crop&q=90" alt="Enterprise Systems" className="welcome-card-img" />
+                      <img src="/enterprise-solution.jpg" alt="Enterprise Systems" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
                         <span className="welcome-badge">  ENTERPRISE SYSTEMS</span>
                       </div>
@@ -1877,7 +1979,7 @@ function App() {
                 <ScrollReveal animation="fade-up" delay={200}>
                   <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1000&auto=format&fit=crop&q=90" alt="IT Talent Augmentation" className="welcome-card-img" />
+                      <img src="/it-staffing.jpg" alt="IT Talent Augmentation" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
                         <span className="welcome-badge">  TALENT AUGMENTATION</span>
                       </div>
@@ -1906,7 +2008,8 @@ function App() {
               <div className="about-grid">
                 <ScrollReveal animation="fade-right">
                   <div className="about-img-wrap">
-                    <img src="/features.png" alt="About The Jobsync" className="about-img" />
+                    <img src="/about.jpg" alt="" className="about-img-ambient-bg" aria-hidden="true" />
+                    <img src="/about.jpg" alt="About The Jobsync" className="about-img" />
                     <div className="about-img-badge">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: '2px' }}>
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
