@@ -199,7 +199,7 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
       const result = await response.json().catch(() => ({}));
 
       if (response.ok && (result.success || response.status === 200)) {
-        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsyn.com.");
+        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsync.com.");
         form.reset();
         setMessage('');
 
@@ -307,7 +307,7 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
               </div>
               <div>
                 <h3>Dubai Office</h3>
-                <p>Dubai Creek Tower - 1st St - Deira-Riggat Al Buteen<br />+971 54 740 5625</p>
+                <p>Dubai Creek Tower - 1st St - Riggat Al Buteen<br />+971 54 740 5625</p>
               </div>
             </div>
 
@@ -327,7 +327,7 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
               </div>
               <div>
                 <h3>Mail Id</h3>
-                <p><a href="mailto:hr@thejobsyn.com" style={{ color: 'inherit', textDecoration: 'none' }}>hr@thejobsyn.com</a></p>
+                <p><a href="mailto:hr@thejobsync.com" style={{ color: 'inherit', textDecoration: 'none' }}>hr@thejobsync.com</a></p>
               </div>
             </div>
           </div>
@@ -1214,7 +1214,7 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                       <circle cx="12" cy="10" r="3"></circle>
                     </svg>
-                    <span>Dubai Creek Tower - 1st St - Deira-Riggat Al Buteen</span>
+                    <span>Dubai Creek Tower - 1st St -Riggat Al Buteen</span>
                   </div>
                   <div className="office-detail-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -1325,6 +1325,40 @@ const SERVICES_DATA = [
     ]
   },
   {
+    title: "Digital Marketing",
+    items: [
+      "Search Engine Optimization (SEO)",
+      "Search Engine Marketing (SEM)",
+      "Social Media Marketing (SMM)",
+      "Content Marketing & Strategy",
+      "Email Marketing Campaigns",
+      "Digital Analytics & Reporting"
+    ]
+  },
+   {
+    title: "Enterprise Applications",
+    items: [
+      "ERP Implementation & Customization",
+      "CRM Implementation",
+      "HRMS Solutions",
+      "Supply Chain Management Solutions",
+      "Application Modernization",
+      "Application Support & Maintenance"
+    ]
+  },
+  
+  {
+    title: "Emerging Technology",
+    items: [
+      "Internet of Things (IoT)",
+      "Blockchain Development",
+      "AR/VR Solutions",
+      "Digital Twin Solutions",
+      "Edge Computing",
+      "Smart Automation Solutions"
+    ]
+  },
+  {
     title: "Cloud Services",
     items: [
       "Cloud Migration",
@@ -1392,39 +1426,7 @@ const SERVICES_DATA = [
       "Disaster Recovery & Business Continuity"
     ]
   },
-  {
-    title: "Enterprise Applications",
-    items: [
-      "ERP Implementation & Customization",
-      "CRM Implementation",
-      "HRMS Solutions",
-      "Supply Chain Management Solutions",
-      "Application Modernization",
-      "Application Support & Maintenance"
-    ]
-  },
-  {
-    title: "Digital Marketing",
-    items: [
-      "Search Engine Optimization (SEO)",
-      "Search Engine Marketing (SEM)",
-      "Social Media Marketing (SMM)",
-      "Content Marketing & Strategy",
-      "Email Marketing Campaigns",
-      "Digital Analytics & Reporting"
-    ]
-  },
-  {
-    title: "Emerging Technology",
-    items: [
-      "Internet of Things (IoT)",
-      "Blockchain Development",
-      "AR/VR Solutions",
-      "Digital Twin Solutions",
-      "Edge Computing",
-      "Smart Automation Solutions"
-    ]
-  },
+ 
   {
     title: "IT Staffing",
     items: [
