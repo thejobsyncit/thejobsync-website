@@ -247,7 +247,7 @@ a {
 .hero {
   position: relative;
   height: auto;
-  min-height: clamp(730px, 88vh, 900px);
+  min-height: 620px;
   display: flex;
   align-items: center;
 }
