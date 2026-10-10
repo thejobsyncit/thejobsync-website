@@ -6,20 +6,34 @@ const router = express.Router();
 
 // GET /api/inquiries
 router.get('/', async (req, res) => {
+  const localData = inquiryStore.getAllInquiries();
+
   try {
-    const { data, error } = await supabase
+    const supabasePromise = supabase
       .from('inquiries')
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (!error && data) {
-      return res.json({ success: true, count: data.length, data });
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Supabase timeout')), 1000)
+    );
+
+    const { data, error } = await Promise.race([supabasePromise, timeoutPromise]);
+
+    if (!error && data && data.length > 0) {
+      const ids = new Set(data.map((d) => String(d.id)));
+      const combined = [...data];
+      for (const item of localData) {
+        if (!ids.has(String(item.id))) {
+          combined.push(item);
+        }
+      }
+      return res.json({ success: true, count: combined.length, data: combined });
     }
   } catch (err) {
-    // Supabase unreachable, fallback to local store
+    // Supabase unreachable or timed out, instantly fallback to local store
   }
 
-  const localData = inquiryStore.getAllInquiries();
   res.json({ success: true, count: localData.length, data: localData });
 });
 

@@ -202,6 +202,21 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
         setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsyn.com.");
         form.reset();
         setMessage('');
+
+        // Cache inquiry locally so Admin Dashboard reflects it immediately
+        try {
+          const localEntry = {
+            id: `inq_${Date.now()}`,
+            name: data.name,
+            email: data.email,
+            phone: data.phone || 'N/A',
+            message: data.message,
+            date: new Date().toLocaleString(),
+            status: 'New',
+          };
+          const prev = JSON.parse(localStorage.getItem('jobsync_inquiries_data') || '[]');
+          localStorage.setItem('jobsync_inquiries_data', JSON.stringify([localEntry, ...prev]));
+        } catch (_) {}
       } else {
         setErrorMsg(result.error || "Failed to submit inquiry. Please try again.");
       }
@@ -778,108 +793,144 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
         </div>
       </section>
 
-      {/* 2a. Mission and Vision (Driven by ABOUT_CONTENT.mission and ABOUT_CONTENT.vision) */}
+      {/* 2a. Mission and Vision (Enhanced Executive Design with Credibility Ribbon) */}
       {(hasMission || hasVision) && (
-        <section className="about-sub-section bg-soft">
-          <div className="about-divider-curve top">
-            <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
-              <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#f4f9fb" />
-            </svg>
-          </div>
+        <section className="mission-vision-section">
           <div className="container">
             <ScrollReveal animation="fade-up">
-              <div className="about-sub-header">
-                <h2>Our Mission & Vision</h2>
-                <p>Guiding our commitment to delivering transformational technology solutions and trusted global partnerships.</p>
+              <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 48px' }}>
+                <span className="about-header-pill">PURPOSE &amp; DIRECTION</span>
+                <h2 style={{ fontSize: '38px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '14px' }}>
+                  Our Mission &amp; Vision
+                </h2>
+                <p style={{ color: '#475569', fontSize: '16.5px', lineHeight: 1.65 }}>
+                  The practical commitment driving our IT consulting, software engineering, and premier talent placement across Dubai and Chennai.
+                </p>
               </div>
             </ScrollReveal>
 
             <div className="mission-vision-grid" style={{ gridTemplateColumns: hasMission && hasVision ? '1fr 1fr' : '1fr' }}>
               {hasMission && (
                 <ScrollReveal animation="fade-up" delay={50}>
-                  <div className="about-card-lift mission-vision-card">
-                    <div className="about-icon-tile">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <circle cx="12" cy="12" r="6"></circle>
-                        <circle cx="12" cy="12" r="2"></circle>
-                      </svg>
+                  <div className="mission-card-modern">
+                    <div className="mission-card-top">
+                      <span className="mission-num-badge">01 • OUR MISSION</span>
+                      <span className="mission-status-tag">ACTIVE COMMITMENT</span>
                     </div>
-                    <h3>Our Mission</h3>
-                    <p>{ABOUT_CONTENT.mission}</p>
+                    <h3 className="mission-card-title">Delivering Practical IT &amp; Scalable Talent</h3>
+                    <p className="mission-card-lead">
+                      "{ABOUT_CONTENT.mission}"
+                    </p>
+                    <ul className="mission-pillars-list">
+                      <li className="mission-pillar-item">
+                        <span className="mission-pillar-bullet">✓</span>
+                        <span><strong>Business-Aligned Tech:</strong> Tailoring cloud, software, and systems to real commercial goals.</span>
+                      </li>
+                      <li className="mission-pillar-item">
+                        <span className="mission-pillar-bullet">✓</span>
+                        <span><strong>Verified Engineering Talent:</strong> Connecting enterprises with vetted developers and specialists.</span>
+                      </li>
+                      <li className="mission-pillar-item">
+                        <span className="mission-pillar-bullet">✓</span>
+                        <span><strong>Long-Term Delivery:</strong> Maintaining high standards from architecture through post-launch support.</span>
+                      </li>
+                    </ul>
+                    <div className="mission-card-footer">
+                      <span>OPERATIONAL SCOPE</span>
+                      <span style={{ color: '#0f766e', fontWeight: 800 }}>UAE • India • Global</span>
+                    </div>
                   </div>
                 </ScrollReveal>
               )}
 
               {hasVision && (
                 <ScrollReveal animation="fade-up" delay={150}>
-                  <div className="about-card-lift mission-vision-card">
-                    <div className="about-icon-tile">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </svg>
+                  <div className="mission-card-modern vision-card">
+                    <div className="mission-card-top">
+                      <span className="mission-num-badge">02 • OUR VISION</span>
+                      <span className="mission-status-tag">LONG-TERM HORIZON</span>
                     </div>
-                    <h3>Our Vision</h3>
-                    <p>{ABOUT_CONTENT.vision}</p>
+                    <h3 className="mission-card-title">The Globally Trusted Technology Partner</h3>
+                    <p className="mission-card-lead">
+                      "{ABOUT_CONTENT.vision}"
+                    </p>
+                    <ul className="mission-pillars-list">
+                      <li className="mission-pillar-item">
+                        <span className="mission-pillar-bullet">★</span>
+                        <span><strong>Cross-Border Bridges:</strong> Connecting talent and enterprises between the Middle East and South Asia.</span>
+                      </li>
+                      <li className="mission-pillar-item">
+                        <span className="mission-pillar-bullet">★</span>
+                        <span><strong>Relationship Over Transaction:</strong> Fostering high-retention client trust and career growth.</span>
+                      </li>
+                      <li className="mission-pillar-item">
+                        <span className="mission-pillar-bullet">★</span>
+                        <span><strong>Sustainable Innovation:</strong> Thoughtfully adopting AI, cloud, and security frameworks built to scale.</span>
+                      </li>
+                    </ul>
+                    <div className="mission-card-footer">
+                      <span>STRATEGIC HUBS</span>
+                      <span style={{ color: '#2563eb', fontWeight: 800 }}>Dubai Creek Tower &amp; Chennai</span>
+                    </div>
                   </div>
                 </ScrollReveal>
               )}
             </div>
+
+            {/* Credibility Impact Ribbon */}
+            <ScrollReveal animation="fade-up" delay={200}>
+              <div className="about-cred-ribbon">
+                <div className="about-cred-item">
+                  <span className="about-cred-num">2</span>
+                  <span className="about-cred-label">Global Tech Hubs</span>
+                  <span className="about-cred-sub">Dubai Creek Tower &amp; Chennai</span>
+                </div>
+                <div className="about-cred-item">
+                  <span className="about-cred-num">100%</span>
+                  <span className="about-cred-label">Vetted IT Talent</span>
+                  <span className="about-cred-sub">Engineers &amp; Consultants</span>
+                </div>
+                <div className="about-cred-item">
+                  <span className="about-cred-num">Full</span>
+                  <span className="about-cred-label">Lifecycle Ownership</span>
+                  <span className="about-cred-sub">From Strategy to Support</span>
+                </div>
+                <div className="about-cred-item">
+                  <span className="about-cred-num">Direct</span>
+                  <span className="about-cred-label">Transparent Delivery</span>
+                  <span className="about-cred-sub">Honest Consulting &amp; No Fluff</span>
+                </div>
+              </div>
+            </ScrollReveal>
           </div>
         </section>
       )}
 
-      {/* 2b. Core Values (Driven by ABOUT_CONTENT.values) */}
+      {/* 2b. Core Values (Modern Human-Crafted Grid) */}
       {activeValues.length > 0 && (
-        <section className="about-sub-section bg-white">
-          <div className="about-divider-curve top">
-            <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
-              <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#ffffff" />
-            </svg>
-          </div>
+        <section className="values-section-modern">
           <div className="container">
             <ScrollReveal animation="fade-up">
-              <div className="about-sub-header">
-                <h2>Our Core Values</h2>
-                <p>The foundational principles that drive our engineering standards, service delivery, and client relationships.</p>
+              <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 20px' }}>
+                <span className="about-header-pill">OUR CULTURE &amp; CODE</span>
+                <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
+                  Our Core Values
+                </h2>
+                <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6 }}>
+                  The practical standards that guide every consulting engagement, candidate placement, and line of code we ship.
+                </p>
               </div>
             </ScrollReveal>
 
-            <div className="values-grid">
+            <div className="values-grid-modern">
               {activeValues.map((val, idx) => {
-                const isCustomer = val.title.toLowerCase().includes('customer');
-                const isQuality = val.title.toLowerCase().includes('quality');
-                const isInnovation = val.title.toLowerCase().includes('innovation');
-
+                const numStr = String(idx + 1).padStart(2, '0');
                 return (
-                  <ScrollReveal key={idx} animation="fade-up" delay={idx * 80}>
-                    <div className="about-card-lift value-card">
-                      <div className="about-icon-tile">
-                        {isCustomer ? (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                          </svg>
-                        ) : isQuality ? (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                            <polyline points="9 12 11 14 15 10"></polyline>
-                          </svg>
-                        ) : isInnovation ? (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <path d="M9 18h6"></path>
-                            <path d="M10 22h4"></path>
-                            <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path>
-                          </svg>
-                        ) : (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                          </svg>
-                        )}
+                  <ScrollReveal key={idx} animation="fade-up" delay={idx * 70}>
+                    <div className="value-card-modern">
+                      <div className="value-card-top">
+                        <span className="value-card-num">{numStr}</span>
+                        <span className="value-tag-pill">PRINCIPLE</span>
                       </div>
                       <h3>{val.title}</h3>
                       <p>{val.text}</p>
@@ -1698,6 +1749,21 @@ function App() {
       if (response.ok && (result.success || response.status === 200)) {
         setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsyn.com.");
         form.reset();
+
+        // Cache inquiry locally so Admin Dashboard reflects it immediately
+        try {
+          const localEntry = {
+            id: `inq_${Date.now()}`,
+            name: data.name,
+            email: data.email,
+            phone: data.phone || 'N/A',
+            message: data.message,
+            date: new Date().toLocaleString(),
+            status: 'New',
+          };
+          const prev = JSON.parse(localStorage.getItem('jobsync_inquiries_data') || '[]');
+          localStorage.setItem('jobsync_inquiries_data', JSON.stringify([localEntry, ...prev]));
+        } catch (_) {}
       } else {
         setErrorMsg(result.error || "Failed to submit inquiry. Please try again.");
       }

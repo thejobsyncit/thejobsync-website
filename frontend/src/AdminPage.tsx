@@ -41,22 +41,31 @@ const initialBlogs: BlogPost[] = [];
 
 const initialInquiries: Inquiry[] = [
   {
-    id: '1',
-    name: 'Robert Vance',
-    email: 'robert@fintechdynamics.com',
-    phone: '+971 50 123 4567',
-    message: 'We are looking to migrate our core transactional database to multi-cloud AWS infrastructure. Please share consultation availability.',
-    date: 'August 25, 2026, 2:30 PM',
+    id: 'inq_1791548587528_l1imi',
+    name: 'asdfghj',
+    email: 'priyaraghulp1997@gmail.com',
+    phone: '06381267339',
+    message: 'sdfghnm',
+    date: '9/10/2026, 5:53:07 pm',
     status: 'New'
   },
   {
-    id: '2',
-    name: 'Anita Desai',
-    email: 'anita@apexhealth.org',
-    phone: '+91 9876543210',
-    message: 'Requesting a quote for HIPAA-compliant custom portal development and security audit.',
-    date: 'August 24, 2026, 11:15 AM',
-    status: 'In Progress'
+    id: 'inq_1791545538444_kr4t6',
+    name: 'zsxdcfvgbh',
+    email: 'priyaraghulp1997@gmail.com',
+    phone: '06381267339',
+    message: 'jhgfcdxsdf',
+    date: '9/10/2026, 5:02:18 pm',
+    status: 'New'
+  },
+  {
+    id: 'inq_1791544952026_qatm3',
+    name: 'qwerty',
+    email: 'dharaniram319@gmail.com',
+    phone: '09444312677',
+    message: 'xascxsssds',
+    date: '9/10/2026, 4:52:31 pm',
+    status: 'New'
   }
 ];
 
@@ -207,7 +216,12 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
 
     fetch(`${getApiUrl()}/api/inquiries`)
       .then(res => res.json())
-      .then(d => d.success && setInquiries(d.data))
+      .then(d => {
+        if (d.success && Array.isArray(d.data)) {
+          setInquiries(d.data);
+          localStorage.setItem('jobsync_inquiries_data', JSON.stringify(d.data));
+        }
+      })
       .catch(() => {});
 
     fetch(`${getApiUrl()}/api/careers`)
@@ -215,6 +229,24 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
       .then(d => d.success && setCareers(d.data))
       .catch(() => {});
   }, []);
+
+  const [isRefreshingInquiries, setIsRefreshingInquiries] = useState(false);
+
+  const refreshInquiries = async () => {
+    setIsRefreshingInquiries(true);
+    try {
+      const res = await fetch(`${getApiUrl()}/api/inquiries`);
+      const d = await res.json();
+      if (d.success && Array.isArray(d.data)) {
+        setInquiries(d.data);
+        localStorage.setItem('jobsync_inquiries_data', JSON.stringify(d.data));
+      }
+    } catch (err) {
+      console.warn('Failed to refresh inquiries:', err);
+    } finally {
+      setIsRefreshingInquiries(false);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -861,9 +893,32 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
         {/* CUSTOMER INQUIRIES TAB */}
         {activeAdminTab === 'inquiries' && (
           <div>
-            <div style={{ marginBottom: '28px' }}>
-              <h2 style={{ fontSize: '24px', color: '#0f172a', margin: 0 }}>Customer Inquiries & Leads ({inquiries.length})</h2>
-              <p style={{ color: '#64748b', fontSize: '14px', margin: '4px 0 0 0' }}>Messages submitted via the contact form on your website.</p>
+            <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px' }}>
+              <div>
+                <h2 style={{ fontSize: '24px', color: '#0f172a', margin: 0 }}>Customer Inquiries & Leads ({inquiries.length})</h2>
+                <p style={{ color: '#64748b', fontSize: '14px', margin: '4px 0 0 0' }}>Messages submitted via the contact form on your website.</p>
+              </div>
+              <button
+                onClick={refreshInquiries}
+                disabled={isRefreshingInquiries}
+                style={{
+                  background: '#0d9488',
+                  color: '#ffffff',
+                  border: 'none',
+                  padding: '9px 18px',
+                  borderRadius: '8px',
+                  fontWeight: '700',
+                  fontSize: '13px',
+                  cursor: isRefreshingInquiries ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '0 2px 6px rgba(13, 148, 136, 0.25)',
+                  opacity: isRefreshingInquiries ? 0.7 : 1
+                }}
+              >
+                🔄 {isRefreshingInquiries ? 'Refreshing...' : 'Refresh Inquiries'}
+              </button>
             </div>
 
             <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
