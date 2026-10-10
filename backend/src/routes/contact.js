@@ -105,9 +105,9 @@ router.post('/', async (req, res) => {
     const transporter = getTransporter();
     if (transporter) {
       try {
-        const recipient = process.env.CONTACT_EMAIL || process.env.SMTP_USER || 'hr@thejobsyn.com';
+        const recipient = process.env.CONTACT_EMAIL || process.env.SMTP_USER || 'hr@thejobsync.com';
         await transporter.sendMail({
-          from: process.env.SMTP_FROM || process.env.SMTP_USER || 'hr@thejobsyn.com',
+          from: process.env.SMTP_FROM || process.env.SMTP_USER || 'hr@thejobsync.com',
           to: recipient,
           subject: `Website Inquiry from ${row.name}`,
           text: `Name: ${row.name}\nEmail: ${row.email}\nPhone: ${row.phone}\nMessage:\n${row.message}\n\nSubmitted: ${row.date}`,
@@ -122,7 +122,7 @@ router.post('/', async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: 'Thank you! Your inquiry has been sent to hr@thejobsyn.com.',
+    message: 'Thank you! Your inquiry has been sent to hr@thejobsync.com.',
     emailDelivered: emailSent,
     data: dbData,
   });

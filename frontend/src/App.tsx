@@ -1214,7 +1214,7 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                       <circle cx="12" cy="10" r="3"></circle>
                     </svg>
-                    <span>Dubai Creek Tower - 1st St -Riggat Al Buteen</span>
+                    <span>Dubai Creek Tower - 1st St - Riggat Al Buteen</span>
                   </div>
                   <div className="office-detail-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -1785,7 +1785,7 @@ function App() {
       const result = await response.json().catch(() => ({}));
 
       if (response.ok && (result.success || response.status === 200)) {
-        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsyn.com.");
+        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsync.com.");
         form.reset();
 
         // Cache inquiry locally so Admin Dashboard reflects it immediately
@@ -2117,7 +2117,7 @@ function App() {
                       </div>
                       <div>
                         <h3>Dubai Office</h3>
-                        <p>Dubai Creek Tower - 1st St - Deira-Riggat Al Buteen<br />+971 54 740 5625</p>
+                        <p>Dubai Creek Tower - 1st St - Riggat Al Buteen<br />+971 54 740 5625</p>
                       </div>
                     </div>
 
@@ -2137,7 +2137,7 @@ function App() {
                       </div>
                       <div>
                         <h3>Mail Id</h3>
-                        <p>hr@thejobsyn.com</p>
+                        <p><a href="mailto:hr@thejobsync.com" style={{ color: 'inherit', textDecoration: 'none' }}>hr@thejobsync.com</a></p>
                       </div>
                     </div>
                   </div>
@@ -2262,7 +2262,7 @@ function App() {
                 
                 <li style={{marginTop: '15px'}}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                  hr@thejobsyn.com
+                  <a href="mailto:hr@thejobsync.com" style={{ color: 'inherit', textDecoration: 'none' }}>hr@thejobsync.com</a>
                 </li>
               </ul>
             </div>
