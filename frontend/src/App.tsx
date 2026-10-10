@@ -1907,7 +1907,7 @@ function App() {
                 <ScrollReveal animation="fade-up" delay={100}>
                   <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
                     <div className="welcome-card-img-wrapper">
-                      <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1000&auto=format&fit=crop&q=90" alt="Cloud Infrastructure" className="welcome-card-img" />
+                      <img src="/cloud-infrastructure.jpg" alt="Cloud Infrastructure" className="welcome-card-img" />
                       <div className="welcome-card-overlay">
                         <span className="welcome-badge">  CLOUD ARCHITECTURE</span>
                       </div>
