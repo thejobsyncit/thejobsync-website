@@ -1608,25 +1608,34 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
       }}
       role="presentation"
     >
-      {/* 1. Subtle Faded Background Image Layer (clear skyline faded into dark theme) */}
-      <div
-        className="hero-bg-layer"
+      {/* 1. Background Video / Image Layer */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
         aria-hidden="true"
+        className="hero-bg-layer"
         style={{
           position: 'absolute',
           top: 0,
           left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: "url('/hero-skyline.webp')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center bottom',
-          backgroundRepeat: 'no-repeat',
-          opacity: 0.72,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          opacity: 0.75,
           zIndex: 1,
           pointerEvents: 'none'
         }}
-      />
+      >
+        <source src="/hero-skyline.mp4" type="video/mp4" />
+        {/* Fallback image if video is not supported or still loading */}
+        <img
+          src="/hero-skyline.webp"
+          alt=""
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      </video>
 
       {/* 2. Subtle Dark Gradient Overlay (soft contrast behind text, highly transparent across image) */}
       <div
