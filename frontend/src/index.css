@@ -488,14 +488,18 @@ a {
 }
 .welcome-card-img-wrapper {
   position: relative;
-  height: 230px;
+  height: 220px;
   width: 100%;
   overflow: hidden;
+  border-radius: 20px 20px 0 0;
+  background-color: #0b172a;
 }
 .welcome-card-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .welcome-card:hover .welcome-card-img {
@@ -2268,7 +2272,18 @@ a {
     grid-template-columns: 1fr !important;
   }
   .welcome-card-img-wrapper {
-    height: 200px;
+    width: 100% !important;
+    height: 200px !important;
+    overflow: hidden !important;
+    border-radius: 18px 18px 0 0 !important;
+    background-color: #0b172a !important;
+  }
+  .welcome-card-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
   }
   .testimonials-grid {
     grid-template-columns: 1fr !important;
@@ -2683,7 +2698,7 @@ a {
   }
 
   /* Guarantee content elements do not cause horizontal overflow */
-  img:not(.hero-bg-fallback-img):not(.about-img),
+  img:not(.hero-bg-fallback-img):not(.about-img):not(.welcome-card-img),
   video:not(.hero-bg-layer),
   svg, canvas, audio, iframe, embed, object {
     max-width: 100% !important;
