@@ -1653,6 +1653,35 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
         </div>
       </div>
 
+      {/* 4. Curve divider transition into next section */}
+      <div
+        className="hero-wave-divider"
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          bottom: -1,
+          left: 0,
+          width: '100%',
+          overflow: 'hidden',
+          lineHeight: 0,
+          zIndex: 4,
+          pointerEvents: 'none'
+        }}
+      >
+        <svg
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          style={{
+            position: 'relative',
+            display: 'block',
+            width: 'calc(100% + 1.3px)',
+            height: '56px',
+            fill: 'var(--pastel-bg, #edf7f8)'
+          }}
+        >
+          <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
+        </svg>
+      </div>
     </section>
   );
 };
