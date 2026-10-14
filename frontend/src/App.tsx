@@ -5,7 +5,7 @@ import { TestimonialsPage, TestimonialsSection } from './TestimonialsPage';
 import { BlogPage, BlogSection } from './BlogPage';
 import { AdminPage } from './AdminPage';
 
-// EDIT THIS. Only include details that are true. Empty fields are hidden.
+// About the founder 'Anitha Ekambaram'.
 const FOUNDER = {
   name: 'Anitha Ekambaram',
   title: 'Founder & Managing Director',
@@ -32,7 +32,7 @@ const FOUNDER = {
   email:  'anithaekambaram@thejobsync.com',
 };
 
-// EDIT THIS. Configuration for About Us page content.
+// About content for the company.
 // Provide your custom text below. Any field left empty ("") or blank will be hidden automatically.
 const ABOUT_CONTENT = {
   // Mission statement placeholder (empty "" hides the mission card)
