@@ -1595,45 +1595,43 @@ const ServicesPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void })
 
 /* Hero Section: Soft Skyline with Cinematic Blur and Subtle Dark Gradient */
 const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (vid) {
+      vid.defaultMuted = true;
+      vid.muted = true;
+      const playPromise = vid.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
+    }
+  }, []);
+
   return (
     <section
       className="hero hero-skyline-section"
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-        minHeight: '620px',
-        backgroundColor: '#0b172a',
-        display: 'flex',
-        alignItems: 'center'
-      }}
       role="presentation"
     >
-      {/* 1. Background Video / Image Layer */}
+      {/* 1. Background Video / Image Layer with AutoPlay */}
       <video
+        ref={videoRef}
         autoPlay
         loop
         muted
         playsInline
+        preload="auto"
+        poster="/hero-skyline.webp"
         aria-hidden="true"
         className="hero-bg-layer"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          opacity: 0.75,
-          zIndex: 1,
-          pointerEvents: 'none'
-        }}
       >
         <source src="/hero-skyline.mp4" type="video/mp4" />
         {/* Fallback image if video is not supported or still loading */}
         <img
           src="/hero-skyline.webp"
-          alt=""
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          alt="The Jobsync Skyline"
+          className="hero-bg-fallback-img"
         />
       </video>
 
@@ -1641,20 +1639,10 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
       <div
         className="hero-gradient-overlay"
         aria-hidden="true"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'linear-gradient(90deg, rgba(8, 19, 36, 0.58) 0%, rgba(11, 25, 46, 0.42) 38%, rgba(15, 33, 60, 0.16) 72%, rgba(11, 23, 42, 0.04) 100%)',
-          zIndex: 2,
-          pointerEvents: 'none'
-        }}
       />
 
       {/* 3. Existing Hero Content Sitting Directly Over Image (NO card, NO box, NO border) */}
-      <div className="container" style={{ position: 'relative', zIndex: 3, padding: '85px 20px 105px', width: '100%' }}>
+      <div className="container hero-skyline-container">
         <div className="hero-content">
           <h1>Looking for first class IT solutions?</h1>
           <p>With over 10 years of experience helping businesses to find comprehensive technological solutions and strategic IT consulting.</p>
@@ -1665,34 +1653,117 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
         </div>
       </div>
 
-      {/* 4. Wave divider fading into next section */}
-      <div
-        className="hero-wave-divider"
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          bottom: -1,
-          left: 0,
-          width: '100%',
-          overflow: 'hidden',
-          lineHeight: 0,
-          zIndex: 4,
-          pointerEvents: 'none'
-        }}
-      >
-        <svg
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
-          style={{
-            position: 'relative',
-            display: 'block',
-            width: 'calc(100% + 1.3px)',
-            height: '56px',
-            fill: 'var(--pastel-bg, #edf7f8)'
-          }}
-        >
-          <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
-        </svg>
+    </section>
+  );
+};
+
+const WhyChooseUsSection = () => {
+  return (
+    <section className="why-choose-section" id="why-choose-us">
+      <div className="container">
+        <ScrollReveal animation="fade-up">
+          <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 16px' }}>
+            <span className="about-header-pill">THE JOBSYNC ADVANTAGE</span>
+            <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
+              Why Choose Us
+            </h2>
+            <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6 }}>
+              Built upon proven engineering capabilities, trusted technology partnerships, and measurable business outcomes that eliminate guesswork.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        <div className="why-choose-grid-modern">
+          {/* 01: End-to-End Solutions */}
+          <ScrollReveal animation="fade-up" delay={0}>
+            <div className="why-choose-card-modern">
+              <div className="why-card-header">
+                <span className="why-num-tag">01</span>
+                <span className="why-category-badge">FULL LIFECYCLE</span>
+              </div>
+              <h3>End-to-End Solutions</h3>
+              <p>
+                Comprehensive capabilities spanning strategic consulting, custom development, cloud deployment, enterprise applications, and ongoing managed IT services.
+              </p>
+              <div className="why-card-outcome-chip">
+                <span className="why-card-outcome-dot"></span>
+                <span>Single Accountability Partner</span>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* 02: Improved Operational Efficiency */}
+          <ScrollReveal animation="fade-up" delay={60}>
+            <div className="why-choose-card-modern">
+              <div className="why-card-header">
+                <span className="why-num-tag">02</span>
+                <span className="why-category-badge">VELOCITY</span>
+              </div>
+              <h3>Improved Operational Efficiency</h3>
+              <p>
+                Optimizing enterprise workflows and technology infrastructure so your organization operates with maximum speed, agility, and precision.
+              </p>
+              <div className="why-card-outcome-chip">
+                <span className="why-card-outcome-dot"></span>
+                <span>Streamlined Digital Operations</span>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* 03: Reduced Costs */}
+          <ScrollReveal animation="fade-up" delay={120}>
+            <div className="why-choose-card-modern">
+              <div className="why-card-header">
+                <span className="why-num-tag">03</span>
+                <span className="why-category-badge">ROI &amp; EFFICIENCY</span>
+              </div>
+              <h3>Reduced Costs</h3>
+              <p>
+                Scalable software architectures and strategic resource planning that minimize infrastructure overhead and optimize total cost of ownership.
+              </p>
+              <div className="why-card-outcome-chip">
+                <span className="why-card-outcome-dot"></span>
+                <span>Zero Tech Waste &amp; Overhead</span>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* 04: Enhanced Security */}
+          <ScrollReveal animation="fade-up" delay={180}>
+            <div className="why-choose-card-modern">
+              <div className="why-card-header">
+                <span className="why-num-tag">04</span>
+                <span className="why-category-badge">DEFENSE IN DEPTH</span>
+              </div>
+              <h3>Enhanced Security</h3>
+              <p>
+                Proactive cybersecurity practices, robust compliance standards, and continuous protection safeguarding critical organizational assets and data.
+              </p>
+              <div className="why-card-outcome-chip">
+                <span className="why-card-outcome-dot"></span>
+                <span>Enterprise Data Protection</span>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* 05: Business Scalability */}
+          <ScrollReveal animation="fade-up" delay={240}>
+            <div className="why-choose-card-modern">
+              <div className="why-card-header">
+                <span className="why-num-tag">05</span>
+                <span className="why-category-badge">ELASTIC CAPACITY</span>
+              </div>
+              <h3>Business Scalability</h3>
+              <p>
+                Flexible cloud-native architectures and on-demand tech staffing tailored to scale smoothly as your customer base and operations expand across markets.
+              </p>
+              <div className="why-card-outcome-chip">
+                <span className="why-card-outcome-dot"></span>
+                <span>Ready for 10x Business Scale</span>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
       </div>
     </section>
   );
@@ -1739,87 +1810,6 @@ function App() {
   }, []);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [successMsg, setSuccessMsg] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-
-  const handleHomeServiceClick = (serviceTitle: string) => {
-    if (typeof window !== 'undefined') {
-      window.history.pushState({}, '', `/contact?service=${encodeURIComponent(serviceTitle)}`);
-    }
-    setActiveTab('contact');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setSuccessMsg('');
-    setErrorMsg('');
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    const data = {
-      name: (formData.get('name') as string || '').trim(),
-      email: (formData.get('email') as string || '').trim(),
-      phone: (formData.get('phone') as string || '').trim(),
-      message: (formData.get('message') as string || '').trim(),
-    };
-
-    try {
-      const web3Key = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'a7cd1aa3-f5a4-4f75-8c7d-0e6d032a3a13';
-      if (web3Key) {
-        fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
-            access_key: web3Key,
-            subject: `Website Inquiry from ${data.name}`,
-            from_name: 'The JobSync Website',
-            name: data.name,
-            email: data.email,
-            phone: data.phone,
-            message: data.message,
-          }),
-        }).catch((err) => console.warn('Web3Forms dispatch note:', err));
-      }
-
-      const apiUrl = import.meta.env.VITE_API_BASE_URL !== undefined ? import.meta.env.VITE_API_BASE_URL : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '');
-      const response = await fetch(`${apiUrl}/api/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json().catch(() => ({}));
-
-      if (response.ok && (result.success || response.status === 200)) {
-        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsync.com.");
-        form.reset();
-
-        // Cache inquiry locally so Admin Dashboard reflects it immediately
-        try {
-          const localEntry = {
-            id: `inq_${Date.now()}`,
-            name: data.name,
-            email: data.email,
-            phone: data.phone || 'N/A',
-            message: data.message,
-            date: new Date().toLocaleString(),
-            status: 'New',
-          };
-          const prev = JSON.parse(localStorage.getItem('jobsync_inquiries_data') || '[]');
-          localStorage.setItem('jobsync_inquiries_data', JSON.stringify([localEntry, ...prev]));
-        } catch (_) {}
-      } else {
-        setErrorMsg(result.error || "Failed to submit inquiry. Please try again.");
-      }
-    } catch (error) {
-      setErrorMsg("Network error: Unable to connect to server. Please try again later.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleNavClick = (tab: string) => {
     setActiveTab(tab);
@@ -1838,6 +1828,37 @@ function App() {
   return (
     <div className="app-container">
 
+
+      {/* Top Bar */}
+      <div className="top-bar">
+        <div className="container top-bar-container">
+          <div className="top-bar-left">
+            <a href="mailto:hr@thejobsync.com" className="top-bar-email">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>hr@thejobsync.com</span>
+            </a>
+          </div>
+          <div className="top-bar-right">
+            <div className="top-bar-social">
+              <a href="https://instagram.com/the_jobsync?" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+              </a>
+              <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+              </a>
+              <a href="https://www.linkedin.com/company/thejobsync/about/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+              </a>
+              <a href="https://www.youtube.com/@thejobsync-it" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M21.582,5.493C21.346,4.618 20.654,3.927 19.779,3.691C18.172,3.262 12,3.262 12,3.262C12,3.262 5.828,3.262 4.221,3.691C3.346,3.927 2.654,4.618 2.418,5.493C1.989,7.1 1.989,12 1.989,12C1.989,12 1.989,16.9 2.418,18.507C2.654,19.382 3.346,20.073 4.221,20.309C5.828,20.738 12,20.738 12,20.738C12,20.738 18.172,20.738 19.779,20.309C20.654,20.073 21.346,19.382 21.582,18.507C22.011,16.9 22.011,12 22.011,12C22.011,12 22.011,7.1 21.582,5.493ZM10.024,15.701L10.024,8.299L15.356,12L10.024,15.701Z"></path></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Header */}
       <header className="header">
@@ -1874,7 +1895,6 @@ function App() {
               <a href="/services" onClick={(e) => { e.preventDefault(); handleNavClick('services'); }} style={{ color: activeTab === 'services' ? 'var(--primary-cyan)' : '' }}>SERVICES</a>
               <a href="/testimonials" onClick={(e) => { e.preventDefault(); handleNavClick('testimonials'); }} style={{ color: activeTab === 'testimonials' ? 'var(--primary-cyan)' : '' }}>TESTIMONIALS</a>
               <a href="/blog" onClick={(e) => { e.preventDefault(); handleNavClick('blog'); }} style={{ color: activeTab === 'blog' ? 'var(--primary-cyan)' : '' }}>BLOG</a>
-              <a href="/careers" onClick={(e) => { e.preventDefault(); handleNavClick('careers'); }} style={{ color: activeTab === 'careers' ? 'var(--primary-cyan)' : '' }}>CAREERS</a>
               <a href="/contact" onClick={(e) => { e.preventDefault(); handleNavClick('contact'); }} style={{ color: activeTab === 'contact' ? 'var(--primary-cyan)' : '' }}>CONTACT US</a>
             </nav>
           </div>
@@ -2049,142 +2069,9 @@ function App() {
             </div>
           </section>
 
-          {/* Services Section */}
-          <section className="services" id="services" style={{ padding: '60px 0 85px' }}>
-            <div className="container">
-              <ScrollReveal animation="fade-up">
-                <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 45px' }}>
-                  <span
-                    style={{
-                      background: 'rgba(43, 182, 180, 0.12)',
-                      color: '#0f766e',
-                      padding: '6px 18px',
-                      borderRadius: '30px',
-                      fontWeight: 800,
-                      fontSize: '12px',
-                      letterSpacing: '1.5px',
-                      textTransform: 'uppercase',
-                      display: 'inline-block',
-                      marginBottom: '14px',
-                      border: '1px solid rgba(43, 182, 180, 0.3)'
-                    }}
-                  >
-                    OUR CAPABILITIES
-                  </span>
-                  <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '14px' }}>
-                    Our Services
-                  </h2>
-                  <p style={{ color: '#64748b', fontSize: '16px', lineHeight: 1.6 }}>
-                    From strategic IT consulting to enterprise cloud transformations, discover how we empower organizations to innovate and scale.
-                  </p>
-                </div>
-              </ScrollReveal>
+          {/* Why Choose Us Section on Home Page */}
+          <WhyChooseUsSection />
 
-              <div className="services-grid">
-                {SERVICES_DATA.map((service, index) => (
-                  <ScrollReveal key={index} animation="fade-up" delay={(index % 3) * 80}>
-                    <div
-                      className="service-item"
-                      onClick={() => handleHomeServiceClick(service.title)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleHomeServiceClick(service.title); }}
-                      title={`Click to inquire about ${service.title}`}
-                    >
-                      <h3>{service.title}</h3>
-
-                      <div className="service-list-wrap">
-                        <ul className="service-list">
-                          {service.items.map((item, i) => (
-                            <li key={i}>{item}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="service-card-cta">
-                        <span>CONTACT US &rarr;</span>
-                      </div>
-                    </div>
-                  </ScrollReveal>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Contact Section */}
-          <section className="contact" id="contact">
-            <div className="container">
-              <div className="contact-grid">
-                <ScrollReveal animation="fade-right">
-                  <div className="contact-info">
-                    <span className="contact-subtitle">GET IN TOUCH</span>
-                    <h2>Connect with Our Team</h2>
-
-                    <div className="contact-item">
-                      <div className="contact-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                      </div>
-                      <div>
-                        <h3>Dubai Office</h3>
-                        <p>Dubai Creek Tower - 1st St - Riggat Al Buteen<br />+971 54 740 5625</p>
-                      </div>
-                    </div>
-
-                    <div className="contact-item">
-                      <div className="contact-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                      </div>
-                      <div>
-                        <h3>India Office</h3>
-                        <p> Tamilnadu, Chennai<br />+91 9789569391</p>
-                      </div>
-                    </div>
-                    
-                    <div className="contact-item">
-                      <div className="contact-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                      </div>
-                      <div>
-                        <h3>Mail Id</h3>
-                        <p><a href="mailto:hr@thejobsync.com" style={{ color: 'inherit', textDecoration: 'none' }}>hr@thejobsync.com</a></p>
-                      </div>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-left">
-                  <div className="contact-form">
-                    <form onSubmit={handleContactSubmit}>
-                      {successMsg && <div style={{ color: '#4caf50', marginBottom: '15px', fontWeight: '500' }}>{successMsg}</div>}
-                      {errorMsg && <div style={{ color: '#f44336', marginBottom: '15px', fontWeight: '500' }}>{errorMsg}</div>}
-                      <div className="form-row">
-                        <input type="text" name="name" placeholder="Full Name" required />
-                      </div>
-                      <div className="form-row">
-                        <input type="email" name="email" placeholder="Email*" required />
-                        <input type="tel" name="phone" placeholder="Phone Number" />
-                      </div>
-                      <div className="form-row">
-                        <textarea name="message" placeholder="Tell us about your IT requirements or business goals *" required rows={4}></textarea>
-                      </div>
-                      <div className="form-checkbox">
-                        <input type="checkbox" id="terms_home" required />
-                        <label htmlFor="terms_home">I accept your Terms & Conditions</label>
-                      </div>
-                      <button type="submit" className="btn-solid" disabled={isLoading} style={{ opacity: isLoading ? 0.7 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}>
-                        {isLoading ? (
-                          <span style={{ display: 'inline-block', width: '16px', height: '16px', border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', animation: 'spin 1s linear infinite', marginRight: '8px', verticalAlign: 'middle' }}></span>
-                        ) : (
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                        )}
-                        {isLoading ? 'Sending...' : 'Submit Inquiry'}
-                      </button>
-                    </form>
-                  </div>
-                </ScrollReveal>
-              </div>
-            </div>
-          </section>
           {/* Testimonials Section on Home Page */}
           <TestimonialsSection setActiveTab={setActiveTab} />
           {/* Blog Section on Home Page */}
@@ -2214,7 +2101,7 @@ function App() {
               <p>At The Jobsync, we specialize in providing expert IT Consulting and technological solutions. Our goal is to help businesses grow and professionals achieve their IT career aspirations efficiently.</p>
               <div className="footer-social">
                 <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
-                <a href="https://www.instagram.com/thejobsyncit/?hl=en" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg></a>
+                <a href="https://instagram.com/the_jobsync?" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg></a>
                 <a href="https://www.linkedin.com/company/thejobsync/about/" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
                 <a href="https://www.youtube.com/@thejobsync-it" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.582,5.493C21.346,4.618 20.654,3.927 19.779,3.691C18.172,3.262 12,3.262 12,3.262C12,3.262 5.828,3.262 4.221,3.691C3.346,3.927 2.654,4.618 2.418,5.493C1.989,7.1 1.989,12 1.989,12C1.989,12 1.989,16.9 2.418,18.507C2.654,19.382 3.346,20.073 4.221,20.309C5.828,20.738 12,20.738 12,20.738C12,20.738 18.172,20.738 19.779,20.309C20.654,20.073 21.346,19.382 21.582,18.507C22.011,16.9 22.011,12 22.011,12C22.011,12 22.011,7.1 21.582,5.493ZM10.024,15.701L10.024,8.299L15.356,12L10.024,15.701Z"></path></svg></a>
               </div>
@@ -2227,6 +2114,7 @@ function App() {
                 <li><a href="#" className={activeTab === 'about' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('about'); window.scrollTo(0, 0); }}>About Us</a></li>
                 <li><a href="#" className={activeTab === 'services' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('services'); window.scrollTo(0, 0); }}>Our Services</a></li>
                 <li><a href="#" className={activeTab === 'testimonials' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('testimonials'); window.scrollTo(0, 0); }}>Testimonials</a></li>
+                <li><a href="#" className={activeTab === 'careers' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('careers'); window.scrollTo(0, 0); }}>Careers</a></li>
                 <li><a href="#contact" onClick={(e) => { e.preventDefault(); setActiveTab('contact'); window.scrollTo(0, 0); }}>Contact Us</a></li>
               </ul>
             </div>
