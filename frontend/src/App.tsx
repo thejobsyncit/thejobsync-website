@@ -5,7 +5,7 @@ import { TestimonialsPage, TestimonialsSection } from './TestimonialsPage';
 import { BlogPage, BlogSection } from './BlogPage';
 import { AdminPage } from './AdminPage';
 
-// EDIT THIS. Only include details that are true. Empty fields are hidden.
+// About the founder 'Anitha Ekambaram'.
 const FOUNDER = {
   name: 'Anitha Ekambaram',
   title: 'Founder & Managing Director',
@@ -32,7 +32,7 @@ const FOUNDER = {
   email:  'anithaekambaram@thejobsync.com',
 };
 
-// EDIT THIS. Configuration for About Us page content.
+// About content for the company.
 // Provide your custom text below. Any field left empty ("") or blank will be hidden automatically.
 const ABOUT_CONTENT = {
   // Mission statement placeholder (empty "" hides the mission card)
@@ -1598,14 +1598,6 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
   return (
     <section
       className="hero hero-skyline-section"
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-        minHeight: '620px',
-        backgroundColor: '#0b172a',
-        display: 'flex',
-        alignItems: 'center'
-      }}
       role="presentation"
     >
       {/* 1. Background Video / Image Layer */}
@@ -1616,24 +1608,13 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
         playsInline
         aria-hidden="true"
         className="hero-bg-layer"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          opacity: 0.75,
-          zIndex: 1,
-          pointerEvents: 'none'
-        }}
       >
         <source src="/hero-skyline.mp4" type="video/mp4" />
         {/* Fallback image if video is not supported or still loading */}
         <img
           src="/hero-skyline.webp"
-          alt=""
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          alt="The Jobsync Skyline"
+          className="hero-bg-fallback-img"
         />
       </video>
 
@@ -1641,20 +1622,10 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
       <div
         className="hero-gradient-overlay"
         aria-hidden="true"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'linear-gradient(90deg, rgba(8, 19, 36, 0.58) 0%, rgba(11, 25, 46, 0.42) 38%, rgba(15, 33, 60, 0.16) 72%, rgba(11, 23, 42, 0.04) 100%)',
-          zIndex: 2,
-          pointerEvents: 'none'
-        }}
       />
 
       {/* 3. Existing Hero Content Sitting Directly Over Image (NO card, NO box, NO border) */}
-      <div className="container" style={{ position: 'relative', zIndex: 3, padding: '85px 20px 105px', width: '100%' }}>
+      <div className="container hero-skyline-container">
         <div className="hero-content">
           <h1>Looking for first class IT solutions?</h1>
           <p>With over 10 years of experience helping businesses to find comprehensive technological solutions and strategic IT consulting.</p>
