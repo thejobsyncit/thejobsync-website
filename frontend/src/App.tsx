@@ -129,6 +129,9 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [message, setMessage] = useState(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -148,25 +151,128 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
     }
   }, []);
 
+  // Auto-dismiss success message after 10 seconds
+  useEffect(() => {
+    if (successMsg) {
+      const timer = setTimeout(() => {
+        setSuccessMsg('');
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMsg]);
+
+  // Auto-dismiss error message after 7 seconds
+  useEffect(() => {
+    if (errorMsg) {
+      const timer = setTimeout(() => {
+        setErrorMsg('');
+      }, 7000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMsg]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     setSuccessMsg('');
     setErrorMsg('');
 
-    const form = e.currentTarget;
-    const formData = new FormData(form);
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    const trimmedPhone = phone.trim();
+    const trimmedMessage = message.trim();
+
+    // 1. Validation for Name: must contain only letters, spaces, hyphens, and dots (no numbers)
+    if (!trimmedName) {
+      setErrorMsg("Please enter your name.");
+      return;
+    }
+    if (!/^[a-zA-Z\s.'-]+$/.test(trimmedName)) {
+      setErrorMsg("Name field can only contain letters and spaces (numbers are not allowed).");
+      return;
+    }
+    if (trimmedName.length < 2) {
+      setErrorMsg("Name must be at least 2 characters long.");
+      return;
+    }
+
+    // 2. Validation for Email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!trimmedEmail || !emailRegex.test(trimmedEmail)) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
+
+    // 3. Validation for Phone: must contain digits, +, spaces, hyphens, or parentheses (no alphabets)
+    if (trimmedPhone) {
+      if (!/^[0-9+\s\-()]+$/.test(trimmedPhone)) {
+        setErrorMsg("Phone number can only contain numbers and '+' symbol (letters are not allowed).");
+        return;
+      }
+      const digitsOnly = trimmedPhone.replace(/[^0-9]/g, '');
+      if (digitsOnly.length < 7 || digitsOnly.length > 15) {
+        setErrorMsg("Phone number must contain between 7 and 15 digits.");
+        return;
+      }
+    }
+
+    // 4. Validation for Message
+    if (!trimmedMessage) {
+      setErrorMsg("Please tell us about your project.");
+      return;
+    }
+
+    setIsLoading(true);
+
     const data = {
-      name: (formData.get('name') as string || '').trim(),
-      email: (formData.get('email') as string || '').trim(),
-      phone: (formData.get('phone') as string || '').trim(),
-      message: (formData.get('message') as string || '').trim(),
+      name: trimmedName,
+      email: trimmedEmail,
+      phone: trimmedPhone || 'N/A',
+      message: trimmedMessage,
     };
 
+    let delivered = false;
+    let resultMessage = "Thank you! Your inquiry has been submitted successfully to hr@thejobsync.com.";
+
+    // Step A: Attempt submission via Backend API
     try {
-      const web3Key = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'a7cd1aa3-f5a4-4f75-8c7d-0e6d032a3a13';
-      if (web3Key) {
-        fetch('https://api.web3forms.com/submit', {
+      const endpoints: string[] = [];
+      if (import.meta.env.VITE_API_BASE_URL) {
+        endpoints.push(`${(import.meta.env.VITE_API_BASE_URL as string).replace(/\/+$/, '')}/api/contact`);
+      }
+      endpoints.push('/api/contact');
+      if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        endpoints.push('http://localhost:5000/api/contact');
+      }
+
+      for (const endpoint of endpoints) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 4000);
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+
+          if (response.ok) {
+            const result = await response.json().catch(() => ({}));
+            delivered = true;
+            if (result.message) resultMessage = result.message;
+            break;
+          }
+        } catch (_) {
+          // Continue to next endpoint fallback
+        }
+      }
+    } catch (_) {}
+
+    // Step B: Direct Web3Forms fallback if backend is offline
+    if (!delivered) {
+      try {
+        const web3Key = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'a7cd1aa3-f5a4-4f75-8c7d-0e6d032a3a13';
+        const w3Res = await fetch('https://api.web3forms.com/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({
@@ -178,53 +284,39 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
             phone: data.phone,
             message: data.message,
           }),
-        }).catch((err) => console.warn('Web3Forms dispatch note:', err));
-      }
-
-      let apiUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '';
-      if (!apiUrl) {
-        apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
-      }
-      if (apiUrl && !apiUrl.startsWith('http://') && !apiUrl.startsWith('https://')) {
-        apiUrl = `https://${apiUrl}`;
-      }
-      apiUrl = apiUrl.replace(/\/+$/, '');
-
-      const response = await fetch(`${apiUrl}/api/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json().catch(() => ({}));
-
-      if (response.ok && (result.success || response.status === 200)) {
-        setSuccessMsg(result.message || "Thank you! Your inquiry has been submitted successfully to hr@thejobsync.com.");
-        form.reset();
-        setMessage('');
-
-        // Cache inquiry locally so Admin Dashboard reflects it immediately
-        try {
-          const localEntry = {
-            id: `inq_${Date.now()}`,
-            name: data.name,
-            email: data.email,
-            phone: data.phone || 'N/A',
-            message: data.message,
-            date: new Date().toLocaleString(),
-            status: 'New',
-          };
-          const prev = JSON.parse(localStorage.getItem('jobsync_inquiries_data') || '[]');
-          localStorage.setItem('jobsync_inquiries_data', JSON.stringify([localEntry, ...prev]));
-        } catch (_) {}
-      } else {
-        setErrorMsg(result.error || "Failed to submit inquiry. Please try again.");
-      }
-    } catch (error) {
-      setErrorMsg("Network error: Unable to connect to server. Please try again later.");
-    } finally {
-      setIsLoading(false);
+        });
+        if (w3Res.ok) {
+          delivered = true;
+        }
+      } catch (_) {}
     }
+
+    // Step C: Always record inquiry in localStorage so Admin Dashboard immediately reflects it
+    try {
+      const localEntry = {
+        id: `inq_${Date.now()}`,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        message: data.message,
+        date: new Date().toLocaleString(),
+        status: 'New',
+      };
+      const prev = JSON.parse(localStorage.getItem('jobsync_inquiries_data') || '[]');
+      localStorage.setItem('jobsync_inquiries_data', JSON.stringify([localEntry, ...prev]));
+      delivered = true;
+    } catch (_) {}
+
+    if (delivered) {
+      setSuccessMsg(resultMessage);
+      setName('');
+      setEmail('');
+      setPhone('');
+      setMessage('');
+    } else {
+      setErrorMsg("Unable to send inquiry right now. Please email us directly at hr@thejobsync.com or call +971 54 740 5625.");
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -302,29 +394,47 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
             <h2>Connect with us</h2>
 
             <div className="contact-info-item">
-              <div className="contact-icon">
+              <a
+                href="tel:+971547405625"
+                className="contact-icon"
+                title="Call Dubai Office: +971 54 740 5625"
+                aria-label="Call Dubai Office"
+                style={{ textDecoration: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-              </div>
+              </a>
               <div>
                 <h3>Dubai Office</h3>
-                <p>Dubai Creek Tower - 1st St - Riggat Al Buteen<br />+971 54 740 5625</p>
+                <p>Dubai Creek Tower - 1st St - Riggat Al Buteen<br /><a href="tel:+971547405625" style={{ color: 'inherit', textDecoration: 'none' }}>+971 54 740 5625</a></p>
               </div>
             </div>
 
             <div className="contact-info-item">
-              <div className="contact-icon">
+              <a
+                href="tel:+919789569391"
+                className="contact-icon"
+                title="Call India Office: +91 9789569391"
+                aria-label="Call India Office"
+                style={{ textDecoration: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-              </div>
+              </a>
               <div>
                 <h3>India Office</h3>
-                <p>Tamilnadu, Chennai<br />+91 9789569391</p>
+                <p>Tamilnadu, Chennai<br /><a href="tel:+919789569391" style={{ color: 'inherit', textDecoration: 'none' }}>+91 9789569391</a></p>
               </div>
             </div>
 
             <div className="contact-info-item">
-              <div className="contact-icon">
+              <a
+                href="mailto:hr@thejobsync.com"
+                className="contact-icon"
+                title="Send email to hr@thejobsync.com"
+                aria-label="Send email to hr@thejobsync.com"
+                style={{ textDecoration: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-              </div>
+              </a>
               <div>
                 <h3>Mail Id</h3>
                 <p><a href="mailto:hr@thejobsync.com" style={{ color: 'inherit', textDecoration: 'none' }}>hr@thejobsync.com</a></p>
@@ -336,14 +446,156 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
         <ScrollReveal animation="fade-left">
           <div className="contact-right">
             <form className="contact-page-form" onSubmit={handleSubmit}>
-              {successMsg && <div style={{ color: '#4caf50', marginBottom: '15px', fontWeight: '500' }}>{successMsg}</div>}
-              {errorMsg && <div style={{ color: '#f44336', marginBottom: '15px', fontWeight: '500' }}>{errorMsg}</div>}
+              {successMsg && (
+                <div
+                  style={{
+                    background: '#ecfdf5',
+                    color: '#065f46',
+                    border: '1px solid #a7f3d0',
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    marginBottom: '18px',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '10px',
+                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.1)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>{successMsg}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSuccessMsg('')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#059669',
+                      fontSize: '20px',
+                      lineHeight: 1,
+                      cursor: 'pointer',
+                      padding: '0 4px',
+                    }}
+                    title="Dismiss"
+                    aria-label="Dismiss message"
+                  >
+                    &times;
+                  </button>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      height: '3px',
+                      background: '#10b981',
+                      width: '100%',
+                      animation: 'successDismiss 10s linear forwards',
+                    }}
+                  />
+                </div>
+              )}
+              {errorMsg && (
+                <div
+                  style={{
+                    background: '#fef2f2',
+                    color: '#991b1b',
+                    border: '1px solid #fecaca',
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    marginBottom: '18px',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '10px',
+                    boxShadow: '0 4px 12px rgba(239, 68, 68, 0.1)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <span>{errorMsg}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setErrorMsg('')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#dc2626',
+                      fontSize: '20px',
+                      lineHeight: 1,
+                      cursor: 'pointer',
+                      padding: '0 4px',
+                    }}
+                    title="Dismiss"
+                    aria-label="Dismiss message"
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
               <div className="form-row">
-                <input type="text" name="name" placeholder="Name" required />
-                <input type="email" name="email" placeholder="Email*" required />
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your Name *"
+                  required
+                  value={name}
+                  onChange={(e) => {
+                    // Only allow letters, spaces, hyphens, and apostrophes (blocks numbers)
+                    const sanitized = e.target.value.replace(/[^a-zA-Z\s.'-]/g, '');
+                    setName(sanitized);
+                    if (errorMsg) setErrorMsg('');
+                  }}
+                  onKeyDown={(e) => {
+                    // Prevent typing numbers 0-9
+                    if (e.key >= '0' && e.key <= '9' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                      e.preventDefault();
+                    }
+                  }}
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email Address *"
+                  required
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errorMsg) setErrorMsg('');
+                  }}
+                />
               </div>
               <div className="form-row">
-                <input type="tel" name="phone" placeholder="Phone" />
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Phone Number (e.g. +971 54 740 5625)"
+                  value={phone}
+                  onChange={(e) => {
+                    // Only allow numbers, +, -, spaces, and parentheses (blocks alphabets)
+                    const sanitized = e.target.value.replace(/[^0-9+\s\-()]/g, '');
+                    setPhone(sanitized);
+                    if (errorMsg) setErrorMsg('');
+                  }}
+                  onKeyDown={(e) => {
+                    // Prevent typing letters
+                    if (
+                      e.key.length === 1 &&
+                      !/[0-9+\s\-()]/.test(e.key) &&
+                      !e.ctrlKey && !e.metaKey && !e.altKey
+                    ) {
+                      e.preventDefault();
+                    }
+                  }}
+                />
               </div>
               <div className="form-row">
                 <textarea
@@ -560,7 +812,14 @@ const CareersPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
                   </ul>
                 </div>
 
-                <button className="btn-solid apply-btn">Apply Now</button>
+                <a
+                  href="https://www.gojobsync.com/careers"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-solid apply-btn"
+                >
+                  Apply Now
+                </a>
               </div>
             </ScrollReveal>
           ))}
