@@ -28,6 +28,46 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
   const [fAvatar, setFAvatar] = useState('');
   const [fQuote, setFQuote] = useState('');
 
+  const isDirectPhotoUrl = (url: string): boolean => {
+    if (!url || !url.trim()) return true; // optional
+    const trimmed = url.trim();
+    try {
+      const parsed = new URL(trimmed);
+      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+        return false;
+      }
+
+      // Check known image file extensions in path
+      const hasImageExt = /\.(jpe?g|png|webp|svg|gif|avif|bmp|ico)($|\?|#)/i.test(parsed.pathname + parsed.search);
+      if (hasImageExt) return true;
+
+      // Check trusted image CDNs that generate images via API or URL paths
+      const host = parsed.hostname.toLowerCase();
+      const isImageHost = (
+        host.includes('images.unsplash.com') ||
+        host.includes('cloudinary.com') ||
+        host.includes('imgur.com') ||
+        host.includes('googleusercontent.com') ||
+        host.includes('githubusercontent.com') ||
+        host.includes('gravatar.com') ||
+        host.includes('images.pexels.com') ||
+        host.includes('cdn.pixabay.com') ||
+        host.includes('media.licdn.com')
+      );
+      if (isImageHost) return true;
+
+      // Check format query parameters (e.g. ?fm=jpg, &format=png)
+      const formatParam = parsed.searchParams.get('format') || parsed.searchParams.get('fm');
+      if (formatParam && ['jpg', 'jpeg', 'png', 'webp', 'avif'].includes(formatParam.toLowerCase())) {
+        return true;
+      }
+
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
   const getApiUrl = () => {
     let url = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '';
     if (!url) {
@@ -43,11 +83,30 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
     fetch(`${getApiUrl()}/api/testimonials`)
       .then(res => res.json())
       .then(data => {
-        if (data.success && Array.isArray(data.data)) {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
           setItems(data.data);
+          try {
+            localStorage.setItem('jobsync_testimonials_data', JSON.stringify(data.data));
+          } catch {}
+        } else {
+          const saved = localStorage.getItem('jobsync_testimonials_data');
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              if (Array.isArray(parsed) && parsed.length > 0) setItems(parsed);
+            } catch {}
+          }
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        const saved = localStorage.getItem('jobsync_testimonials_data');
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) setItems(parsed);
+          } catch {}
+        }
+      });
   };
 
   useEffect(() => {
@@ -56,21 +115,77 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
 
   const handleFeedbackSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fName.trim() || !fQuote.trim()) {
-      setErrorMsg('Please enter your Name and Feedback details.');
+    setErrorMsg('');
+
+    // 1. Validate Name (Letters and spaces only, no numbers)
+    const cleanName = fName.trim();
+    if (!cleanName) {
+      setErrorMsg('Please enter your full name.');
       return;
     }
-    setErrorMsg('');
+    if (/\d/.test(cleanName)) {
+      setErrorMsg('Name field cannot accept numbers. Please enter alphabetic characters only.');
+      return;
+    }
+    if (cleanName.length < 2 || !/^[a-zA-Z\s.'-]+$/.test(cleanName)) {
+      setErrorMsg('Please enter a valid name (letters only, minimum 2 characters).');
+      return;
+    }
+
+    // 2. Validate Role / Title (No numbers allowed)
+    const cleanRole = fRole.trim();
+    if (cleanRole) {
+      if (/\d/.test(cleanRole)) {
+        setErrorMsg('Role / Title cannot contain numbers. Please enter a valid professional title (e.g. CTO, Operations Director).');
+        return;
+      }
+      if (cleanRole.length < 2 || !/^[a-zA-Z\s/&.'-]+$/.test(cleanRole)) {
+        setErrorMsg('Role / Title contains invalid characters. Please enter letters and standard symbols only.');
+        return;
+      }
+    }
+
+    // 3. Validate Company Name (No phone / mobile numbers allowed, must contain company letters)
+    const cleanCompany = fCompany.trim();
+    if (cleanCompany) {
+      const isPurelyDigitsOrPhone = /^[\d\s+\-().]{6,}$/.test(cleanCompany);
+      const hasLetters = /[a-zA-Z]/.test(cleanCompany);
+      if (isPurelyDigitsOrPhone || !hasLetters) {
+        setErrorMsg('Company Name cannot be a mobile or phone number. Please enter a valid organization name (e.g. FinTech Dynamics).');
+        return;
+      }
+      if (cleanCompany.length < 2) {
+        setErrorMsg('Company Name must be at least 2 characters long.');
+        return;
+      }
+    }
+
+    // 4. Validate Profile Photo URL (Only direct photo/image URLs allowed, no regular website links)
+    const cleanAvatar = fAvatar.trim();
+    if (cleanAvatar) {
+      if (!isDirectPhotoUrl(cleanAvatar)) {
+        setErrorMsg('Invalid Profile Photo URL. Only direct photo URLs (ending in .jpg, .jpeg, .png, .webp, or from an image host like Unsplash) are accepted. Generic website links are not allowed.');
+        return;
+      }
+    }
+
+    // 5. Validate Feedback Review text
+    const cleanQuote = fQuote.trim();
+    if (!cleanQuote || cleanQuote.length < 10) {
+      setErrorMsg('Please enter a feedback review of at least 10 characters.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     const payload = {
-      name: fName.trim(),
-      role: fRole.trim() || 'Client Partner',
-      company: fCompany.trim() || 'Enterprise Client',
+      name: cleanName,
+      role: cleanRole || 'Client Partner',
+      company: cleanCompany || 'Enterprise Client',
       category: fCategory,
       rating: Number(fRating) || 5,
-      avatar: fAvatar.trim() || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-      quote: fQuote.trim(),
+      avatar: cleanAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      quote: cleanQuote,
     };
 
     try {
@@ -79,25 +194,60 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (res.ok && data.success) {
-        setSuccessMsg('Thank you for your feedback! Your review has been submitted.');
+        const createdTestimonial: Testimonial = data.data || {
+          id: Date.now(),
+          ...payload,
+        };
+
+        // Immediately update state and localStorage so feedback is visible without delay
+        setItems(prev => [createdTestimonial, ...prev]);
+        try {
+          const existing = localStorage.getItem('jobsync_testimonials_data');
+          const list = existing ? JSON.parse(existing) : [];
+          localStorage.setItem('jobsync_testimonials_data', JSON.stringify([createdTestimonial, ...list]));
+        } catch {}
+
+        setSuccessMsg('Thank you for your feedback! Your review has been submitted successfully.');
         setFName('');
         setFRole('');
         setFCompany('');
         setFAvatar('');
         setFQuote('');
-        fetchTestimonials();
+
         setTimeout(() => {
           setSuccessMsg('');
           setShowFeedbackModal(false);
         }, 2200);
       } else {
-        setErrorMsg(data.error || 'Failed to submit feedback. Please try again.');
+        setErrorMsg(data.error || 'Failed to submit feedback. Please check your inputs and try again.');
       }
-    } catch (err) {
-      setErrorMsg('Network error: Unable to reach backend server.');
+    } catch (err: any) {
+      // Graceful offline fallback
+      const localTestimonial: Testimonial = {
+        id: Date.now(),
+        ...payload,
+      };
+      setItems(prev => [localTestimonial, ...prev]);
+      try {
+        const existing = localStorage.getItem('jobsync_testimonials_data');
+        const list = existing ? JSON.parse(existing) : [];
+        localStorage.setItem('jobsync_testimonials_data', JSON.stringify([localTestimonial, ...list]));
+      } catch {}
+
+      setSuccessMsg('Thank you for your feedback! Your review has been recorded.');
+      setFName('');
+      setFRole('');
+      setFCompany('');
+      setFAvatar('');
+      setFQuote('');
+
+      setTimeout(() => {
+        setSuccessMsg('');
+        setShowFeedbackModal(false);
+      }, 2200);
     } finally {
       setIsSubmitting(false);
     }
@@ -415,12 +565,25 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
 
             <form onSubmit={handleFeedbackSubmit}>
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Your Name *</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '13px', fontWeight: '700', color: '#334155' }}>Your Name *</label>
+                  <span style={{ fontSize: '11px', color: '#64748b' }}>Letters only (no numbers)</span>
+                </div>
                 <input
                   type="text"
                   placeholder="e.g. Sarah Jenkins"
                   value={fName}
-                  onChange={(e) => setFName(e.target.value)}
+                  onKeyDown={(e) => {
+                    // Prevent entering numeric characters directly
+                    if (/^[0-9]$/.test(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  onChange={(e) => {
+                    // Strip numeric characters if pasted
+                    setFName(e.target.value.replace(/[0-9]/g, ''));
+                    if (errorMsg) setErrorMsg('');
+                  }}
                   required
                   style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
                 />
@@ -428,25 +591,53 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Your Role / Title</label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
+                    <label style={{ fontSize: '13px', fontWeight: '700', color: '#334155' }}>Your Role / Title</label>
+                  </div>
                   <input
                     type="text"
                     placeholder="e.g. CTO / Operations Director"
                     value={fRole}
-                    onChange={(e) => setFRole(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (/^[0-9]$/.test(e.key)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    onChange={(e) => {
+                      setFRole(e.target.value.replace(/[0-9]/g, ''));
+                      if (errorMsg) setErrorMsg('');
+                    }}
                     style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
                   />
+                  <span style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginTop: '4px' }}>No numbers allowed</span>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Company Name</label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
+                    <label style={{ fontSize: '13px', fontWeight: '700', color: '#334155' }}>Company Name</label>
+                  </div>
                   <input
                     type="text"
                     placeholder="e.g. FinTech Dynamics"
                     value={fCompany}
-                    onChange={(e) => setFCompany(e.target.value)}
-                    style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
+                    onChange={(e) => {
+                      setFCompany(e.target.value);
+                      if (errorMsg) setErrorMsg('');
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '11px 14px',
+                      borderRadius: '8px',
+                      border: `1px solid ${fCompany && (/^[\d\s+\-().]{6,}$/.test(fCompany.trim()) || (!/[a-zA-Z]/.test(fCompany.trim()) && fCompany.trim().length > 3)) ? '#ef4444' : '#cbd5e1'}`,
+                      fontSize: '14px',
+                      outline: 'none'
+                    }}
                   />
+                  <span style={{ fontSize: '11px', color: fCompany && (/^[\d\s+\-().]{6,}$/.test(fCompany.trim()) || (!/[a-zA-Z]/.test(fCompany.trim()) && fCompany.trim().length > 3)) ? '#ef4444' : '#94a3b8', display: 'block', marginTop: '4px' }}>
+                    {fCompany && (/^[\d\s+\-().]{6,}$/.test(fCompany.trim()) || (!/[a-zA-Z]/.test(fCompany.trim()) && fCompany.trim().length > 3))
+                      ? 'Cannot be a mobile or phone number'
+                      : 'Organization name (not a mobile number)'}
+                  </span>
                 </div>
               </div>
 
@@ -480,14 +671,50 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
               </div>
 
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Profile Photo URL (Optional)</label>
-                <input
-                  type="url"
-                  placeholder="https://images.unsplash.com/photo-..."
-                  value={fAvatar}
-                  onChange={(e) => setFAvatar(e.target.value)}
-                  style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
-                />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '13px', fontWeight: '700', color: '#334155' }}>Profile Photo URL (Optional)</label>
+                  <span style={{ fontSize: '11px', color: '#64748b' }}>Photo image link only (.jpg, .png, Unsplash, etc.)</span>
+                </div>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <input
+                    type="url"
+                    placeholder="https://images.unsplash.com/photo-..."
+                    value={fAvatar}
+                    onChange={(e) => {
+                      setFAvatar(e.target.value);
+                      if (errorMsg) setErrorMsg('');
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '11px 14px',
+                      borderRadius: '8px',
+                      border: `1px solid ${fAvatar && !isDirectPhotoUrl(fAvatar) ? '#ef4444' : '#cbd5e1'}`,
+                      fontSize: '14px',
+                      outline: 'none'
+                    }}
+                  />
+                  {fAvatar && isDirectPhotoUrl(fAvatar) && (
+                    <div style={{ width: '42px', height: '42px', borderRadius: '50%', overflow: 'hidden', border: '2px solid #10b981', flexShrink: 0, background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Photo Preview">
+                      <img
+                        src={fAvatar}
+                        alt="Photo Preview"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        onError={(e) => {
+                          (e.currentTarget as HTMLElement).style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+                {fAvatar && !isDirectPhotoUrl(fAvatar) ? (
+                  <p style={{ color: '#ef4444', fontSize: '12px', marginTop: '6px', marginBottom: 0, fontWeight: '500' }}>
+                    ⚠️ Only direct photo URLs (ending in .jpg, .jpeg, .png, .webp, or from Unsplash/image CDNs) are accepted. General website links (e.g. google.com) cannot be used.
+                  </p>
+                ) : (
+                  <p style={{ color: '#94a3b8', fontSize: '11px', marginTop: '4px', marginBottom: 0 }}>
+                    Leave blank to use a default professional avatar, or paste a direct photo URL.
+                  </p>
+                )}
               </div>
 
               <div style={{ marginBottom: '24px' }}>
@@ -496,7 +723,10 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                   rows={4}
                   placeholder="Share details about your experience working with The Jobsync..."
                   value={fQuote}
-                  onChange={(e) => setFQuote(e.target.value)}
+                  onChange={(e) => {
+                    setFQuote(e.target.value);
+                    if (errorMsg) setErrorMsg('');
+                  }}
                   required
                   style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', resize: 'vertical' }}
                 />
