@@ -9,7 +9,7 @@ import { AdminPage } from './AdminPage';
 const FOUNDER = {
   name: 'Anitha Ekambaram',
   title: 'Founder & Managing Director',
-  photo: '/founder.jpg',
+  photo: '/founder-jasync.png',
 
   bio: [
     'Anitha Ekambaram, M.B.A., is the Founder & Managing Director of The JobSync, a technology-driven recruitment and IT services company focused on connecting businesses with talent and delivering innovative technology solutions.',
