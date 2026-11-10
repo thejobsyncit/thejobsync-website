@@ -37,36 +37,52 @@ interface JobOpening {
 
 const initialTestimonials: Testimonial[] = [];
 
+const FAKE_TESTIMONIAL_NAMES = new Set(['sarah jenkins', 'marcus vance', 'elena rostova', 'sophia loren', 'test client', 'wertyfg']);
+const FAKE_TESTIMONIAL_COMPANIES = new Set(['fintech dynamics', 'aeroglobal logistics', 'quantum systems emea', 'quantum innovations', 'acme tech', 'werthbvcx']);
+
+const filterRealTestimonials = (list: Testimonial[]): Testimonial[] => {
+  return (list || []).filter(item => {
+    if (!item) return false;
+    const name = (item.name || '').trim().toLowerCase();
+    const company = (item.company || '').trim().toLowerCase();
+    const quote = (item.quote || '').toLowerCase();
+    if (FAKE_TESTIMONIAL_NAMES.has(name)) return false;
+    if (FAKE_TESTIMONIAL_COMPANIES.has(company)) return false;
+    if (quote.includes('42%') || quote.includes('sdcvfgbhnnjhytgrfd')) return false;
+    return true;
+  });
+};
+
 const initialBlogs: BlogPost[] = [];
 
 const initialInquiries: Inquiry[] = [
-  {
-    id: 'inq_1791548587528_l1imi',
-    name: 'asdfghj',
-    email: 'priyaraghulp1997@gmail.com',
-    phone: '06381267339',
-    message: 'sdfghnm',
-    date: '9/10/2026, 5:53:07 pm',
-    status: 'New'
-  },
-  {
-    id: 'inq_1791545538444_kr4t6',
-    name: 'zsxdcfvgbh',
-    email: 'priyaraghulp1997@gmail.com',
-    phone: '06381267339',
-    message: 'jhgfcdxsdf',
-    date: '9/10/2026, 5:02:18 pm',
-    status: 'New'
-  },
-  {
-    id: 'inq_1791544952026_qatm3',
-    name: 'qwerty',
-    email: 'dharaniram319@gmail.com',
-    phone: '09444312677',
-    message: 'xascxsssds',
-    date: '9/10/2026, 4:52:31 pm',
-    status: 'New'
-  }
+  // {
+  //   id: 'inq_1791548587528_l1imi',
+  //   name: 'asdfghj',
+  //   email: 'priyaraghulp1997@gmail.com',
+  //   phone: '06381267339',
+  //   message: 'sdfghnm',
+  //   date: '9/10/2026, 5:53:07 pm',
+  //   status: 'New'
+  // },
+  // {
+  //   id: 'inq_1791545538444_kr4t6',
+  //   name: 'zsxdcfvgbh',
+  //   email: 'priyaraghulp1997@gmail.com',
+  //   phone: '06381267339',
+  //   message: 'jhgfcdxsdf',
+  //   date: '9/10/2026, 5:02:18 pm',
+  //   status: 'New'
+  // },
+  // {
+  //   id: 'inq_1791544952026_qatm3',
+  //   name: 'qwerty',
+  //   email: 'dharaniram319@gmail.com',
+  //   phone: '09444312677',
+  //   message: 'xascxsssds',
+  //   date: '9/10/2026, 4:52:31 pm',
+  // //   status: 'New'
+  // }
 ];
 
 const initialCareers: JobOpening[] = [
@@ -127,7 +143,15 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>(() => {
     try {
       const saved = localStorage.getItem('jobsync_testimonials_data');
-      return saved && JSON.parse(saved).length > 0 ? JSON.parse(saved) : initialTestimonials;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          const clean = filterRealTestimonials(parsed);
+          localStorage.setItem('jobsync_testimonials_data', JSON.stringify(clean));
+          return clean;
+        }
+      }
+      return initialTestimonials;
     } catch (e) {
       return initialTestimonials;
     }
@@ -211,7 +235,13 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
 
     fetch(`${getApiUrl()}/api/testimonials`)
       .then(res => res.json())
-      .then(d => d.success && setTestimonials(d.data))
+      .then(d => {
+        if (d.success && Array.isArray(d.data)) {
+          const clean = filterRealTestimonials(d.data);
+          setTestimonials(clean);
+          localStorage.setItem('jobsync_testimonials_data', JSON.stringify(clean));
+        }
+      })
       .catch(() => {});
 
     fetch(`${getApiUrl()}/api/inquiries`)
@@ -486,7 +516,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
       company: tCompany.trim() || 'Enterprise Partner',
       category: tCategory,
       rating: Number(tRating),
-      avatar: tAvatar.trim() || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      avatar: tAvatar.trim() || '',
       quote: tQuote.trim()
     };
 
@@ -1142,7 +1172,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
                     <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Client Name *</label>
                     <input
                       type="text"
-                      placeholder="e.g. Sarah Jenkins"
+                      placeholder="e.g. Jane Doe"
                       value={tName}
                       onChange={(e) => setTName(e.target.value)}
                       required
@@ -1165,7 +1195,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
                     <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Company Name</label>
                     <input
                       type="text"
-                      placeholder="e.g. FinTech Dynamics"
+                      placeholder="e.g. Acme Corp"
                       value={tCompany}
                       onChange={(e) => setTCompany(e.target.value)}
                       style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
@@ -1202,7 +1232,7 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
                     <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Avatar Image URL (Optional)</label>
                     <input
                       type="url"
-                      placeholder="https://images.unsplash.com/photo-..."
+                      placeholder="https://example.com/client-photo.jpg"
                       value={tAvatar}
                       onChange={(e) => setTAvatar(e.target.value)}
                       style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
@@ -1235,7 +1265,13 @@ export const AdminPage = ({ onExit }: { onExit: () => void }) => {
                 {testimonials.map((t) => (
                   <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
                     <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
-                      <img src={t.avatar} alt={t.name} style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }} />
+                      {t.avatar ? (
+                        <img src={t.avatar} alt={t.name} style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }} />
+                      ) : (
+                        <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#0f766e', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '16px', flexShrink: 0 }}>
+                          {t.name ? t.name.charAt(0).toUpperCase() : 'C'}
+                        </div>
+                      )}
                       <div>
                         <h4 style={{ margin: 0, fontSize: '16px', color: '#0f172a' }}>{t.name} <span style={{ fontSize: '13px', color: '#64748b', fontWeight: 'normal' }}>({t.role} - {t.company})</span></h4>
                         <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#475569' }}>"{t.quote}"</p>

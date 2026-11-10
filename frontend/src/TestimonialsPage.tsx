@@ -11,7 +11,29 @@ export interface Testimonial {
   quote: string;
 }
 
-export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: string) => void }) => {
+const FAKE_TESTIMONIAL_NAMES = new Set(['sarah jenkins', 'marcus vance', 'elena rostova', 'sophia loren', 'test client', 'wertyfg']);
+const FAKE_TESTIMONIAL_COMPANIES = new Set(['fintech dynamics', 'aeroglobal logistics', 'quantum systems emea', 'quantum innovations', 'acme tech', 'werthbvcx']);
+
+const filterRealTestimonials = (list: Testimonial[]): Testimonial[] => {
+  return (list || []).filter(item => {
+    if (!item) return false;
+    const name = (item.name || '').trim().toLowerCase();
+    const company = (item.company || '').trim().toLowerCase();
+    const quote = (item.quote || '').toLowerCase();
+    if (FAKE_TESTIMONIAL_NAMES.has(name)) return false;
+    if (FAKE_TESTIMONIAL_COMPANIES.has(company)) return false;
+    if (quote.includes('42%') || quote.includes('sdcvfgbhnnjhytgrfd')) return false;
+    return true;
+  });
+};
+
+export const TestimonialsSection = ({
+  setActiveTab: _setActiveTab,
+  isHomePage = false
+}: {
+  setActiveTab?: (tab: string) => void;
+  isHomePage?: boolean;
+}) => {
   const [items, setItems] = useState<Testimonial[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false);
@@ -83,17 +105,22 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
     fetch(`${getApiUrl()}/api/testimonials`)
       .then(res => res.json())
       .then(data => {
-        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-          setItems(data.data);
+        if (data.success && Array.isArray(data.data)) {
+          const clean = filterRealTestimonials(data.data);
+          setItems(clean);
           try {
-            localStorage.setItem('jobsync_testimonials_data', JSON.stringify(data.data));
+            localStorage.setItem('jobsync_testimonials_data', JSON.stringify(clean));
           } catch {}
         } else {
           const saved = localStorage.getItem('jobsync_testimonials_data');
           if (saved) {
             try {
               const parsed = JSON.parse(saved);
-              if (Array.isArray(parsed) && parsed.length > 0) setItems(parsed);
+              if (Array.isArray(parsed)) {
+                const clean = filterRealTestimonials(parsed);
+                setItems(clean);
+                localStorage.setItem('jobsync_testimonials_data', JSON.stringify(clean));
+              }
             } catch {}
           }
         }
@@ -103,7 +130,11 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
         if (saved) {
           try {
             const parsed = JSON.parse(saved);
-            if (Array.isArray(parsed) && parsed.length > 0) setItems(parsed);
+            if (Array.isArray(parsed)) {
+              const clean = filterRealTestimonials(parsed);
+              setItems(clean);
+              localStorage.setItem('jobsync_testimonials_data', JSON.stringify(clean));
+            }
           } catch {}
         }
       });
@@ -151,7 +182,7 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
       const isPurelyDigitsOrPhone = /^[\d\s+\-().]{6,}$/.test(cleanCompany);
       const hasLetters = /[a-zA-Z]/.test(cleanCompany);
       if (isPurelyDigitsOrPhone || !hasLetters) {
-        setErrorMsg('Company Name cannot be a mobile or phone number. Please enter a valid organization name (e.g. FinTech Dynamics).');
+        setErrorMsg('Company Name cannot be a mobile or phone number. Please enter a valid organization name (e.g. Acme Corp).');
         return;
       }
       if (cleanCompany.length < 2) {
@@ -184,7 +215,7 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
       company: cleanCompany || 'Enterprise Client',
       category: fCategory,
       rating: Number(fRating) || 5,
-      avatar: cleanAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      avatar: cleanAvatar || '',
       quote: cleanQuote,
     };
 
@@ -253,11 +284,16 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
     }
   };
 
-  const categories = ['All', 'Cloud Infrastructure', 'Custom Software', 'IT Consulting', 'Digital Transformation'];
+  const categories = ['All', 'Cloud Infrastructure', 'Custom Software', 'IT Consulting', 'Enterprise Systems'];
 
   const filteredTestimonials = activeCategory === 'All'
     ? items
     : items.filter(t => t.category === activeCategory);
+
+  // If on the Home page and no client testimonials have been published yet, hide section
+  if (isHomePage && items.length === 0) {
+    return null;
+  }
 
   return (
     <section className="testimonials-section" id="testimonials" style={{ padding: '90px 0', background: 'transparent' }}>
@@ -265,71 +301,46 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
 
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <span style={{
-            color: '#0f766e',
-            fontWeight: '700',
-            textTransform: 'uppercase',
-            letterSpacing: '1.5px',
-            fontSize: '12px',
-            background: 'rgba(15, 118, 110, 0.08)',
-            padding: '6px 16px',
-            borderRadius: '20px',
-            border: '1px solid rgba(15, 118, 110, 0.2)',
-            display: 'inline-block'
-          }}>
-            Client Testimonials
-          </span>
-          <h2 style={{ fontSize: '36px', color: 'var(--logo-navy-primary)', fontWeight: '900', marginTop: '14px', marginBottom: '12px' }}>
-            What Our Partners & Clients Say
+          <h2 style={{ fontSize: '32px', color: '#0f172a', fontWeight: '700', marginBottom: '12px' }}>
+            Client feedback
           </h2>
-          <p style={{ maxWidth: '680px', margin: '0 auto', color: '#64748b', fontSize: '16px', lineHeight: '1.6' }}>
-            Read real feedback from tech leaders who rely on The Jobsync for cloud architecture, software development, and IT consulting.
+          <p style={{ maxWidth: '680px', margin: '0 auto', color: '#475569', fontSize: '15px', lineHeight: '1.6' }}>
+            Feedback from clients we have worked with across our consulting and staffing projects.
           </p>
         </div>
 
         {/* Feedback Submission Banner */}
         <div style={{
-          background: 'var(--bg-card)',
-          borderRadius: '16px',
-          padding: '28px 36px',
-          marginBottom: '45px',
-          color: 'var(--text-main)',
+          background: '#ffffff',
+          borderRadius: '2px',
+          padding: '28px 32px',
+          marginBottom: '40px',
+          color: '#0f172a',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '20px',
-          border: '1px solid var(--card-border)',
-          boxShadow: '0 4px 20px rgba(15, 23, 42, 0.04)'
+          border: '1px solid #e2e8f0',
+          boxShadow: 'none'
         }}>
           <div style={{ maxWidth: '620px' }}>
-            <span style={{
-              display: 'inline-block',
-              color: '#0f766e',
-              fontSize: '12px',
-              fontWeight: '700',
-              textTransform: 'uppercase',
-              letterSpacing: '1.2px',
-              marginBottom: '8px'
-            }}>
-              Share Your Experience
-            </span>
-            <h3 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', margin: '0 0 6px 0' }}>
-              Worked with The Jobsync? We'd love your feedback
+            <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '0 0 6px 0' }}>
+              Worked with us? We would like to hear how it went.
             </h3>
-            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6' }}>
-              Your review helps us maintain high delivery standards and guides teams looking for the right technology partner.
+            <p style={{ margin: 0, color: '#475569', fontSize: '14px', lineHeight: '1.6' }}>
+              We welcome feedback from current and past project stakeholders.
             </p>
           </div>
 
           <button
-            className="btn-solid"
+            className="btn-rect-primary"
             onClick={() => setShowFeedbackModal(true)}
             style={{
               padding: '12px 24px',
               fontSize: '14px',
-              borderRadius: '8px',
-              fontWeight: '700',
+              borderRadius: '2px',
+              fontWeight: '600',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
@@ -341,28 +352,28 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
               <path d="M12 20h9"></path>
               <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
             </svg>
-            Share Feedback
+            Share feedback
           </button>
         </div>
 
-        {/* Category Filter Pills */}
+        {/* Category Filter Tabs */}
         {items.length > 0 && (
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '40px' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '36px', borderBottom: '1px solid #e2e8f0', paddingBottom: '8px' }}>
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 style={{
-                  padding: '9px 20px',
-                  borderRadius: '30px',
-                  border: '1px solid',
-                  borderColor: activeCategory === category ? 'var(--primary-cyan)' : '#cbd5e1',
-                  background: activeCategory === category ? 'var(--primary-cyan)' : '#ffffff',
-                  color: activeCategory === category ? '#ffffff' : '#475569',
-                  fontWeight: '700',
-                  fontSize: '13px',
+                  padding: '8px 16px',
+                  borderRadius: '0',
+                  border: 'none',
+                  borderBottom: activeCategory === category ? '2px solid #0f766e' : '2px solid transparent',
+                  background: 'transparent',
+                  color: activeCategory === category ? '#0f766e' : '#475569',
+                  fontWeight: activeCategory === category ? '700' : '500',
+                  fontSize: '14px',
                   cursor: 'pointer',
-                  transition: 'all 0.3s'
+                  transition: 'color 0.15s ease, border-color 0.15s ease'
                 }}
               >
                 {category}
@@ -373,104 +384,86 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
 
         {/* Testimonial Cards Grid or Empty State */}
         {filteredTestimonials.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', background: '#f8fafc', borderRadius: '16px', border: '1px solid #e2e8f0', maxWidth: '600px', margin: '0 auto 50px' }}>
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '12px' }} aria-hidden="true">
+          <div style={{ textAlign: 'center', padding: '48px 24px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', maxWidth: '580px', margin: '0 auto 40px' }}>
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '12px' }} aria-hidden="true">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
-            <h3 style={{ fontSize: '20px', fontWeight: '800', color: '#0f172a', marginBottom: '8px' }}>Be the First to Share Your Feedback</h3>
-            <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '24px', lineHeight: '1.6' }}>
-              No client reviews published in this category yet. Click below to submit your experience with The Jobsync.
+            <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>No Public Reviews Published Yet</h3>
+            <p style={{ color: '#64748b', fontSize: '14px', margin: 0, lineHeight: '1.6' }}>
+              We are actively gathering direct feedback from our recent client engagements. If you have partnered with The Jobsync, we would appreciate hearing about your experience.
             </p>
-            <button
-              className="btn-solid"
-              onClick={() => setShowFeedbackModal(true)}
-              style={{ padding: '12px 28px', borderRadius: '8px', fontSize: '14px', fontWeight: '700' }}
-            >
-              Share Feedback &rarr;
-            </button>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '30px', marginBottom: '60px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px', marginBottom: '50px' }}>
             {filteredTestimonials.map((item) => (
               <div
                 key={item.id}
+                className="testimonial-card"
                 style={{
                   background: '#ffffff',
-                  borderRadius: '20px',
-                  padding: '32px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                  borderRadius: '8px',
+                  padding: '28px',
+                  boxShadow: 'none',
                   border: '1px solid #e2e8f0',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                   position: 'relative',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                  transition: 'border-color 0.25s ease, background-color 0.25s ease'
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                    <span style={{ background: 'rgba(14, 165, 233, 0.1)', color: 'var(--primary-cyan)', padding: '4px 12px', borderRadius: '15px', fontSize: '11px', fontWeight: '800' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                    <span style={{ color: '#0f766e', fontSize: '12px', fontWeight: '600' }}>
                       {item.category}
                     </span>
-                    <div style={{ color: '#f59e0b', fontSize: '14px', letterSpacing: '2px' }}>
+                    <div style={{ color: '#f59e0b', fontSize: '13px', letterSpacing: '1px' }}>
                       {'★'.repeat(item.rating || 5)}
                     </div>
                   </div>
 
-                  <p style={{ fontSize: '15px', color: '#334155', lineHeight: '1.7', fontStyle: 'italic', marginBottom: '24px' }}>
+                  <p style={{ fontSize: '14.5px', color: '#334155', lineHeight: '1.6', marginBottom: '20px' }}>
                     "{item.quote}"
                   </p>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', paddingTop: '18px', borderTop: '1px solid #f1f5f9' }}>
-                  <img
-                    src={item.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
-                    alt={item.name}
-                    style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--primary-cyan)' }}
-                  />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
+                  {item.avatar ? (
+                    <img
+                      src={item.avatar}
+                      alt={item.name}
+                      style={{ width: '42px', height: '42px', borderRadius: '2px', objectFit: 'cover', border: '1px solid #e2e8f0' }}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLElement).style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '2px',
+                        background: '#0f766e',
+                        color: '#ffffff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: '700',
+                        fontSize: '16px',
+                        flexShrink: 0
+                      }}
+                    >
+                      {item.name ? item.name.charAt(0).toUpperCase() : 'C'}
+                    </div>
+                  )}
                   <div>
-                    <h4 style={{ margin: 0, fontSize: '15px', color: '#0f172a', fontWeight: '800' }}>{item.name}</h4>
-                    <p style={{ margin: '2px 0 0', fontSize: '12px', color: '#64748b' }}>{item.role}</p>
-                    <span style={{ fontSize: '12px', color: 'var(--primary-cyan)', fontWeight: '700' }}>{item.company}</span>
+                    <h4 style={{ margin: 0, fontSize: '14px', color: '#0f172a', fontWeight: '700' }}>{item.name}</h4>
+                    <p style={{ margin: '1px 0 0', fontSize: '12px', color: '#64748b' }}>{item.role}</p>
+                    <span style={{ fontSize: '12px', color: '#0f766e', fontWeight: '600' }}>{item.company}</span>
                   </div>
                 </div>
               </div>
             ))}
-          </div>
-        )}
-
-        {/* Impact Metrics Banner */}
-        <div style={{ background: 'var(--navy-gradient)', color: '#ffffff', borderRadius: '24px', padding: '40px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '30px', textAlign: 'center', border: '1px solid rgba(43, 182, 180, 0.2)', boxShadow: '0 20px 40px rgba(11, 23, 42, 0.15)' }}>
-          <div>
-            <h3 style={{ fontSize: '36px', color: 'var(--primary-cyan)', fontWeight: '900', margin: 0 }}>150+</h3>
-            <p style={{ color: '#94a3b8', fontSize: '14px', marginTop: '6px', margin: 0 }}>Enterprise Projects Delivered</p>
-          </div>
-          <div>
-            <h3 style={{ fontSize: '36px', color: 'var(--primary-cyan)', fontWeight: '900', margin: 0 }}>99.4%</h3>
-            <p style={{ color: '#94a3b8', fontSize: '14px', marginTop: '6px', margin: 0 }}>Client Satisfaction Rate</p>
-          </div>
-          <div>
-            <h3 style={{ fontSize: '36px', color: 'var(--primary-cyan)', fontWeight: '900', margin: 0 }}>10+ Yrs</h3>
-            <p style={{ color: '#94a3b8', fontSize: '14px', marginTop: '6px', margin: 0 }}>Domain IT Experience</p>
-          </div>
-          <div>
-            <h3 style={{ fontSize: '36px', color: 'var(--primary-cyan)', fontWeight: '900', margin: 0 }}>24/7</h3>
-            <p style={{ color: '#94a3b8', fontSize: '14px', marginTop: '6px', margin: 0 }}>Dedicated Support & SLA</p>
-          </div>
-        </div>
-
-        {setActiveTab && (
-          <div style={{ textAlign: 'center', marginTop: '40px' }}>
-            <button
-              className="btn-solid"
-              onClick={() => {
-                setActiveTab('contact');
-                window.scrollTo(0, 0);
-              }}
-              style={{ padding: '14px 34px', fontSize: '15px', borderRadius: '30px' }}
-            >
-              Get Started with The Jobsync &rarr;
-            </button>
           </div>
         )}
       </div>
@@ -497,13 +490,14 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
           <div
             style={{
               background: '#ffffff',
-              borderRadius: '24px',
+              borderRadius: '2px',
               maxWidth: '560px',
               width: '100%',
               maxHeight: '90vh',
               overflowY: 'auto',
               padding: '36px',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.3)',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
+              border: '1px solid #e2e8f0',
               position: 'relative'
             }}
             onClick={(e) => e.stopPropagation()}
@@ -516,9 +510,9 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                 right: '20px',
                 background: '#f1f5f9',
                 border: 'none',
-                borderRadius: '50%',
-                width: '36px',
-                height: '36px',
+                borderRadius: '2px',
+                width: '32px',
+                height: '32px',
                 fontWeight: '700',
                 cursor: 'pointer'
               }}
@@ -528,9 +522,9 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
 
             <div style={{ textAlign: 'center', marginBottom: '24px' }}>
               <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                borderRadius: '2px',
                 background: 'rgba(15, 118, 110, 0.1)',
                 color: '#0f766e',
                 display: 'flex',
@@ -543,8 +537,8 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                   <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                 </svg>
               </div>
-              <h3 style={{ fontSize: '22px', fontWeight: '800', color: '#0f172a', margin: '0 0 6px 0' }}>
-                Share Your Feedback
+              <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '0 0 6px 0' }}>
+                Share your feedback
               </h3>
               <p style={{ color: '#64748b', fontSize: '14px', margin: 0 }}>
                 We value your partnership. Submit your feedback below to help us continuously improve our services.
@@ -552,13 +546,13 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
             </div>
 
             {errorMsg && (
-              <div style={{ background: '#fef2f2', borderLeft: '4px solid #ef4444', color: '#991b1b', padding: '12px 14px', borderRadius: '8px', fontSize: '13px', marginBottom: '20px' }}>
+              <div style={{ background: '#fef2f2', borderLeft: '4px solid #ef4444', color: '#991b1b', padding: '12px 14px', borderRadius: '2px', fontSize: '13px', marginBottom: '20px' }}>
                 {errorMsg}
               </div>
             )}
 
             {successMsg && (
-              <div style={{ background: '#ecfdf5', borderLeft: '4px solid #10b981', color: '#065f46', padding: '12px 14px', borderRadius: '8px', fontSize: '13px', marginBottom: '20px' }}>
+              <div style={{ background: '#ecfdf5', borderLeft: '4px solid #10b981', color: '#065f46', padding: '12px 14px', borderRadius: '2px', fontSize: '13px', marginBottom: '20px' }}>
                 {successMsg}
               </div>
             )}
@@ -571,7 +565,7 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                 </div>
                 <input
                   type="text"
-                  placeholder="e.g. Sarah Jenkins"
+                  placeholder="e.g. Jane Doe"
                   value={fName}
                   onKeyDown={(e) => {
                     // Prevent entering numeric characters directly
@@ -585,7 +579,7 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                     if (errorMsg) setErrorMsg('');
                   }}
                   required
-                  style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '2px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
                 />
               </div>
 
@@ -607,7 +601,7 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                       setFRole(e.target.value.replace(/[0-9]/g, ''));
                       if (errorMsg) setErrorMsg('');
                     }}
-                    style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '2px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none' }}
                   />
                   <span style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginTop: '4px' }}>No numbers allowed</span>
                 </div>
@@ -618,7 +612,7 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                   </div>
                   <input
                     type="text"
-                    placeholder="e.g. FinTech Dynamics"
+                    placeholder="e.g. Acme Corp"
                     value={fCompany}
                     onChange={(e) => {
                       setFCompany(e.target.value);
@@ -626,8 +620,8 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                     }}
                     style={{
                       width: '100%',
-                      padding: '11px 14px',
-                      borderRadius: '8px',
+                      padding: '10px 14px',
+                      borderRadius: '2px',
                       border: `1px solid ${fCompany && (/^[\d\s+\-().]{6,}$/.test(fCompany.trim()) || (!/[a-zA-Z]/.test(fCompany.trim()) && fCompany.trim().length > 3)) ? '#ef4444' : '#cbd5e1'}`,
                       fontSize: '14px',
                       outline: 'none'
@@ -647,12 +641,12 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                   <select
                     value={fCategory}
                     onChange={(e) => setFCategory(e.target.value)}
-                    style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', background: '#ffffff' }}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '2px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', background: '#ffffff' }}
                   >
                     <option value="Cloud Infrastructure">Cloud Infrastructure</option>
                     <option value="Custom Software">Custom Software</option>
                     <option value="IT Consulting">IT Consulting</option>
-                    <option value="Digital Transformation">Digital Transformation</option>
+                    <option value="Enterprise Systems">Enterprise Systems</option>
                   </select>
                 </div>
 
@@ -661,7 +655,7 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                   <select
                     value={fRating}
                     onChange={(e) => setFRating(Number(e.target.value))}
-                    style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', background: '#ffffff' }}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '2px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', background: '#ffffff' }}
                   >
                     <option value={5}>5 Stars (Excellent)</option>
                     <option value={4}>4 Stars (Very Good)</option>
@@ -673,12 +667,12 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
               <div style={{ marginBottom: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
                   <label style={{ fontSize: '13px', fontWeight: '700', color: '#334155' }}>Profile Photo URL (Optional)</label>
-                  <span style={{ fontSize: '11px', color: '#64748b' }}>Photo image link only (.jpg, .png, Unsplash, etc.)</span>
+                  <span style={{ fontSize: '11px', color: '#64748b' }}>Photo image link only (.jpg, .png, etc.)</span>
                 </div>
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                   <input
                     type="url"
-                    placeholder="https://images.unsplash.com/photo-..."
+                    placeholder="https://example.com/client-photo.jpg"
                     value={fAvatar}
                     onChange={(e) => {
                       setFAvatar(e.target.value);
@@ -686,15 +680,15 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                     }}
                     style={{
                       flex: 1,
-                      padding: '11px 14px',
-                      borderRadius: '8px',
+                      padding: '10px 14px',
+                      borderRadius: '2px',
                       border: `1px solid ${fAvatar && !isDirectPhotoUrl(fAvatar) ? '#ef4444' : '#cbd5e1'}`,
                       fontSize: '14px',
                       outline: 'none'
                     }}
                   />
                   {fAvatar && isDirectPhotoUrl(fAvatar) && (
-                    <div style={{ width: '42px', height: '42px', borderRadius: '50%', overflow: 'hidden', border: '2px solid #10b981', flexShrink: 0, background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Photo Preview">
+                    <div style={{ width: '40px', height: '40px', borderRadius: '2px', overflow: 'hidden', border: '1px solid #10b981', flexShrink: 0, background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Photo Preview">
                       <img
                         src={fAvatar}
                         alt="Photo Preview"
@@ -728,7 +722,7 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                     if (errorMsg) setErrorMsg('');
                   }}
                   required
-                  style={{ width: '100%', padding: '11px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', resize: 'vertical' }}
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '2px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', resize: 'vertical' }}
                 />
               </div>
 
@@ -736,17 +730,17 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
                 <button
                   type="button"
                   onClick={() => setShowFeedbackModal(false)}
-                  style={{ padding: '12px 22px', borderRadius: '25px', background: '#f1f5f9', color: '#475569', border: '1px solid #cbd5e1', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}
+                  style={{ padding: '10px 20px', borderRadius: '2px', background: '#f1f5f9', color: '#475569', border: '1px solid #cbd5e1', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn-solid"
-                  style={{ padding: '12px 28px', borderRadius: '25px', fontSize: '14px', fontWeight: '700' }}
+                  className="btn-rect-primary"
+                  style={{ padding: '10px 24px', borderRadius: '2px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit Feedback →'}
+                  {isSubmitting ? 'Submitting...' : 'Submit feedback'}
                 </button>
               </div>
             </form>
@@ -760,69 +754,23 @@ export const TestimonialsSection = ({ setActiveTab }: { setActiveTab?: (tab: str
 export const TestimonialsPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
   return (
     <div className="testimonials-page">
-      {/* Hero Header - Merged seamlessly with the page */}
+      {/* Hero Header - Flat solid dark navy with straight edge */}
       <div
         style={{
           position: 'relative',
-          overflow: 'hidden',
-          padding: '70px 0 90px',
-          borderBottom: 'none',
-          background: 'radial-gradient(circle at 50% 20%, rgba(43, 182, 180, 0.15) 0%, transparent 60%), linear-gradient(135deg, #071224 0%, #0b1a30 50%, #102442 100%)',
+          padding: '70px 0 80px',
+          background: '#0b172a',
+          borderBottom: '1px solid #1e293b',
           textAlign: 'center'
         }}
       >
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <span
-            style={{
-              background: 'rgba(43, 182, 180, 0.16)',
-              color: '#2bb6b4',
-              padding: '6px 20px',
-              borderRadius: '30px',
-              fontWeight: 800,
-              fontSize: '12px',
-              letterSpacing: '1.5px',
-              textTransform: 'uppercase',
-              display: 'inline-block',
-              marginBottom: '16px',
-              border: '1px solid rgba(43, 182, 180, 0.35)'
-            }}
-          >
-            VERIFIED CLIENT REVIEWS
-          </span>
-          <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#ffffff', marginBottom: '14px', letterSpacing: '-0.5px' }}>
-            What Our Clients <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Say About Us</span>
+        <div className="container">
+          <h1 style={{ fontSize: '38px', fontWeight: 700, color: '#ffffff', marginBottom: '14px', letterSpacing: '-0.5px' }}>
+            What Our Clients Say
           </h1>
-          <p style={{ maxWidth: '720px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
-            Read real feedback from CTOs, Directors, and Tech Leaders who rely on The JobSync for cloud infrastructure, custom software engineering, and strategic IT consulting.
+          <p style={{ maxWidth: '640px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
+            What clients say about working with The Jobsync.
           </p>
-        </div>
-
-        {/* Seamless Wave Divider Merging into the section below */}
-        <div
-          className="hero-wave-divider"
-          style={{
-            position: 'absolute',
-            bottom: -1,
-            left: 0,
-            right: 0,
-            lineHeight: 0,
-            pointerEvents: 'none',
-            zIndex: 3
-          }}
-        >
-          <svg
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none"
-            style={{
-              position: 'relative',
-              display: 'block',
-              width: 'calc(100% + 1.3px)',
-              height: '52px',
-              fill: 'var(--pastel-bg, #edf7f8)'
-            }}
-          >
-            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
-          </svg>
         </div>
       </div>
 
