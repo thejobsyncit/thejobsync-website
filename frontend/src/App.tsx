@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import './index.css';
+import { homeContent } from './data/homeContent';
 import { TestimonialsPage, TestimonialsSection } from './TestimonialsPage';
 import { BlogPage, BlogSection } from './BlogPage';
 import { AdminPage } from './AdminPage';
@@ -12,19 +13,19 @@ const FOUNDER = {
   photo: '/founder-jasync.png',
 
   bio: [
-    'Anitha Ekambaram, M.B.A., is the Founder & Managing Director of The JobSync, a technology-driven recruitment and IT services company focused on connecting businesses with talent and delivering innovative technology solutions.',
+    'Anitha Ekambaram, M.B.A., is the Founder & Managing Director of The Jobsync, a technology-driven recruitment and IT services company focused on connecting businesses with talent and delivering reliable technology solutions.',
 
-    'Under her leadership, The JobSync / GoJobSync focuses on software development, IT consulting, digital transformation, cloud solutions, cybersecurity, AI and technology services, recruitment, talent acquisition, for startups, SMEs, and enterprises.',
+    'Under her leadership, The Jobsync focuses on software development, IT consulting, cloud solutions, cybersecurity, AI and technology services, recruitment, and talent acquisition for startups, SMEs, and enterprises.',
 
-    'With a strong focus on innovation, people, and technology, Anitha is committed to building trusted partnerships, creating effective recruitment solutions, and helping organizations improve their operations, scale their capabilities, and achieve sustainable business growth.'
+    'With a strong focus on people and technology, Anitha is committed to building trusted partnerships, creating effective recruitment solutions, and helping organizations improve their operations, scale their capabilities, and achieve sustainable business growth.'
   ] as string[],
 
-  quote: 'At The JobSync, we believe that the right combination of people, technology, and trusted partnerships can create meaningful opportunities and sustainable business growth.',
+  quote: 'At The Jobsync, we believe that the right combination of people, technology, and trusted partnerships can create meaningful opportunities and sustainable business growth.',
 
   highlights: [
-    'Founder & Managing Director of The JobSync',
+    'Founder & Managing Director of The Jobsync',
     'Focused on recruitment, talent acquisition, and HR technology solutions',
-    'Driving IT consulting, software development, and digital transformation',
+    'Driving IT consulting, software development, and technical recruitment',
     'Building technology-driven solutions for startups, SMEs, and enterprises'
   ] as string[],
 
@@ -38,7 +39,7 @@ const ABOUT_CONTENT = {
   // Mission statement placeholder (empty "" hides the mission card)
   mission: 'To help organizations grow with reliable technology and the right talent. We deliver practical IT consulting, software, and staffing solutions that solve real business problems and create lasting value for our clients.',
   // Vision statement placeholder (empty "" hides the vision card)
-  vision: 'To be a trusted global technology and talent partner, known for quality, integrity, and long-term relationships with the businesses and professionals we serve.',
+  vision: 'To be a trusted technology and talent partner, known for quality, integrity, and long-term relationships with the businesses and professionals we serve.',
 
   // Core values placeholders (empty text "" hides that specific card)
   // Titles: Customer Focus, Quality, Innovation, Expertise
@@ -278,7 +279,7 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
           body: JSON.stringify({
             access_key: web3Key,
             subject: `Website Inquiry from ${data.name}`,
-            from_name: 'The JobSync Website',
+            from_name: 'The Jobsync Website',
             name: data.name,
             email: data.email,
             phone: data.phone,
@@ -321,74 +322,28 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
 
   return (
     <div className="contact-page">
-      {/* Hero Header - Merged seamlessly with the page */}
+      {/* Hero Header - Flat Solid Dark Navy, Straight Edge */}
       <div
         className="contact-hero contact-hero-merged"
         style={{
           position: 'relative',
-          overflow: 'hidden',
-          padding: '70px 0 90px',
-          borderBottom: 'none',
-          background: 'radial-gradient(circle at 50% 20%, rgba(43, 182, 180, 0.15) 0%, transparent 60%), linear-gradient(135deg, #071224 0%, #0b1a30 50%, #102442 100%)',
+          padding: '80px 0 85px',
+          borderBottom: '1px solid #1e293b',
+          background: '#0b172a',
           textAlign: 'center'
         }}
       >
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <span
-            style={{
-              background: 'rgba(43, 182, 180, 0.16)',
-              color: '#2bb6b4',
-              padding: '6px 20px',
-              borderRadius: '30px',
-              fontWeight: 800,
-              fontSize: '12px',
-              letterSpacing: '1.5px',
-              textTransform: 'uppercase',
-              display: 'inline-block',
-              marginBottom: '16px',
-              border: '1px solid rgba(43, 182, 180, 0.35)'
-            }}
-          >
-            GET IN TOUCH
-          </span>
-          <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#ffffff', marginBottom: '12px', letterSpacing: '-0.5px' }}>
-            Contact <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Us</span>
+          <h1 style={{ fontSize: '40px', fontWeight: 700, color: '#ffffff', marginBottom: '12px', letterSpacing: '-0.01em' }}>
+            Contact Us
           </h1>
           <p style={{ maxWidth: '640px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
-            Have questions or a project in mind? Reach out to our global teams in Dubai and Chennai.
+            Reach our teams in Dubai and Chennai.
           </p>
-        </div>
-
-        {/* Seamless Wave Divider Merging into the section below */}
-        <div
-          className="hero-wave-divider"
-          style={{
-            position: 'absolute',
-            bottom: -1,
-            left: 0,
-            right: 0,
-            lineHeight: 0,
-            pointerEvents: 'none',
-            zIndex: 3
-          }}
-        >
-          <svg
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none"
-            style={{
-              position: 'relative',
-              display: 'block',
-              width: 'calc(100% + 1.3px)',
-              height: '52px',
-              fill: 'var(--pastel-bg, #edf7f8)'
-            }}
-          >
-            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
-          </svg>
         </div>
       </div>
 
-      <div className="contact-page-body container" style={{ padding: '45px 0 80px' }}>
+      <div className="contact-page-body container" style={{ padding: '60px 0 85px' }}>
         <ScrollReveal animation="fade-right">
           <div className="contact-left">
             <h2>Connect with us</h2>
@@ -401,11 +356,19 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
                 aria-label="Call Dubai Office"
                 style={{ textDecoration: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               </a>
               <div>
                 <h3>Dubai Office</h3>
                 <p>Dubai Creek Tower - 1st St - Riggat Al Buteen<br /><a href="tel:+971547405625" style={{ color: 'inherit', textDecoration: 'none' }}>+971 54 740 5625</a></p>
+                <a
+                  href="https://maps.google.com/?q=Dubai+Creek+Tower+1st+St+Riggat+Al+Buteen"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '13px', color: '#0f766e', marginTop: '4px', textDecoration: 'none', fontWeight: 500 }}
+                >
+                  View on Google Maps &rarr;
+                </a>
               </div>
             </div>
 
@@ -417,11 +380,19 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
                 aria-label="Call India Office"
                 style={{ textDecoration: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               </a>
               <div>
                 <h3>India Office</h3>
                 <p>Tamilnadu, Chennai<br /><a href="tel:+919789569391" style={{ color: 'inherit', textDecoration: 'none' }}>+91 9789569391</a></p>
+                <a
+                  href="https://maps.google.com/?q=Chennai+Tamil+Nadu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '13px', color: '#0f766e', marginTop: '4px', textDecoration: 'none', fontWeight: 500 }}
+                >
+                  View on Google Maps &rarr;
+                </a>
               </div>
             </div>
 
@@ -433,10 +404,10 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
                 aria-label="Send email to hr@thejobsync.com"
                 style={{ textDecoration: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
               </a>
               <div>
-                <h3>Mail Id</h3>
+                <h3>Email</h3>
                 <p><a href="mailto:hr@thejobsync.com" style={{ color: 'inherit', textDecoration: 'none' }}>hr@thejobsync.com</a></p>
               </div>
             </div>
@@ -453,15 +424,14 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
                     color: '#065f46',
                     border: '1px solid #a7f3d0',
                     padding: '12px 16px',
-                    borderRadius: '12px',
+                    borderRadius: '2px',
                     marginBottom: '18px',
                     fontSize: '14px',
-                    fontWeight: 600,
+                    fontWeight: 500,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     gap: '10px',
-                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.1)',
                     position: 'relative',
                     overflow: 'hidden',
                   }}
@@ -507,15 +477,14 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
                     color: '#991b1b',
                     border: '1px solid #fecaca',
                     padding: '12px 16px',
-                    borderRadius: '12px',
+                    borderRadius: '2px',
                     marginBottom: '18px',
                     fontSize: '14px',
-                    fontWeight: 600,
+                    fontWeight: 500,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     gap: '10px',
-                    boxShadow: '0 4px 12px rgba(239, 68, 68, 0.1)',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -549,13 +518,11 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
                   required
                   value={name}
                   onChange={(e) => {
-                    // Only allow letters, spaces, hyphens, and apostrophes (blocks numbers)
                     const sanitized = e.target.value.replace(/[^a-zA-Z\s.'-]/g, '');
                     setName(sanitized);
                     if (errorMsg) setErrorMsg('');
                   }}
                   onKeyDown={(e) => {
-                    // Prevent typing numbers 0-9
                     if (e.key >= '0' && e.key <= '9' && !e.ctrlKey && !e.metaKey && !e.altKey) {
                       e.preventDefault();
                     }
@@ -580,13 +547,11 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
                   placeholder="Phone Number (e.g. +971 54 740 5625)"
                   value={phone}
                   onChange={(e) => {
-                    // Only allow numbers, +, -, spaces, and parentheses (blocks alphabets)
                     const sanitized = e.target.value.replace(/[^0-9+\s\-()]/g, '');
                     setPhone(sanitized);
                     if (errorMsg) setErrorMsg('');
                   }}
                   onKeyDown={(e) => {
-                    // Prevent typing letters
                     if (
                       e.key.length === 1 &&
                       !/[0-9+\s\-()]/.test(e.key) &&
@@ -611,13 +576,11 @@ const ContactPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
                 <input type="checkbox" id="terms" required />
                 <label htmlFor="terms">I accept your Terms & Conditions</label>
               </div>
-              <button type="submit" className="btn-solid btn-get-touch" disabled={isLoading} style={{ opacity: isLoading ? 0.7 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}>
+              <button type="submit" className="btn-solid btn-get-touch" disabled={isLoading} style={{ opacity: isLoading ? 0.7 : 1, cursor: isLoading ? 'not-allowed' : 'pointer', borderRadius: '2px', textTransform: 'none', letterSpacing: 'normal', fontWeight: 500 }}>
                 {isLoading ? (
                   <span style={{ display: 'inline-block', width: '16px', height: '16px', border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', animation: 'spin 1s linear infinite', marginRight: '8px', verticalAlign: 'middle' }}></span>
-                ) : (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                )}
-                {isLoading ? 'Sending...' : 'Get In Touch'}
+                ) : null}
+                {isLoading ? 'Sending...' : 'Send message'}
               </button>
             </form>
           </div>
@@ -751,7 +714,7 @@ const CareersPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
             Explore <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Careers</span>
           </h1>
           <p style={{ maxWidth: '640px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
-            Join a dynamic global team shaping the future of IT consulting, software engineering, and digital solutions.
+            Join our engineering and recruiting teams in Dubai and Chennai.
           </p>
         </div>
 
@@ -787,8 +750,8 @@ const CareersPage = ({ setActiveTab: _setActiveTab }: { setActiveTab: (tab: stri
       <div className="container" style={{ padding: '45px 0 70px' }}>
         <ScrollReveal animation="fade-up">
           <div className="careers-intro">
-            <h2>Join The JobSync</h2>
-            <p>The JobSync is a global recruitment and career platform dedicated to connecting talented professionals with leading employers across India, the UAE, Singapore, and other international markets. We are expanding our team and inviting passionate individuals to build rewarding careers with us.</p>
+            <h2>Join The Jobsync</h2>
+            <p>The Jobsync is a technology and talent recruitment company connecting professionals with leading employers across the UAE and India. We are expanding our team and inviting passionate individuals to build rewarding careers with us.</p>
             <h3 style={{ marginTop: '40px', color: '#1a2238' }}>Current Openings</h3>
           </div>
         </ScrollReveal>
@@ -865,17 +828,15 @@ const FounderSection = () => {
                   <span className="founder-initials">{getInitials(FOUNDER.name)}</span>
                 </div>
               )}
-              <div className="founder-badge">Founder</div>
             </div>
           </ScrollReveal>
 
           {/* Text Column on the RIGHT */}
           <ScrollReveal animation="fade-left">
             <div className="founder-content">
-              <span className="about-tag">Meet Our Founder</span>
+              <span className="plain-eyebrow-text">Founder &amp; Leadership</span>
               <h2>{FOUNDER.name}</h2>
               {FOUNDER.title && <p className="founder-title">{FOUNDER.title}</p>}
-              <div className="founder-underline" />
 
               {/* Bio Paragraphs */}
               {FOUNDER.bio && FOUNDER.bio.length > 0 && (
@@ -947,75 +908,29 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
 
   return (
     <div className="about-page">
-      {/* Hero Header - Merged seamlessly with the page */}
+      {/* Hero Header - Clean Solid Dark Navy, Flat Edge */}
       <div
         className="contact-hero about-hero-merged"
         style={{
           position: 'relative',
-          overflow: 'hidden',
-          padding: '70px 0 90px',
-          borderBottom: 'none',
-          background: 'radial-gradient(circle at 50% 20%, rgba(43, 182, 180, 0.15) 0%, transparent 60%), linear-gradient(135deg, #071224 0%, #0b1a30 50%, #102442 100%)',
+          padding: '80px 0 85px',
+          borderBottom: '1px solid #1e293b',
+          background: '#0b172a',
           textAlign: 'center'
         }}
       >
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <span
-            style={{
-              background: 'rgba(43, 182, 180, 0.16)',
-              color: '#2bb6b4',
-              padding: '6px 20px',
-              borderRadius: '30px',
-              fontWeight: 800,
-              fontSize: '12px',
-              letterSpacing: '1.5px',
-              textTransform: 'uppercase',
-              display: 'inline-block',
-              marginBottom: '16px',
-              border: '1px solid rgba(43, 182, 180, 0.35)'
-            }}
-          >
-            WHO WE ARE
-          </span>
-          <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#ffffff', marginBottom: '12px', letterSpacing: '-0.5px' }}>
-            About <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Us</span>
+          <h1 style={{ fontSize: '42px', fontWeight: 600, color: '#ffffff', marginBottom: '14px', letterSpacing: '-0.5px' }}>
+            About Us
           </h1>
           <p style={{ maxWidth: '640px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
-            Empowering global organizations with modern technology consulting and premier engineering talent.
+            Technology consulting and engineering talent from our offices in Dubai and Chennai.
           </p>
-        </div>
-
-        {/* Seamless Wave Divider Merging into the section below */}
-        <div
-          className="hero-wave-divider"
-          style={{
-            position: 'absolute',
-            bottom: -1,
-            left: 0,
-            right: 0,
-            lineHeight: 0,
-            pointerEvents: 'none',
-            zIndex: 3
-          }}
-        >
-          <svg
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none"
-            style={{
-              position: 'relative',
-              display: 'block',
-              width: 'calc(100% + 1.3px)',
-              height: '52px',
-              fill: 'var(--pastel-bg, #edf7f8)'
-            }}
-          >
-            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
-          </svg>
         </div>
       </div>
 
-      {/* 1. Layout Fix: About Our Company Two-Column Block (Equal Height on Desktop) */}
-      <section className="about bg-white" style={{ padding: '45px 0 70px' }}>
+      {/* 1. About Our Company Two-Column Block */}
+      <section className="about bg-white" style={{ padding: '60px 0 80px' }}>
         <div className="container">
           <ScrollReveal animation="fade-up">
             <div className="section-title">
@@ -1026,26 +941,18 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
           <div className="about-grid">
             <ScrollReveal animation="fade-right">
               <div className="about-img-wrap">
-                <img src="/about.jpg" alt="" className="about-img-ambient-bg" aria-hidden="true" />
                 <img src="/about.jpg" alt="About The Jobsync" className="about-img" />
-                <div className="about-img-badge">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: '2px' }}>
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  Dubai • Chennai
-                </div>
               </div>
             </ScrollReveal>
             <ScrollReveal animation="fade-left">
               <div className="about-content">
-                <span className="about-tag">About The JobSync</span>
-                <h3>IT Consulting & Services</h3>
+                <span className="plain-eyebrow-text">Overview</span>
+                <h3>IT Consulting &amp; Services</h3>
                 <div className="about-highlight">
-                  The JobSync is a global IT consulting and technology services company committed to helping organizations accelerate digital transformation, optimize business operations, and achieve sustainable growth through innovative technology solutions.
+                  The Jobsync is an IT consulting and technology services company with offices in Dubai and Chennai, helping organizations build reliable systems, manage cloud infrastructure, and hire technical talent.
                 </div>
-                <p>We partner with startups, SMEs, and large enterprises to deliver strategic consulting, custom software development, cloud solutions, cybersecurity, managed IT services, enterprise applications, AI-driven innovation, and IT staffing. Our experienced consultants and technology specialists provide end-to-end solutions that improve operational efficiency, reduce costs, enhance security, and enable business scalability.</p>
-                <p>Our customer-centric approach, industry expertise, and commitment to quality make The JobSync a trusted technology partner for organizations across multiple industries worldwide.</p>
+                <p>We partner with startups, SMEs, and large enterprises to deliver strategic consulting, custom software development, cloud infrastructure, cybersecurity, managed IT services, enterprise applications, and IT staffing. Our consultants and technology specialists provide practical solutions that improve operational efficiency, reduce costs, enhance security, and enable business scalability.</p>
+                <p>Our customer-centric approach, industry expertise, and commitment to quality make The Jobsync a trusted technology partner for organizations in the UAE and India.</p>
                 <div className="about-bottom"></div>
               </div>
             </ScrollReveal>
@@ -1053,18 +960,18 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
         </div>
       </section>
 
-      {/* 2a. Mission and Vision (Enhanced Executive Design with Credibility Ribbon) */}
+      {/* 2a. Mission and Vision with Flat Dark Stats Band */}
       {(hasMission || hasVision) && (
         <section className="mission-vision-section">
           <div className="container">
             <ScrollReveal animation="fade-up">
               <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 48px' }}>
-                <span className="about-header-pill">PURPOSE &amp; DIRECTION</span>
-                <h2 style={{ fontSize: '38px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '14px' }}>
+                <span className="plain-eyebrow-text">Mission &amp; Vision</span>
+                <h2 style={{ fontSize: '36px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '14px' }}>
                   Our Mission &amp; Vision
                 </h2>
                 <p style={{ color: '#475569', fontSize: '16.5px', lineHeight: 1.65 }}>
-                  The practical commitment driving our IT consulting, software engineering, and premier talent placement across Dubai and Chennai.
+                  The practical commitment driving our IT consulting, software engineering, and talent placement across Dubai and Chennai.
                 </p>
               </div>
             </ScrollReveal>
@@ -1074,8 +981,7 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                 <ScrollReveal animation="fade-up" delay={50}>
                   <div className="mission-card-modern">
                     <div className="mission-card-top">
-                      <span className="mission-num-badge">01 • OUR MISSION</span>
-                      <span className="mission-status-tag">ACTIVE COMMITMENT</span>
+                      <span className="mission-plain-label">01 · Mission</span>
                     </div>
                     <h3 className="mission-card-title">Delivering Practical IT &amp; Scalable Talent</h3>
                     <p className="mission-card-lead">
@@ -1083,21 +989,18 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                     </p>
                     <ul className="mission-pillars-list">
                       <li className="mission-pillar-item">
-                        {/* <span className="mission-pillar-bullet"></span> */}
                         <span><strong>Business-Aligned Tech:</strong> Tailoring cloud, software, and systems to real commercial goals.</span>
                       </li>
                       <li className="mission-pillar-item">
-                        {/* <span className="mission-pillar-bullet"></span> */}
                         <span><strong>Verified Engineering Talent:</strong> Connecting enterprises with vetted developers and specialists.</span>
                       </li>
                       <li className="mission-pillar-item">
-                        {/* <span className="mission-pillar-bullet"></span> */}
                         <span><strong>Long-Term Delivery:</strong> Maintaining high standards from architecture through post-launch support.</span>
                       </li>
                     </ul>
                     <div className="mission-card-footer">
-                      <span>OPERATIONAL SCOPE</span>
-                      <span style={{ color: '#0f766e', fontWeight: 800 }}>UAE • India • Global</span>
+                      <span>Operational scope</span>
+                      <span style={{ color: '#0f766e', fontWeight: 600 }}>Dubai and Chennai</span>
                     </div>
                   </div>
                 </ScrollReveal>
@@ -1107,73 +1010,43 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                 <ScrollReveal animation="fade-up" delay={150}>
                   <div className="mission-card-modern vision-card">
                     <div className="mission-card-top">
-                      <span className="mission-num-badge">02 • OUR VISION</span>
-                      <span className="mission-status-tag">LONG-TERM HORIZON</span>
+                      <span className="mission-plain-label">02 · Vision</span>
                     </div>
-                    <h3 className="mission-card-title">The Globally Trusted Technology Partner</h3>
+                    <h3 className="mission-card-title">A technology partner known for quality and honest work</h3>
                     <p className="mission-card-lead">
                       "{ABOUT_CONTENT.vision}"
                     </p>
                     <ul className="mission-pillars-list">
                       <li className="mission-pillar-item">
-                        {/* <span className="mission-pillar-bullet"></span> */}
                         <span><strong>Cross-Border Bridges:</strong> Connecting talent and enterprises between the Middle East and South Asia.</span>
                       </li>
                       <li className="mission-pillar-item">
-                        {/* <span className="mission-pillar-bullet"></span> */}
                         <span><strong>Relationship Over Transaction:</strong> Fostering high-retention client trust and career growth.</span>
                       </li>
                       <li className="mission-pillar-item">
-                        {/* <span className="mission-pillar-bullet"></span> */}
-                        <span><strong>Sustainable Innovation:</strong> Thoughtfully adopting AI, cloud, and security frameworks built to scale.</span>
+                        <span><strong>Sustainable Engineering:</strong> Thoughtfully adopting cloud, data, and security frameworks built to scale.</span>
                       </li>
                     </ul>
                     <div className="mission-card-footer">
-                      <span>STRATEGIC HUBS</span>
-                      <span style={{ color: '#2563eb', fontWeight: 800 }}>Dubai Creek Tower &amp; Chennai</span>
+                      <span>Offices</span>
+                      <span style={{ color: '#0f766e', fontWeight: 600 }}>Dubai Creek Tower &amp; Chennai</span>
                     </div>
                   </div>
                 </ScrollReveal>
               )}
             </div>
-
-            {/* Credibility Impact Ribbon */}
-            <ScrollReveal animation="fade-up" delay={200}>
-              <div className="about-cred-ribbon">
-                <div className="about-cred-item">
-                  <span className="about-cred-num">2</span>
-                  <span className="about-cred-label">Global Tech Hubs</span>
-                  <span className="about-cred-sub">Dubai Creek Tower &amp; Chennai</span>
-                </div>
-                <div className="about-cred-item">
-                  <span className="about-cred-num">100%</span>
-                  <span className="about-cred-label">Vetted IT Talent</span>
-                  <span className="about-cred-sub">Engineers &amp; Consultants</span>
-                </div>
-                <div className="about-cred-item">
-                  <span className="about-cred-num">Full</span>
-                  <span className="about-cred-label">Lifecycle Ownership</span>
-                  <span className="about-cred-sub">From Strategy to Support</span>
-                </div>
-                <div className="about-cred-item">
-                  <span className="about-cred-num">Direct</span>
-                  <span className="about-cred-label">Transparent Delivery</span>
-                  <span className="about-cred-sub">Honest Consulting &amp; No Fluff</span>
-                </div>
-              </div>
-            </ScrollReveal>
           </div>
         </section>
       )}
 
-      {/* 2b. Core Values (Modern Human-Crafted Grid) */}
+      {/* 2b. Core Values */}
       {activeValues.length > 0 && (
         <section className="values-section-modern">
           <div className="container">
             <ScrollReveal animation="fade-up">
               <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 20px' }}>
-                <span className="about-header-pill">OUR CULTURE &amp; CODE</span>
-                <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
+                <span className="plain-eyebrow-text">Principles</span>
+                <h2 style={{ fontSize: '36px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
                   Our Core Values
                 </h2>
                 <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6 }}>
@@ -1190,7 +1063,6 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                     <div className="value-card-modern">
                       <div className="value-card-top">
                         <span className="value-card-num">{numStr}</span>
-                        {/* <span className="value-tag-pill">PRINCIPLE</span> */}
                       </div>
                       <h3>{val.title}</h3>
                       <p>{val.text}</p>
@@ -1209,12 +1081,12 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
           {/* Part 1: What We Do */}
           <ScrollReveal animation="fade-up">
             <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 16px' }}>
-              <span className="about-header-pill">OUR PRACTICE AREAS</span>
-              <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
+              <span className="plain-eyebrow-text">Practice Areas</span>
+              <h2 style={{ fontSize: '36px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
                 What We Do
               </h2>
               <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6 }}>
-                Reinventing how modern enterprises build software, optimize infrastructure, and secure high-caliber tech talent across global markets.
+                How we build software, configure infrastructure, and place technical contractors from our offices in Dubai and Chennai.
               </p>
             </div>
           </ScrollReveal>
@@ -1224,7 +1096,7 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
             <ScrollReveal animation="fade-up" delay={0}>
               <div className="practice-card-modern card-consulting">
                 <div className="practice-card-top">
-                  <span className="practice-chip">PRACTICE 01 • ENGINEERING</span>
+                  <span className="practice-plain-label">Practice 01 · Engineering</span>
                   <span className="practice-number">01</span>
                 </div>
                 <h3>IT Consulting &amp; Services</h3>
@@ -1233,21 +1105,21 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
                 </p>
                 <ul className="practice-deliverables-list">
                   <li className="practice-deliverable-item">
-                    <span className="practice-check-badge">✓</span>
+                    <span className="practice-bullet">•</span>
                     <span>Custom Software Development &amp; Modern Web Apps</span>
                   </li>
                   <li className="practice-deliverable-item">
-                    <span className="practice-check-badge">✓</span>
+                    <span className="practice-bullet">•</span>
                     <span>Cloud Architecture, Optimization &amp; Migration</span>
                   </li>
                   <li className="practice-deliverable-item">
-                    <span className="practice-check-badge">✓</span>
-                    <span>Cybersecurity Audits &amp; 24/7 Managed IT Support</span>
+                    <span className="practice-bullet">•</span>
+                    <span>Cybersecurity Audits &amp; Managed IT Support</span>
                   </li>
                 </ul>
                 <div className="practice-card-footer">
-                  <span>ENGAGEMENT MODEL</span>
-                  <span style={{ color: '#0d9488', fontWeight: 800 }}>Full Lifecycle Ownership</span>
+                  <span>Engagement model</span>
+                  <span style={{ color: '#0f766e', fontWeight: 600 }}>Project &amp; Managed Services</span>
                 </div>
               </div>
             </ScrollReveal>
@@ -1256,85 +1128,79 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
             <ScrollReveal animation="fade-up" delay={80}>
               <div className="practice-card-modern card-staffing">
                 <div className="practice-card-top">
-                  <span className="practice-chip">PRACTICE 02 • TALENT</span>
+                  <span className="practice-plain-label">Practice 02 · Talent</span>
                   <span className="practice-number">02</span>
                 </div>
                 <h3>IT Staffing &amp; Recruitment</h3>
                 <p>
-                  We connect businesses with skilled engineers, technical leads, and IT specialists through contract, permanent, and dedicated-team hiring. We also help professionals find the right opportunities with leading employers.
+                  We connect businesses with skilled engineers, technical leads, and IT specialists through our hiring platform, GoJobSync, as well as contract, permanent, and dedicated-team hiring. We also help professionals find the right opportunities with leading employers.
                 </p>
                 <ul className="practice-deliverables-list">
                   <li className="practice-deliverable-item">
-                    <span className="practice-check-badge">✓</span>
+                    <span className="practice-bullet">•</span>
                     <span>Specialized Engineering Talent Augmentation</span>
                   </li>
                   <li className="practice-deliverable-item">
-                    <span className="practice-check-badge">✓</span>
+                    <span className="practice-bullet">•</span>
                     <span>Dedicated Turnkey Development Pods</span>
                   </li>
                   <li className="practice-deliverable-item">
-                    <span className="practice-check-badge">✓</span>
+                    <span className="practice-bullet">•</span>
                     <span>Executive Technical Search &amp; Permanent Hiring</span>
                   </li>
                 </ul>
                 <div className="practice-card-footer">
-                  <span>SPEED TO DEPLOY</span>
-                  <span style={{ color: '#2563eb', fontWeight: 800 }}>48–72h Pre-Vetted Matches</span>
+                  <span>Hiring models</span>
+                  <span style={{ color: '#0f766e', fontWeight: 600 }}>Contract, permanent and dedicated teams</span>
                 </div>
               </div>
             </ScrollReveal>
 
-            {/* Practice 3: Global Presence */}
+            {/* Practice 3: Dubai and Chennai */}
             <ScrollReveal animation="fade-up" delay={160}>
               <div className="practice-card-modern card-global">
                 <div className="practice-card-top">
-                  <span className="practice-chip">PRACTICE 03 • OPERATIONS</span>
+                  <span className="practice-plain-label">Practice 03 · Operations</span>
                   <span className="practice-number">03</span>
                 </div>
-                <h3>Global Reach &amp; Local Delivery</h3>
+                <h3>Dubai and Chennai</h3>
                 <p>
-                  With operational hubs in Dubai (UAE) and Chennai (India), we support clients across India, UAE, Singapore, and international markets, keeping communication crystal-clear and project milestones on track.
+                  With offices in Dubai (UAE) and Chennai (India), we support clients across the UAE and India, keeping communication clear and project milestones on track.
                 </p>
                 <ul className="practice-deliverables-list">
                   <li className="practice-deliverable-item">
-                    <span className="practice-check-badge">✓</span>
-                    <span>Dubai Creek Tower, UAE (Middle East Regional HQ)</span>
+                    <span className="practice-bullet">•</span>
+                    <span>Dubai Creek Tower, UAE (Middle East Regional Office)</span>
                   </li>
                   <li className="practice-deliverable-item">
-                    <span className="practice-check-badge">✓</span>
-                    <span>Chennai Tech Center, India (Engineering Center)</span>
+                    <span className="practice-bullet">•</span>
+                    <span>Chennai Center, India (Engineering Center)</span>
                   </li>
                   <li className="practice-deliverable-item">
-                    <span className="practice-check-badge">✓</span>
-                    <span>Cross-Border Follow-the-Sun Project Delivery</span>
+                    <span className="practice-bullet">•</span>
+                    <span>Direct Project Coordination &amp; Delivery</span>
                   </li>
                 </ul>
                 <div className="practice-card-footer">
-                  <span>REGIONAL FOOTPRINT</span>
-                  <span style={{ color: '#059669', fontWeight: 800 }}>UAE, India &amp; Singapore</span>
+                  <span>Offices</span>
+                  <span style={{ color: '#0f766e', fontWeight: 600 }}>Dubai and Chennai</span>
                 </div>
               </div>
             </ScrollReveal>
           </div>
 
-          {/* Section Bridge */}
-          <div className="section-bridge-divider">
-            <div className="section-bridge-line"></div>
-            <div className="section-bridge-pill">
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#2bb6b4', display: 'inline-block' }}></span>
-              <span>The JobSync Advantage</span>
-            </div>
-          </div>
+          {/* Section Bridge - Clean 1px Line */}
+          <div className="section-bridge-clean"></div>
 
-          {/* Part 2: Why Choose The JobSync */}
+          {/* Part 2: Why Choose The Jobsync */}
           <ScrollReveal animation="fade-up">
             <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 16px' }}>
-              <span className="about-header-pill">MEASURABLE VALUE</span>
-              <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
-                Why Choose The JobSync
+              <span className="plain-eyebrow-text">Strengths</span>
+              <h2 style={{ fontSize: '36px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
+                Why Choose The Jobsync
               </h2>
               <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6 }}>
-                Built upon proven engineering capabilities, trusted technology partnerships, and measurable business outcomes that eliminate guesswork.
+                Built upon proven engineering capabilities, trusted technology partnerships, and reliable delivery practices.
               </p>
             </div>
           </ScrollReveal>
@@ -1345,16 +1211,11 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
               <div className="why-choose-card-modern">
                 <div className="why-card-header">
                   <span className="why-num-tag">01</span>
-                  <span className="why-category-badge">FULL LIFECYCLE</span>
                 </div>
                 <h3>End-to-End Solutions</h3>
                 <p>
                   Comprehensive capabilities spanning strategic consulting, custom development, cloud deployment, enterprise applications, and ongoing managed IT services.
                 </p>
-                <div className="why-card-outcome-chip">
-                  <span className="why-card-outcome-dot"></span>
-                  <span>Single Accountability Partner</span>
-                </div>
               </div>
             </ScrollReveal>
 
@@ -1363,16 +1224,11 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
               <div className="why-choose-card-modern">
                 <div className="why-card-header">
                   <span className="why-num-tag">02</span>
-                  <span className="why-category-badge">VELOCITY</span>
                 </div>
                 <h3>Improved Operational Efficiency</h3>
                 <p>
                   Optimizing enterprise workflows and technology infrastructure so your organization operates with maximum speed, agility, and precision.
                 </p>
-                <div className="why-card-outcome-chip">
-                  <span className="why-card-outcome-dot"></span>
-                  <span>Streamlined Digital Operations</span>
-                </div>
               </div>
             </ScrollReveal>
 
@@ -1381,16 +1237,11 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
               <div className="why-choose-card-modern">
                 <div className="why-card-header">
                   <span className="why-num-tag">03</span>
-                  <span className="why-category-badge">ROI &amp; EFFICIENCY</span>
                 </div>
                 <h3>Reduced Costs</h3>
                 <p>
                   Scalable software architectures and strategic resource planning that minimize infrastructure overhead and optimize total cost of ownership.
                 </p>
-                <div className="why-card-outcome-chip">
-                  <span className="why-card-outcome-dot"></span>
-                  <span>Zero Tech Waste &amp; Overhead</span>
-                </div>
               </div>
             </ScrollReveal>
 
@@ -1399,16 +1250,11 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
               <div className="why-choose-card-modern">
                 <div className="why-card-header">
                   <span className="why-num-tag">04</span>
-                  <span className="why-category-badge">DEFENSE IN DEPTH</span>
                 </div>
                 <h3>Enhanced Security</h3>
                 <p>
                   Proactive cybersecurity practices, robust compliance standards, and continuous protection safeguarding critical organizational assets and data.
                 </p>
-                <div className="why-card-outcome-chip">
-                  <span className="why-card-outcome-dot"></span>
-                  <span>Enterprise Data Protection</span>
-                </div>
               </div>
             </ScrollReveal>
 
@@ -1417,16 +1263,11 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
               <div className="why-choose-card-modern">
                 <div className="why-card-header">
                   <span className="why-num-tag">05</span>
-                  <span className="why-category-badge">ELASTIC CAPACITY</span>
                 </div>
                 <h3>Business Scalability</h3>
                 <p>
                   Flexible cloud-native architectures and on-demand tech staffing tailored to scale smoothly as your customer base and operations expand across markets.
                 </p>
-                <div className="why-card-outcome-chip">
-                  <span className="why-card-outcome-dot"></span>
-                  <span>Ready for 10x Business Scale</span>
-                </div>
               </div>
             </ScrollReveal>
           </div>
@@ -1436,18 +1277,13 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
       {/* 2e. The FounderSection (About page only) */}
       <FounderSection />
 
-      {/* 2f. Offices Block (Dubai and Chennai reusing existing addresses and phone numbers) */}
-      <section className="about-sub-section bg-white">
-        <div className="about-divider-curve top">
-          <svg viewBox="0 0 1440 30" fill="none" preserveAspectRatio="none">
-            <path d="M0,0 C480,24 960,24 1440,0 L1440,30 L0,30 Z" fill="#ffffff" />
-          </svg>
-        </div>
+      {/* 2f. Offices Block */}
+      <section className="about-sub-section bg-white" style={{ padding: '70px 0 85px' }}>
         <div className="container">
           <ScrollReveal animation="fade-up">
             <div className="about-sub-header">
-              <h2>Our Global Offices</h2>
-              <p>Connect with our teams in the United Arab Emirates and India to discuss your IT requirements or career growth.</p>
+              <h2>Our Offices</h2>
+              <p>Connect with our teams in Dubai and Chennai to discuss your IT requirements or technical hiring.</p>
             </div>
           </ScrollReveal>
 
@@ -1456,12 +1292,6 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
             <ScrollReveal animation="fade-right">
               <div className="about-card-lift office-card">
                 <div className="office-header">
-                  <div className="about-icon-tile" style={{ marginBottom: 0 }}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                      <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                  </div>
                   <div>
                     <h3>Dubai Office</h3>
                     <span style={{ fontSize: '13px', color: '#0f766e', fontWeight: 600 }}>Middle East Operations</span>
@@ -1496,15 +1326,9 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
             <ScrollReveal animation="fade-left">
               <div className="about-card-lift office-card">
                 <div className="office-header">
-                  <div className="about-icon-tile" style={{ marginBottom: 0 }}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                      <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                  </div>
                   <div>
                     <h3>India Office</h3>
-                    <span style={{ fontSize: '13px', color: '#0f766e', fontWeight: 600 }}>Delivery & Engineering Hub</span>
+                    <span style={{ fontSize: '13px', color: '#0f766e', fontWeight: 600 }}>Delivery &amp; Engineering Hub</span>
                   </div>
                 </div>
                 <div className="office-details">
@@ -1535,27 +1359,27 @@ const AboutPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) =>
         </div>
       </section>
 
-      {/* 2g. Call-to-Action Strip: "Talk to Us" (Contact) and "Find a Job" (Careers) */}
+      {/* 2g. Call-to-Action Strip */}
       <section className="about-cta-strip">
         <div className="container">
           <ScrollReveal animation="fade-up">
             <div className="about-cta-content">
               <h2>Ready to Elevate Your Technology or Career?</h2>
-              <p>Connect with our expert technology consultants in Dubai and Chennai to discuss enterprise solutions, or explore current career opportunities with The JobSync.</p>
+              <p>Connect with our expert technology consultants in Dubai and Chennai to discuss enterprise solutions, or explore current career opportunities with The Jobsync.</p>
               <div className="about-cta-buttons">
                 <button
                   type="button"
                   className="about-cta-btn-primary"
                   onClick={() => { setActiveTab('contact'); window.scrollTo(0, 0); }}
                 >
-                  Talk to Us
+                  Talk to us
                 </button>
                 <button
                   type="button"
                   className="about-cta-btn-secondary"
                   onClick={() => { setActiveTab('careers'); window.scrollTo(0, 0); }}
                 >
-                  Find a Job
+                  Find a job
                 </button>
               </div>
             </div>
@@ -1669,7 +1493,7 @@ const SERVICES_DATA = [
   {
     title: "IT Strategy Consulting",
     items: [
-      "Digital Transformation Consulting",
+      "Technology Modernization Consulting",
       "Business Process Consulting",
       "Technology Advisory Services",
       "Enterprise Architecture Consulting",
@@ -1719,108 +1543,74 @@ const ServicesPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void })
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const getServiceLinkText = (title: string) => {
+    switch (title) {
+      case 'Software Development':
+        return 'Talk to us about software →';
+      case 'Digital Marketing':
+        return 'Ask about digital marketing →';
+      case 'Enterprise Applications':
+        return 'Talk to us about enterprise apps →';
+      case 'Emerging Technology':
+        return 'Ask about emerging tech →';
+      case 'Cloud Services':
+        return 'Ask about cloud services →';
+      case 'Cybersecurity Services':
+        return 'Talk to our security team →';
+      case 'Data & AI Services':
+        return 'Ask about data and AI →';
+      case 'IT Infrastructure':
+        return 'Ask about IT infrastructure →';
+      case 'IT Strategy Consulting':
+        return 'Talk to our consulting team →';
+      case 'IT Staffing':
+        return 'Ask about IT staffing →';
+      case 'Training & Support':
+        return 'Ask about training and support →';
+      default:
+        return 'Talk to our team →';
+    }
+  };
+
   return (
     <div className="services-page">
-      {/* Hero Header - Merged seamlessly with the page */}
+      {/* Hero Header - Flat Solid Dark Navy, Straight Edge */}
       <div
         className="contact-hero services-hero-merged"
         style={{
           position: 'relative',
-          overflow: 'hidden',
-          padding: '70px 0 90px',
-          borderBottom: 'none',
-          background: 'radial-gradient(circle at 50% 20%, rgba(43, 182, 180, 0.15) 0%, transparent 60%), linear-gradient(135deg, #071224 0%, #0b1a30 50%, #102442 100%)',
+          padding: '80px 0 85px',
+          borderBottom: '1px solid #1e293b',
+          background: '#0b172a',
           textAlign: 'center'
         }}
       >
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <span
-            style={{
-              background: 'rgba(43, 182, 180, 0.16)',
-              color: '#2bb6b4',
-              padding: '6px 20px',
-              borderRadius: '30px',
-              fontWeight: 800,
-              fontSize: '12px',
-              letterSpacing: '1.5px',
-              textTransform: 'uppercase',
-              display: 'inline-block',
-              marginBottom: '16px',
-              border: '1px solid rgba(43, 182, 180, 0.35)'
-            }}
-          >
-            WHAT WE OFFER
-          </span>
-          <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#ffffff', marginBottom: '12px', letterSpacing: '-0.5px' }}>
-            Our <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Services</span>
+          <h1 style={{ fontSize: '40px', fontWeight: 700, color: '#ffffff', marginBottom: '12px', letterSpacing: '-0.01em' }}>
+            Our Services
           </h1>
           <p style={{ maxWidth: '640px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
-            Comprehensive technology consulting, enterprise software engineering, and strategic IT solutions tailored to your business.
+            IT consulting, software development and IT staffing from Dubai and Chennai.
           </p>
-        </div>
-
-        {/* Seamless Wave Divider Merging into the section below */}
-        <div
-          className="hero-wave-divider"
-          style={{
-            position: 'absolute',
-            bottom: -1,
-            left: 0,
-            right: 0,
-            lineHeight: 0,
-            pointerEvents: 'none',
-            zIndex: 3
-          }}
-        >
-          <svg
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none"
-            style={{
-              position: 'relative',
-              display: 'block',
-              width: 'calc(100% + 1.3px)',
-              height: '52px',
-              fill: 'var(--pastel-bg, #edf7f8)'
-            }}
-          >
-            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
-          </svg>
         </div>
       </div>
 
-      <section className="services" style={{ padding: '45px 0 80px' }}>
+      <section className="services" style={{ padding: '60px 0 85px', background: '#ffffff' }}>
         <div className="container">
           <ScrollReveal animation="fade-up">
             <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 45px' }}>
-              <span
-                style={{
-                  background: 'rgba(43, 182, 180, 0.12)',
-                  color: '#0f766e',
-                  padding: '6px 18px',
-                  borderRadius: '30px',
-                  fontWeight: 800,
-                  fontSize: '12px',
-                  letterSpacing: '1.5px',
-                  textTransform: 'uppercase',
-                  display: 'inline-block',
-                  marginBottom: '14px',
-                  border: '1px solid rgba(43, 182, 180, 0.3)'
-                }}
-              >
-                END-TO-END CAPABILITIES
-              </span>
-              <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '14px' }}>
-                Comprehensive IT Solutions
+              <h2 style={{ fontSize: '32px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.01em', marginBottom: '12px' }}>
+                What we offer
               </h2>
-              <p style={{ color: '#64748b', fontSize: '16px', lineHeight: 1.6 }}>
-                Explore our full spectrum of technology consulting, custom software engineering, cloud architectures, and dedicated tech talent to accelerate your digital transformation.
+              <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6, maxWidth: '680px', margin: '0 auto' }}>
+                Our services, grouped by area. Contact us if you do not see what you need.
               </p>
             </div>
           </ScrollReveal>
 
           <div className="services-grid">
             {SERVICES_DATA.map((service, index) => (
-              <ScrollReveal key={index} animation="fade-up" delay={(index % 3) * 80}>
+              <ScrollReveal key={index} animation="fade-up" delay={(index % 3) * 60}>
                 <div
                   className="service-item"
                   onClick={() => handleServiceClick(service.title)}
@@ -1840,7 +1630,7 @@ const ServicesPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void })
                   </div>
 
                   <div className="service-card-cta">
-                    <span>CONTACT US &rarr;</span>
+                    <span>{getServiceLinkText(service.title)}</span>
                   </div>
                 </div>
               </ScrollReveal>
@@ -1903,154 +1693,260 @@ const InteractiveNetworkHero = ({ setActiveTab }: { setActiveTab: (tab: string) 
       {/* 3. Existing Hero Content Sitting Directly Over Image (NO card, NO box, NO border) */}
       <div className="container hero-skyline-container">
         <div className="hero-content">
-          <h1>Looking for first class IT solutions?</h1>
-          <p>With over 10 years of experience helping businesses to find comprehensive technological solutions and strategic IT consulting.</p>
-          <div className="hero-buttons">
-            <button className="btn-outline" onClick={() => { setActiveTab('about'); window.scrollTo(0, 0); }}>OUR COMPANY</button>
-            <button className="btn-solid" onClick={() => { setActiveTab('contact'); window.scrollTo(0, 0); }}>CONTACT US</button>
+          <h1>{homeContent.hero.heading}</h1>
+          <p>{homeContent.hero.description}</p>
+          <div className="hero-actions-editorial">
+            <button
+              className="btn-rect-primary"
+              onClick={() => {
+                setActiveTab('contact');
+                window.scrollTo(0, 0);
+              }}
+            >
+              {homeContent.hero.primaryCtaText}
+            </button>
+            <a
+              href="#about"
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab('about');
+                window.scrollTo(0, 0);
+              }}
+              className="hero-plain-link"
+            >
+              {homeContent.hero.secondaryLinkText} &rarr;
+            </a>
           </div>
         </div>
-      </div>
-
-      {/* 4. Curve divider transition into next section */}
-      <div
-        className="hero-wave-divider"
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          bottom: -1,
-          left: 0,
-          width: '100%',
-          overflow: 'hidden',
-          lineHeight: 0,
-          zIndex: 4,
-          pointerEvents: 'none'
-        }}
-      >
-        <svg
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
-          style={{
-            position: 'relative',
-            display: 'block',
-            width: 'calc(100% + 1.3px)',
-            height: '56px',
-            fill: 'var(--pastel-bg, #edf7f8)'
-          }}
-        >
-          <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
-        </svg>
       </div>
     </section>
   );
 };
 
-const WhyChooseUsSection = () => {
+const getServiceIcon = (id: string) => {
+  switch (id) {
+    case 'custom-software':
+      return (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+      );
+    case 'cloud-infrastructure':
+      return (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+        </svg>
+      );
+    case 'cybersecurity':
+      return (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      );
+    case 'data-ai':
+      return (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="4" y="4" width="16" height="16" rx="2" />
+          <rect x="9" y="9" width="6" height="6" />
+          <line x1="9" y1="1" x2="9" y2="4" />
+          <line x1="15" y1="1" x2="15" y2="4" />
+          <line x1="9" y1="20" x2="9" y2="23" />
+          <line x1="15" y1="20" x2="15" y2="23" />
+          <line x1="20" y1="9" x2="23" y2="9" />
+          <line x1="20" y1="14" x2="23" y2="14" />
+          <line x1="1" y1="9" x2="4" y2="9" />
+          <line x1="1" y1="14" x2="4" y2="14" />
+        </svg>
+      );
+    case 'enterprise-solutions':
+      return (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7 12 2" />
+          <polyline points="2 17 12 22 22 17" />
+          <polyline points="2 12 12 17 22 12" />
+        </svg>
+      );
+    case 'it-staffing':
+      return (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      );
+    default:
+      return (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+      );
+  }
+};
+
+const getWhyChooseIcon = (id: string) => {
+  switch (id) {
+    case 'end-to-end':
+    case 'direct-communication':
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+        </svg>
+      );
+    case 'efficiency':
+    case 'clear-scoping':
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+      );
+    case 'cost':
+    case 'transparent-billing':
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23" />
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+        </svg>
+      );
+    case 'security':
+    case 'code-ownership':
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+      );
+    case 'scalability':
+    case 'flexible-terms':
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="15 3 21 3 21 9" />
+          <polyline points="9 21 3 21 3 15" />
+          <line x1="21" y1="3" x2="14" y2="10" />
+          <line x1="3" y1="21" x2="10" y2="14" />
+        </svg>
+      );
+    default:
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+      );
+  }
+};
+
+const ServicesCardsSection = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
   return (
-    <section className="why-choose-section" id="why-choose-us">
+    <section className="services-cards-section" id="services">
       <div className="container">
-        <ScrollReveal animation="fade-up">
-          <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 16px' }}>
-            <span className="about-header-pill">THE JOBSYNC ADVANTAGE</span>
-            <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', marginBottom: '12px' }}>
-              Why Choose Us
-            </h2>
-            <p style={{ color: '#475569', fontSize: '16px', lineHeight: 1.6 }}>
-              Built upon proven engineering capabilities, trusted technology partnerships, and measurable business outcomes that eliminate guesswork.
-            </p>
+        <div className="services-cards-header">
+          {homeContent.services.eyebrow && (
+            <span className="eyebrow-plain">{homeContent.services.eyebrow}</span>
+          )}
+          <h2 className="editorial-heading">{homeContent.services.heading}</h2>
+          <p className="editorial-intro">{homeContent.services.intro}</p>
+        </div>
+
+        <div className="services-cards-grid">
+          {homeContent.services.items.map((service) => (
+            <div
+              key={service.id}
+              className={`service-card-item ${service.isStaffing ? 'service-card-staffing' : ''}`}
+              onClick={() => {
+                setActiveTab('services');
+                window.scrollTo(0, 0);
+              }}
+            >
+              <div>
+                <div className="service-card-top">
+                  <div className="service-card-icon-box">
+                    {getServiceIcon(service.id)}
+                  </div>
+                  {service.isStaffing && (
+                    <span className="service-card-tag">Staffing Line</span>
+                  )}
+                </div>
+                <h3 className="service-card-title">{service.title}</h3>
+                <p className="service-card-desc">{service.description}</p>
+              </div>
+              <div className="service-card-link">
+                <span>{service.linkText}</span>
+                <span aria-hidden="true">&rarr;</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const AboutEditorialSection = ({ setActiveTab }: { setActiveTab: (tab: string) => void }) => {
+  return (
+    <section className="about-editorial-section" id="about">
+      <div className="container">
+        <div className="about-editorial-grid">
+          <div className="about-editorial-image-col">
+            <img src="/about.jpg" alt="About The Jobsync" className="about-editorial-img" />
           </div>
-        </ScrollReveal>
-
-        <div className="why-choose-grid-modern">
-          {/* 01: End-to-End Solutions */}
-          <ScrollReveal animation="fade-up" delay={0}>
-            <div className="why-choose-card-modern">
-              <div className="why-card-header">
-                <span className="why-num-tag">01</span>
-                <span className="why-category-badge">FULL LIFECYCLE</span>
-              </div>
-              <h3>End-to-End Solutions</h3>
-              <p>
-                Comprehensive capabilities spanning strategic consulting, custom development, cloud deployment, enterprise applications, and ongoing managed IT services.
-              </p>
-              <div className="why-card-outcome-chip">
-                <span className="why-card-outcome-dot"></span>
-                <span>Single Accountability Partner</span>
-              </div>
+          <div className="about-editorial-content">
+            <h2 className="editorial-heading">{homeContent.about.heading}</h2>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0f172a', margin: '0 0 12px 0' }}>
+              {homeContent.about.subheading}
+            </h3>
+            <div className="about-editorial-highlight">
+              {homeContent.about.highlight}
             </div>
-          </ScrollReveal>
-
-          {/* 02: Improved Operational Efficiency */}
-          <ScrollReveal animation="fade-up" delay={60}>
-            <div className="why-choose-card-modern">
-              <div className="why-card-header">
-                <span className="why-num-tag">02</span>
-                <span className="why-category-badge">VELOCITY</span>
-              </div>
-              <h3>Improved Operational Efficiency</h3>
-              <p>
-                Optimizing enterprise workflows and technology infrastructure so your organization operates with maximum speed, agility, and precision.
-              </p>
-              <div className="why-card-outcome-chip">
-                <span className="why-card-outcome-dot"></span>
-                <span>Streamlined Digital Operations</span>
-              </div>
+            {homeContent.about.paragraphs.map((p, idx) => (
+              <p key={idx} className="about-editorial-p">{p}</p>
+            ))}
+            {homeContent.about.statsConfig.showStats && (
+              <p className="about-inline-meta">{homeContent.about.statsConfig.text}</p>
+            )}
+            <div style={{ marginTop: '24px' }}>
+              <button
+                className="btn-rect-primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveTab('about');
+                  window.scrollTo(0, 0);
+                }}
+              >
+                {homeContent.about.buttonText}
+              </button>
             </div>
-          </ScrollReveal>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
-          {/* 03: Reduced Costs */}
-          <ScrollReveal animation="fade-up" delay={120}>
-            <div className="why-choose-card-modern">
-              <div className="why-card-header">
-                <span className="why-num-tag">03</span>
-                <span className="why-category-badge">ROI &amp; EFFICIENCY</span>
-              </div>
-              <h3>Reduced Costs</h3>
-              <p>
-                Scalable software architectures and strategic resource planning that minimize infrastructure overhead and optimize total cost of ownership.
-              </p>
-              <div className="why-card-outcome-chip">
-                <span className="why-card-outcome-dot"></span>
-                <span>Zero Tech Waste &amp; Overhead</span>
-              </div>
-            </div>
-          </ScrollReveal>
+const WhyChooseUsCardsSection = () => {
+  return (
+    <section className="why-choose-cards-section" id="why-choose-us">
+      <div className="container">
+        <div className="why-choose-cards-header">
+          {homeContent.whyChoose.eyebrow && (
+            <span className="eyebrow-plain">{homeContent.whyChoose.eyebrow}</span>
+          )}
+          <h2 className="editorial-heading">{homeContent.whyChoose.heading}</h2>
+          <p className="editorial-intro">{homeContent.whyChoose.intro}</p>
+        </div>
 
-          {/* 04: Enhanced Security */}
-          <ScrollReveal animation="fade-up" delay={180}>
-            <div className="why-choose-card-modern">
-              <div className="why-card-header">
-                <span className="why-num-tag">04</span>
-                <span className="why-category-badge">DEFENSE IN DEPTH</span>
+        <div className="why-choose-cards-grid">
+          {homeContent.whyChoose.items.map((item) => (
+            <div key={item.id} className="why-choose-card-item">
+              <div className="why-card-icon-box">
+                {getWhyChooseIcon(item.id)}
               </div>
-              <h3>Enhanced Security</h3>
-              <p>
-                Proactive cybersecurity practices, robust compliance standards, and continuous protection safeguarding critical organizational assets and data.
-              </p>
-              <div className="why-card-outcome-chip">
-                <span className="why-card-outcome-dot"></span>
-                <span>Enterprise Data Protection</span>
-              </div>
+              <h3 className="why-card-item-title">{item.title}</h3>
+              <p className="why-card-item-desc">{item.description}</p>
             </div>
-          </ScrollReveal>
-
-          {/* 05: Business Scalability */}
-          <ScrollReveal animation="fade-up" delay={240}>
-            <div className="why-choose-card-modern">
-              <div className="why-card-header">
-                <span className="why-num-tag">05</span>
-                <span className="why-category-badge">ELASTIC CAPACITY</span>
-              </div>
-              <h3>Business Scalability</h3>
-              <p>
-                Flexible cloud-native architectures and on-demand tech staffing tailored to scale smoothly as your customer base and operations expand across markets.
-              </p>
-              <div className="why-card-outcome-chip">
-                <span className="why-card-outcome-dot"></span>
-                <span>Ready for 10x Business Scale</span>
-              </div>
-            </div>
-          </ScrollReveal>
+          ))}
         </div>
       </div>
     </section>
@@ -2178,12 +2074,12 @@ function App() {
 
           <div className={`nav-wrapper ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
             <nav className="nav">
-              <a href="/" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} style={{ color: activeTab === 'home' ? 'var(--primary-cyan)' : '' }}>HOME</a>
-              <a href="/about" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }} style={{ color: activeTab === 'about' ? 'var(--primary-cyan)' : '' }}>ABOUT US</a>
-              <a href="/services" onClick={(e) => { e.preventDefault(); handleNavClick('services'); }} style={{ color: activeTab === 'services' ? 'var(--primary-cyan)' : '' }}>SERVICES</a>
-              <a href="/testimonials" onClick={(e) => { e.preventDefault(); handleNavClick('testimonials'); }} style={{ color: activeTab === 'testimonials' ? 'var(--primary-cyan)' : '' }}>TESTIMONIALS</a>
-              <a href="/blog" onClick={(e) => { e.preventDefault(); handleNavClick('blog'); }} style={{ color: activeTab === 'blog' ? 'var(--primary-cyan)' : '' }}>BLOG</a>
-              <a href="/contact" onClick={(e) => { e.preventDefault(); handleNavClick('contact'); }} style={{ color: activeTab === 'contact' ? 'var(--primary-cyan)' : '' }}>CONTACT US</a>
+              <a href="/" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} style={{ color: activeTab === 'home' ? 'var(--primary-cyan)' : '' }}>Home</a>
+              <a href="/about" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }} style={{ color: activeTab === 'about' ? 'var(--primary-cyan)' : '' }}>About us</a>
+              <a href="/services" onClick={(e) => { e.preventDefault(); handleNavClick('services'); }} style={{ color: activeTab === 'services' ? 'var(--primary-cyan)' : '' }}>Services</a>
+              <a href="/testimonials" onClick={(e) => { e.preventDefault(); handleNavClick('testimonials'); }} style={{ color: activeTab === 'testimonials' ? 'var(--primary-cyan)' : '' }}>Testimonials</a>
+              <a href="/blog" onClick={(e) => { e.preventDefault(); handleNavClick('blog'); }} style={{ color: activeTab === 'blog' ? 'var(--primary-cyan)' : '' }}>Blog</a>
+              <a href="/contact" onClick={(e) => { e.preventDefault(); handleNavClick('contact'); }} style={{ color: activeTab === 'contact' ? 'var(--primary-cyan)' : '' }}>Contact us</a>
             </nav>
           </div>
         </div>
@@ -2194,174 +2090,17 @@ function App() {
           {/* Interactive Network Hero Section */}
           <InteractiveNetworkHero setActiveTab={setActiveTab} />
 
-          {/* Welcome Section */}
-          <section className="welcome">
-            <div className="container">
-              <ScrollReveal animation="fade-up">
-                <div className="section-title">
-                  <h2>Welcome to The Jobsync</h2>
-                  <p><strong>Transforming Businesses Through Innovation, Technology & Talent.</strong> The JobSync is a leading IT Consulting and Technology Services company delivering innovative digital solutions that empower businesses to thrive in a rapidly evolving world. Innovate. Transform. Grow.</p>
-                </div>
-              </ScrollReveal>
+          {/* Services Cards Section */}
+          <ServicesCardsSection setActiveTab={setActiveTab} />
 
-              <div className="welcome-grid">
-                <ScrollReveal animation="fade-up" delay={0}>
-                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
-                    <div className="welcome-card-img-wrapper">
-                      <img src="/custom-software.jpg" alt="Custom Software" className="welcome-card-img" />
-                      <div className="welcome-card-overlay">
-                        <span className="welcome-badge">  SOFTWARE ENGINEERING</span>
-                      </div>
-                    </div>
-                    <div className="welcome-card-content">
-                      <div>
-                        <h3>Custom Software</h3>
-                        <p>We build scalable enterprise applications tailored to your business needs, ensuring high performance and security.</p>
-                      </div>
-                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
-                    </div>
-                  </div>
-                </ScrollReveal>
+          {/* About Our Company Editorial Section */}
+          <AboutEditorialSection setActiveTab={setActiveTab} />
 
-                <ScrollReveal animation="fade-up" delay={100}>
-                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
-                    <div className="welcome-card-img-wrapper">
-                      <img src="/cloud-infrastructure.jpg" alt="Cloud Infrastructure" className="welcome-card-img" />
-                      <div className="welcome-card-overlay">
-                        <span className="welcome-badge">  CLOUD ARCHITECTURE</span>
-                      </div>
-                    </div>
-                    <div className="welcome-card-content">
-                      <div>
-                        <h3>Cloud Infrastructure</h3>
-                        <p>Launch your multi-cloud infrastructure seamlessly with automated DevOps and enterprise cloud deployment.</p>
-                      </div>
-                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={200}>
-                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
-                    <div className="welcome-card-img-wrapper">
-                      <img src="/cybersecurity.jpg" alt="Cybersecurity" className="welcome-card-img" />
-                      <div className="welcome-card-overlay">
-                        <span className="welcome-badge">  CYBERSECURITY & SOC</span>
-                      </div>
-                    </div>
-                    <div className="welcome-card-content">
-                      <div>
-                        <h3>Cybersecurity</h3>
-                        <p>Protect your critical infrastructure with 24/7 SOC monitoring, zero-trust protocols, and threat intelligence.</p>
-                      </div>
-                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={0}>
-                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
-                    <div className="welcome-card-img-wrapper">
-                      <img src="/service_data_ai.jpg" alt="Data Analytics & AI" className="welcome-card-img" />
-                      <div className="welcome-card-overlay">
-                        <span className="welcome-badge">  DATA & AI SYSTEMS</span>
-                      </div>
-                    </div>
-                    <div className="welcome-card-content">
-                      <div>
-                        <h3>Data Analytics & AI</h3>
-                        <p>Unlock actionable business intelligence and automate enterprise workflows with generative AI and machine learning.</p>
-                      </div>
-                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={100}>
-                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
-                    <div className="welcome-card-img-wrapper">
-                      <img src="/enterprise-solution.jpg" alt="Enterprise Systems" className="welcome-card-img" />
-                      <div className="welcome-card-overlay">
-                        <span className="welcome-badge">  ENTERPRISE SYSTEMS</span>
-                      </div>
-                    </div>
-                    <div className="welcome-card-content">
-                      <div>
-                        <h3>Enterprise Solutions</h3>
-                        <p>Streamline core business operations with custom ERP, CRM, and supply chain management integrations.</p>
-                      </div>
-                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={200}>
-                  <div className="welcome-card" onClick={() => { setActiveTab('services'); window.scrollTo(0, 0); }} style={{ cursor: 'pointer' }}>
-                    <div className="welcome-card-img-wrapper">
-                      <img src="/it-staffing.jpg" alt="IT Talent Augmentation" className="welcome-card-img" />
-                      <div className="welcome-card-overlay">
-                        <span className="welcome-badge">  TALENT AUGMENTATION</span>
-                      </div>
-                    </div>
-                    <div className="welcome-card-content">
-                      <div>
-                        <h3>IT Staffing</h3>
-                        <p>Accelerate project delivery with vetted top-tier engineers, tech leads, and specialized IT consultants.</p>
-                      </div>
-                      <span className="welcome-action-btn">Explore Solutions &rarr;</span>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              </div>
-            </div>
-          </section>
-          {/* About Our Company Section */}
-          <section className="about" id="about">
-            <div className="container">
-              <ScrollReveal animation="fade-up">
-                <div className="section-title">
-                  <h2>About Our Company</h2>
-                </div>
-              </ScrollReveal>
-
-              <div className="about-grid">
-                <ScrollReveal animation="fade-right">
-                  <div className="about-img-wrap">
-                    <img src="/about.jpg" alt="" className="about-img-ambient-bg" aria-hidden="true" />
-                    <img src="/about.jpg" alt="About The Jobsync" className="about-img" />
-                    <div className="about-img-badge">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: '2px' }}>
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                      </svg>
-                      Dubai • Chennai
-                    </div>
-                  </div>
-                </ScrollReveal>
-                <ScrollReveal animation="fade-left">
-                  <div className="about-content">
-                    <span className="about-tag">About The JobSync</span>
-                    <h3>Where Technology Meets Talent</h3>
-                    <div className="about-highlight">
-                      The Jobsync is a global IT consulting and staffing company. We help organizations choose the right technology and build the right teams, from our offices in Dubai and Chennai.
-                    </div>
-                    <p>Whether you are a startup, a growing business, or a large enterprise, we bring together technical expertise and recruitment experience under one roof. </p>
-                    <p>From cloud and cybersecurity to custom software and dedicated teams, we focus on solutions that fit your goals and your budget. </p>
-
-                    <div className="about-bottom">
-                      <button className="btn-solid" style={{ padding: '10px 25px' }} onClick={(e) => { e.preventDefault(); setActiveTab('about'); window.scrollTo(0, 0); }}>READ MORE</button>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              </div>
-            </div>
-          </section>
-
-          {/* Why Choose Us Section on Home Page */}
-          <WhyChooseUsSection />
+          {/* Why Choose Us Cards Section */}
+          <WhyChooseUsCardsSection />
 
           {/* Testimonials Section on Home Page */}
-          <TestimonialsSection setActiveTab={setActiveTab} />
+          <TestimonialsSection setActiveTab={setActiveTab} isHomePage={true} />
           {/* Blog Section on Home Page */}
           <BlogSection setActiveTab={setActiveTab} />
         </>
@@ -2382,11 +2121,11 @@ function App() {
               <div className="logo" style={{ marginBottom: '20px' }}>
                 <img src="/jobsync-logo.png" alt="The Jobsync Logo" width="45" height="45" className="logo-img" style={{ marginRight: '10px', objectFit: 'contain' }} />
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span className="logo-text" style={{ color: 'white' }}>The Jobsync</span>
-                  <span style={{ fontSize: '9px', color: '#94a3b8', letterSpacing: '1px' }}>IT CONSULTING & SERVICES</span>
+                  <span className="logo-text" style={{ color: '#ffffff' }}>The Jobsync</span>
+                  <span style={{ fontSize: '9px', color: '#ccfbf1', letterSpacing: '1px' }}>IT CONSULTING & SERVICES</span>
                 </div>
               </div>
-              <p>At The Jobsync, we specialize in providing expert IT Consulting and technological solutions. Our goal is to help businesses grow and professionals achieve their IT career aspirations efficiently.</p>
+              <p>The Jobsync provides IT consulting, custom software, and cloud services from Dubai and Chennai. We also maintain a dedicated technical staffing division that places contract developers with client teams.</p>
               <div className="footer-social">
                 <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
                 <a href="https://instagram.com/the_jobsync?" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg></a>
@@ -2410,11 +2149,12 @@ function App() {
             <div className="footer-col">
               <h3>Our Services</h3>
               <ul className="footer-links">
-                <li><a href="#">Cloud Infrastructure</a></li>
-                <li><a href="#">Cybersecurity</a></li>
-                <li><a href="#">Digital Transformation</a></li>
-                <li><a href="#">Custom Software</a></li>
-                <li><a href="#">IT Support</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('services'); window.scrollTo(0, 0); }}>Custom Software</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('services'); window.scrollTo(0, 0); }}>Cloud Infrastructure</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('services'); window.scrollTo(0, 0); }}>Cybersecurity</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('services'); window.scrollTo(0, 0); }}>Data Analytics &amp; AI</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('services'); window.scrollTo(0, 0); }}>Enterprise Systems</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('services'); window.scrollTo(0, 0); }}>IT Staffing</a></li>
               </ul>
             </div>
 
@@ -2422,7 +2162,7 @@ function App() {
               <h3>Contact Info</h3>
               <ul className="footer-contact">
                 <li style={{marginBottom: '5px'}}>
-                  <strong style={{color: 'white'}}>Dubai Office</strong>
+                  <strong style={{color: '#ffffff'}}>Dubai Office</strong>
                 </li>
                 <li>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -2434,7 +2174,7 @@ function App() {
                 </li>
                 
                 <li style={{marginTop: '15px', marginBottom: '5px'}}>
-                  <strong style={{color: 'white'}}>India Office</strong>
+                  <strong style={{color: '#ffffff'}}>India Office</strong>
                 </li>
                 <li>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>

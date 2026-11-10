@@ -68,7 +68,7 @@ const BlogCardSlideshow = ({
   return (
     <div
       className="blog-img-card"
-      style={{ height: '220px', overflow: 'hidden', position: 'relative', background: '#0b172a', borderRadius: '16px 16px 0 0' }}
+      style={{ height: '220px', overflow: 'hidden', position: 'relative', background: '#0b172a', borderRadius: '8px 8px 0 0' }}
       onClick={onImageClick}
     >
       {/* Auto Cross-Fading Images */}
@@ -99,31 +99,12 @@ const BlogCardSlideshow = ({
 
       {/* Hover Overlay for Brief Content */}
       <div className="blog-img-card-overlay">
-        <span className="blog-quick-badge">
-          <span>👁️</span> Click to View Brief Content
+        <span className="blog-quick-badge" style={{ borderRadius: '2px' }}>
+          Click to view brief summary
         </span>
       </div>
 
-      {/* Category Badge */}
-      <span
-        style={{
-          position: 'absolute',
-          top: '14px',
-          left: '14px',
-          background: 'rgba(15, 23, 42, 0.9)',
-          color: 'var(--primary-cyan)',
-          padding: '5px 13px',
-          borderRadius: '20px',
-          fontSize: '11px',
-          fontWeight: '800',
-          border: '1px solid rgba(14,165,233,0.3)',
-          zIndex: 3
-        }}
-      >
-        {post.category}
-      </span>
-
-      {/* Animated Slide Progress Dots */}
+      {/* Slide Progress Dots - Plain dots with no pill background bar */}
       {images.length > 1 && (
         <div
           style={{
@@ -133,22 +114,18 @@ const BlogCardSlideshow = ({
             transform: 'translateX(-50%)',
             display: 'flex',
             gap: '6px',
-            zIndex: 3,
-            background: 'rgba(15, 23, 42, 0.5)',
-            padding: '4px 10px',
-            borderRadius: '12px',
-            backdropFilter: 'blur(4px)'
+            zIndex: 3
           }}
         >
           {images.map((_, i) => (
             <span
               key={i}
               style={{
-                width: currentIdx === i ? '18px' : '6px',
-                height: '6px',
-                borderRadius: '10px',
-                background: currentIdx === i ? 'var(--primary-cyan)' : 'rgba(255,255,255,0.7)',
-                transition: 'all 0.4s ease'
+                width: currentIdx === i ? '14px' : '6px',
+                height: '4px',
+                borderRadius: '1px',
+                background: currentIdx === i ? '#ffffff' : 'rgba(255,255,255,0.5)',
+                transition: 'all 0.3s ease'
               }}
             />
           ))}
@@ -200,14 +177,13 @@ const BriefContentModal = ({
       <div
         style={{
           background: '#ffffff',
-          borderRadius: '24px',
+          borderRadius: '2px',
           maxWidth: '680px',
           width: '100%',
           maxHeight: '90vh',
           overflowY: 'auto',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.3)',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
           border: '1px solid #e2e8f0',
-          animation: 'modalPopUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           position: 'relative'
         }}
         onClick={(e) => e.stopPropagation()}
@@ -247,16 +223,15 @@ const BriefContentModal = ({
               background: 'rgba(15, 23, 42, 0.75)',
               color: '#ffffff',
               border: 'none',
-              borderRadius: '50%',
-              width: '36px',
-              height: '36px',
-              fontSize: '16px',
+              borderRadius: '2px',
+              width: '32px',
+              height: '32px',
+              fontSize: '14px',
               fontWeight: '700',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
               zIndex: 4
             }}
           >
@@ -268,13 +243,12 @@ const BriefContentModal = ({
               position: 'absolute',
               bottom: '16px',
               left: '16px',
-              background: 'rgba(14, 165, 233, 0.95)',
+              background: '#0f766e',
               color: 'white',
-              padding: '6px 16px',
-              borderRadius: '20px',
+              padding: '4px 12px',
+              borderRadius: '2px',
               fontSize: '11px',
-              fontWeight: '800',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              fontWeight: '600',
               zIndex: 4
             }}
           >
@@ -289,21 +263,18 @@ const BriefContentModal = ({
                 right: '16px',
                 display: 'flex',
                 gap: '6px',
-                zIndex: 4,
-                background: 'rgba(15, 23, 42, 0.5)',
-                padding: '4px 10px',
-                borderRadius: '12px'
+                zIndex: 4
               }}
             >
               {images.map((_, i) => (
                 <span
                   key={i}
                   style={{
-                    width: modalSlideIdx === i ? '18px' : '6px',
-                    height: '6px',
-                    borderRadius: '10px',
-                    background: modalSlideIdx === i ? 'var(--primary-cyan)' : 'rgba(255,255,255,0.7)',
-                    transition: 'all 0.4s ease'
+                    width: modalSlideIdx === i ? '14px' : '6px',
+                    height: '4px',
+                    borderRadius: '1px',
+                    background: modalSlideIdx === i ? '#ffffff' : 'rgba(255,255,255,0.5)',
+                    transition: 'all 0.3s ease'
                   }}
                 />
               ))}
@@ -312,21 +283,21 @@ const BriefContentModal = ({
         </div>
 
         <div style={{ padding: '32px' }}>
-          <div style={{ display: 'flex', gap: '12px', fontSize: '13px', color: '#64748b', marginBottom: '12px', flexWrap: 'wrap' }}>
-            <span>📅 {post.date}</span>
-            <span>•</span>
-            <span>⏱️ {post.readTime}</span>
+          <div style={{ display: 'flex', gap: '8px', fontSize: '13px', color: '#64748b', marginBottom: '12px', flexWrap: 'wrap' }}>
+            <span>Published {post.date}</span>
+            <span>·</span>
+            <span>{post.readTime}</span>
           </div>
 
-          <h2 style={{ fontSize: '24px', color: '#0f172a', fontWeight: '800', marginBottom: '16px', lineHeight: '1.3' }}>
+          <h2 style={{ fontSize: '22px', color: '#0f172a', fontWeight: '700', marginBottom: '16px', lineHeight: '1.3' }}>
             {post.title}
           </h2>
 
-          <div style={{ background: '#f8fafc', padding: '20px', borderRadius: '16px', borderLeft: '4px solid var(--primary-cyan)', marginBottom: '24px' }}>
-            <h4 style={{ margin: '0 0 8px 0', fontSize: '13px', color: 'var(--primary-cyan)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              📌 Brief Content & Summary
+          <div style={{ background: '#f8fafc', padding: '16px 20px', borderRadius: '2px', borderLeft: '3px solid #0f766e', marginBottom: '24px' }}>
+            <h4 style={{ margin: '0 0 6px 0', fontSize: '12px', color: '#0f766e', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Summary
             </h4>
-            <p style={{ margin: 0, fontSize: '15px', color: '#334155', lineHeight: '1.7' }}>
+            <p style={{ margin: 0, fontSize: '14.5px', color: '#334155', lineHeight: '1.6' }}>
               {post.excerpt || post.content.slice(0, 220) + '...'}
             </p>
           </div>
@@ -334,16 +305,16 @@ const BriefContentModal = ({
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
             <button
               onClick={onClose}
-              style={{ padding: '12px 22px', borderRadius: '30px', background: '#f1f5f9', color: '#475569', border: '1px solid #cbd5e1', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}
+              style={{ padding: '10px 20px', borderRadius: '2px', background: '#f1f5f9', color: '#475569', border: '1px solid #cbd5e1', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}
             >
               Close
             </button>
             <button
-              className="btn-solid"
+              className="btn-rect-primary"
               onClick={() => onReadFull(post)}
-              style={{ padding: '12px 28px', borderRadius: '30px', fontSize: '14px' }}
+              style={{ padding: '10px 24px', borderRadius: '2px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}
             >
-              Read Full Article &rarr;
+              Read full article &rarr;
             </button>
           </div>
         </div>
@@ -383,12 +354,11 @@ const GalleryImageModal = ({
       <div
         style={{
           background: '#ffffff',
-          borderRadius: '20px',
+          borderRadius: '2px',
           maxWidth: '750px',
           width: '100%',
           overflow: 'hidden',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
-          animation: 'modalPopUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
           position: 'relative'
         }}
         onClick={(e) => e.stopPropagation()}
@@ -414,10 +384,10 @@ const GalleryImageModal = ({
               background: 'rgba(255, 255, 255, 0.9)',
               color: '#0f172a',
               border: 'none',
-              borderRadius: '50%',
-              width: '36px',
-              height: '36px',
-              fontSize: '16px',
+              borderRadius: '2px',
+              width: '32px',
+              height: '32px',
+              fontSize: '14px',
               fontWeight: '700',
               cursor: 'pointer',
               display: 'flex',
@@ -428,9 +398,9 @@ const GalleryImageModal = ({
             ✕
           </button>
         </div>
-        <div style={{ padding: '20px 24px', background: '#ffffff', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '14px', fontWeight: '700', color: '#0f172a' }}>{caption}</span>
-          <button onClick={onClose} style={{ background: 'var(--primary-cyan)', color: 'white', border: 'none', padding: '8px 18px', borderRadius: '20px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
+        <div style={{ padding: '16px 20px', background: '#ffffff', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a' }}>{caption}</span>
+          <button onClick={onClose} className="btn-rect-primary" style={{ padding: '8px 16px', borderRadius: '2px', fontSize: '13px', cursor: 'pointer' }}>
             Close
           </button>
         </div>
@@ -471,29 +441,28 @@ export const BlogSection = ({ setActiveTab }: { setActiveTab: (tab: string) => v
   }
 
   return (
-    <section className="blog-section" style={{ padding: '80px 0', backgroundColor: 'var(--pastel-bg-alt, #e3eff1)' }}>
+    <section className="blog-section" style={{ padding: '80px 0', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
       <div className="container">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px', flexWrap: 'wrap', gap: '20px' }}>
           <div>
-            <span style={{ color: 'var(--primary-cyan)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '13px' }}>
-              Latest Insights & Publications
+            <span className="eyebrow-plain" style={{ color: '#0f766e', fontWeight: '600', fontSize: '13px' }}>
+              Latest insights &amp; publications
             </span>
-            <h2 style={{ fontSize: '32px', color: '#0f172a', marginTop: '6px' }}>Technology & Insights Blog</h2>
-            <p style={{ color: '#64748b', fontSize: '14px', marginTop: '4px' }}>Expert perspectives on Cloud Solutions, Cybersecurity, and Software Architecture.</p>
+            <h2 className="editorial-heading" style={{ fontSize: '32px', color: '#0f172a', margin: '4px 0 0 0' }}>Technology &amp; Insights Blog</h2>
+            <p style={{ color: '#64748b', fontSize: '15px', marginTop: '6px' }}>Expert perspectives on Cloud Solutions, Cybersecurity, and Software Architecture.</p>
           </div>
           <button
-            className="btn-solid"
+            className="btn-rect-outline"
             onClick={() => {
               setActiveTab('blog');
               window.scrollTo(0, 0);
             }}
-            style={{ padding: '12px 26px', fontSize: '14px', borderRadius: '30px' }}
           >
             Read All Articles &rarr;
           </button>
         </div>
 
-        <div className="blog-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px' }}>
+        <div className="blog-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
           {blogs.slice(0, 3).map((post) => {
             return (
               <article
@@ -501,14 +470,14 @@ export const BlogSection = ({ setActiveTab }: { setActiveTab: (tab: string) => v
                 className="blog-card"
                 style={{
                   background: '#ffffff',
-                  borderRadius: '16px',
+                  borderRadius: '8px',
                   overflow: 'hidden',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.06)',
+                  boxShadow: 'none',
                   border: '1px solid #e2e8f0',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  transition: 'transform 0.3s ease, boxShadow 0.3s ease'
+                  transition: 'border-color 0.25s ease, background-color 0.25s ease'
                 }}
               >
                 <div>
@@ -519,20 +488,23 @@ export const BlogSection = ({ setActiveTab }: { setActiveTab: (tab: string) => v
                   />
 
                   <div style={{ padding: '24px', cursor: 'pointer' }} onClick={() => { setActiveTab('blog'); window.scrollTo(0, 0); }}>
-                    <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '10px' }}>
-                      <span>⏱️ {post.readTime}</span>
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: '#0f766e', display: 'block', marginBottom: '6px' }}>
+                      {post.category}
+                    </span>
+                    <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', marginBottom: '10px', lineHeight: '1.4' }}>{post.title}</h3>
+                    <p style={{ fontSize: '14px', color: '#475569', lineHeight: '1.6', marginBottom: '14px' }}>{post.excerpt}</p>
+                    <div style={{ fontSize: '12px', color: '#64748b' }}>
+                      <span>{post.readTime}</span>
                     </div>
-                    <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: '800', marginBottom: '10px', lineHeight: '1.4' }}>{post.title}</h3>
-                    <p style={{ fontSize: '14px', color: '#475569', lineHeight: '1.6', marginBottom: '18px' }}>{post.excerpt}</p>
                   </div>
                 </div>
 
                 <div
-                  style={{ padding: '16px 24px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+                  style={{ padding: '14px 24px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
                   onClick={() => { setActiveTab('blog'); window.scrollTo(0, 0); }}
                 >
-                  <span style={{ fontSize: '12px', fontWeight: '600', color: '#64748b' }}>📅 {post.date}</span>
-                  <span style={{ fontSize: '13px', fontWeight: '800', color: 'var(--primary-cyan)' }}>Read Article &rarr;</span>
+                  <span style={{ fontSize: '12px', fontWeight: '500', color: '#64748b' }}>{post.date}</span>
+                  <span style={{ fontSize: '13px', fontWeight: '600', color: '#0f766e' }}>Read article &rarr;</span>
                 </div>
               </article>
             );
@@ -586,69 +558,23 @@ export const BlogPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void
 
   return (
     <div className="blog-page">
-      {/* Hero Header - Merged seamlessly with the page */}
+      {/* Hero Header - Flat solid dark navy with straight edge */}
       <div
         style={{
           position: 'relative',
-          overflow: 'hidden',
-          padding: '70px 0 90px',
-          borderBottom: 'none',
-          background: 'radial-gradient(circle at 50% 20%, rgba(43, 182, 180, 0.15) 0%, transparent 60%), linear-gradient(135deg, #071224 0%, #0b1a30 50%, #102442 100%)',
+          padding: '70px 0 80px',
+          background: '#0b172a',
+          borderBottom: '1px solid #1e293b',
           textAlign: 'center'
         }}
       >
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <span
-            style={{
-              background: 'rgba(43, 182, 180, 0.16)',
-              color: '#2bb6b4',
-              padding: '6px 20px',
-              borderRadius: '30px',
-              fontWeight: 800,
-              fontSize: '12px',
-              letterSpacing: '1.5px',
-              textTransform: 'uppercase',
-              display: 'inline-block',
-              marginBottom: '16px',
-              border: '1px solid rgba(43, 182, 180, 0.35)'
-            }}
-          >
-            LATEST INSIGHTS & ARTICLES
-          </span>
-          <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#ffffff', marginBottom: '14px', letterSpacing: '-0.5px' }}>
-            Insights & <span style={{ background: 'linear-gradient(135deg, #2bb6b4 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Tech Innovation</span>
+        <div className="container">
+          <h1 style={{ fontSize: '38px', fontWeight: 700, color: '#ffffff', marginBottom: '14px', letterSpacing: '-0.5px' }}>
+            Blog
           </h1>
-          <p style={{ maxWidth: '720px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
-            Stay ahead of the curve with expert analysis, industry trends, and technology insights from The JobSync.
+          <p style={{ maxWidth: '640px', margin: '0 auto', color: '#94a3b8', fontSize: '16px', lineHeight: 1.6 }}>
+            News, events and notes from The Jobsync team.
           </p>
-        </div>
-
-        {/* Seamless Wave Divider Merging into the section below */}
-        <div
-          className="hero-wave-divider"
-          style={{
-            position: 'absolute',
-            bottom: -1,
-            left: 0,
-            right: 0,
-            lineHeight: 0,
-            pointerEvents: 'none',
-            zIndex: 3
-          }}
-        >
-          <svg
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none"
-            style={{
-              position: 'relative',
-              display: 'block',
-              width: 'calc(100% + 1.3px)',
-              height: '52px',
-              fill: 'var(--pastel-bg, #edf7f8)'
-            }}
-          >
-            <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,40 L1200,120 L0,120 Z"></path>
-          </svg>
         </div>
       </div>
 
@@ -656,70 +582,66 @@ export const BlogPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void
         <div className="container">
           {selectedPost ? (
             /* DETAILED POST READER VIEW */
-            <div style={{ background: '#ffffff', borderRadius: '20px', padding: '44px', boxShadow: '0 20px 40px rgba(0,0,0,0.06)', maxWidth: '920px', margin: '0 auto', border: '1px solid #e2e8f0' }}>
+            <div style={{ background: '#ffffff', borderRadius: '2px', padding: '36px', boxShadow: 'none', maxWidth: '720px', margin: '0 auto', border: '1px solid #e2e8f0' }}>
               <button
-                className="btn-outline"
+                className="btn-rect-outline"
                 onClick={() => setSelectedPost(null)}
-                style={{ marginBottom: '28px', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', fontSize: '14px', borderRadius: '25px' }}
+                style={{ marginBottom: '24px', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 16px', fontSize: '14px', borderRadius: '2px' }}
               >
-                &larr; Back to All Articles
+                &larr; Back to all articles
               </button>
 
-              <div style={{ marginBottom: '16px' }}>
-                <span style={{ background: 'rgba(14, 165, 233, 0.1)', color: 'var(--primary-cyan)', padding: '6px 16px', borderRadius: '20px', fontWeight: '800', fontSize: '12px' }}>
+              <div style={{ marginBottom: '12px' }}>
+                <span style={{ color: '#0f766e', fontWeight: '600', fontSize: '13px' }}>
                   {selectedPost.category}
                 </span>
               </div>
 
-              <h1 style={{ fontSize: '30px', color: '#0f172a', fontWeight: '900', marginBottom: '20px', lineHeight: '1.3' }}>
+              <h1 style={{ fontSize: '28px', color: '#0f172a', fontWeight: '700', marginBottom: '16px', lineHeight: '1.3' }}>
                 {selectedPost.title}
               </h1>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '30px', borderBottom: '1px solid #e2e8f0', paddingBottom: '20px', flexWrap: 'wrap' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(14, 165, 233, 0.1)', color: 'var(--primary-cyan)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '16px' }}>
-                  📅
-                </div>
-                <div>
-                  <h4 style={{ margin: 0, fontSize: '15px', color: '#0f172a', fontWeight: '700' }}>Published on {selectedPost.date}</h4>
-                  <p style={{ margin: 0, fontSize: '13px', color: '#64748b' }}>Estimated Read: {selectedPost.readTime}</p>
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px', fontSize: '13px', color: '#64748b' }}>
+                <span>Published on {selectedPost.date}</span>
+                <span>·</span>
+                <span>Estimated read: {selectedPost.readTime}</span>
               </div>
 
               {Boolean(selectedPost.coverImage && selectedPost.coverImage.trim() !== '') && (
                 <div
                   className="blog-img-card"
-                  style={{ borderRadius: '14px', overflow: 'hidden', marginBottom: '32px', maxHeight: '440px' }}
+                  style={{ borderRadius: '2px', overflow: 'hidden', marginBottom: '28px', maxHeight: '420px', border: '1px solid #e2e8f0' }}
                   onClick={() => setPreviewPost(selectedPost)}
                 >
                   <img
                     src={selectedPost.coverImage}
                     alt={selectedPost.title}
-                    style={{ width: '100%', height: '100%', maxHeight: '440px', objectFit: 'cover' }}
+                    style={{ width: '100%', height: '100%', maxHeight: '420px', objectFit: 'cover' }}
                   />
                   <div className="blog-img-card-overlay">
-                    <span className="blog-quick-badge">
-                      <span>👁️</span> Click to View Brief Content & Summary
+                    <span className="blog-quick-badge" style={{ borderRadius: '2px' }}>
+                      Click to view brief summary
                     </span>
                   </div>
                 </div>
               )}
 
-              <div style={{ fontSize: '16px', lineHeight: '1.8', color: '#334155', whiteSpace: 'pre-line', marginBottom: '40px' }}>
+              <div style={{ fontSize: '15.5px', lineHeight: '1.7', color: '#334155', whiteSpace: 'pre-line', marginBottom: '36px' }}>
                 {selectedPost.content}
               </div>
 
               {/* Photo Gallery Grid */}
               {Array.isArray(selectedPost.images) && selectedPost.images.length > 0 && (
-                <div style={{ marginTop: '40px', marginBottom: '40px', borderTop: '1px solid #e2e8f0', paddingTop: '30px' }}>
-                  <h3 style={{ fontSize: '20px', color: '#0f172a', fontWeight: '800', marginBottom: '18px' }}>
-                    📸 Article Gallery ({selectedPost.images.length})
+                <div style={{ marginTop: '36px', marginBottom: '36px', borderTop: '1px solid #e2e8f0', paddingTop: '28px' }}>
+                  <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', marginBottom: '16px' }}>
+                    Article Gallery ({selectedPost.images.length})
                   </h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '16px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '14px' }}>
                     {selectedPost.images.map((imgUrl, idx) => (
                       <div
                         key={idx}
                         className="blog-img-card"
-                        style={{ height: '200px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', position: 'relative', background: '#f1f5f9' }}
+                        style={{ height: '180px', borderRadius: '2px', overflow: 'hidden', border: '1px solid #cbd5e1', boxShadow: 'none', position: 'relative', background: '#f1f5f9' }}
                         onClick={() => setActiveGalleryImg({ url: imgUrl, index: idx + 1 })}
                       >
                         <img
@@ -734,8 +656,8 @@ export const BlogPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void
                           }}
                         />
                         <div className="blog-img-card-overlay">
-                          <span className="blog-quick-badge" style={{ fontSize: '11px', padding: '6px 12px' }}>
-                            🔍 View Photo {idx + 1}
+                          <span className="blog-quick-badge" style={{ fontSize: '11px', padding: '6px 12px', borderRadius: '2px' }}>
+                            View photo {idx + 1}
                           </span>
                         </div>
                       </div>
@@ -745,17 +667,17 @@ export const BlogPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void
               )}
 
               {/* Consultation Footer */}
-              <div style={{ background: 'var(--navy-gradient)', color: 'white', borderRadius: '16px', padding: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px', border: '1px solid rgba(43, 182, 180, 0.2)' }}>
+              <div style={{ background: '#0b172a', color: 'white', borderRadius: '2px', padding: '28px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '18px', border: '1px solid #1e293b' }}>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: '18px', color: 'white' }}>Need Technical Guidance for Your Enterprise?</h3>
-                  <p style={{ margin: '4px 0 0', color: '#94a3b8', fontSize: '13px' }}>Schedule a consultation with our technology architecture experts.</p>
+                  <h3 style={{ margin: 0, fontSize: '17px', color: 'white', fontWeight: '700' }}>Need technical guidance for your project?</h3>
+                  <p style={{ margin: '4px 0 0', color: '#94a3b8', fontSize: '13px' }}>Schedule a consultation with our technology architecture team.</p>
                 </div>
                 <button
-                  className="btn-solid"
+                  className="btn-rect-primary"
                   onClick={() => setActiveTab('contact')}
-                  style={{ padding: '14px 28px', fontSize: '14px', borderRadius: '30px' }}
+                  style={{ padding: '10px 22px', fontSize: '14px', borderRadius: '2px', cursor: 'pointer' }}
                 >
-                  Consult IT Experts &rarr;
+                  Consult IT experts &rarr;
                 </button>
               </div>
             </div>
@@ -763,29 +685,30 @@ export const BlogPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void
             /* ALL BLOGS LIST */
             <>
               {blogs.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '70px 20px', background: '#ffffff', borderRadius: '20px', border: '1px solid #e2e8f0', maxWidth: '600px', margin: '0 auto', boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
-                  <div style={{ fontSize: '48px', marginBottom: '16px' }}>📰</div>
-                  <h3 style={{ fontSize: '20px', color: '#0f172a', fontWeight: '800', marginBottom: '8px' }}>No Blog Articles Published Yet</h3>
+                <div style={{ textAlign: 'center', padding: '60px 20px', background: '#ffffff', borderRadius: '2px', border: '1px solid #e2e8f0', maxWidth: '580px', margin: '0 auto', boxShadow: 'none' }}>
+                  <div style={{ fontSize: '36px', marginBottom: '12px' }}>📰</div>
+                  <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', marginBottom: '8px' }}>No Blog Articles Published Yet</h3>
                   <p style={{ color: '#64748b', fontSize: '14px', margin: 0 }}>
-                    Log into the Admin Portal (at <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>/admin</code>) to publish your first article!
+                    Log into the Admin Portal (at <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '2px' }}>/admin</code>) to publish your first article.
                   </p>
                 </div>
               ) : (
-                <div className="blog-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '32px' }}>
+                <div className="blog-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
                   {blogs.map((post) => {
                     return (
                       <article
                         key={post.id}
+                        className="blog-card"
                         style={{
-                          background: 'var(--pastel-card, #f4fbfb)',
-                          borderRadius: '20px',
+                          background: '#ffffff',
+                          borderRadius: '8px',
                           overflow: 'hidden',
-                          boxShadow: '0 10px 30px rgba(22,43,76,0.06)',
-                          border: '1px solid var(--pastel-border, rgba(43, 182, 180, 0.22))',
+                          boxShadow: 'none',
+                          border: '1px solid #e2e8f0',
                           display: 'flex',
                           flexDirection: 'column',
                           justifyContent: 'space-between',
-                          transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                          transition: 'border-color 0.25s ease, background-color 0.25s ease'
                         }}
                       >
                         <div>
@@ -796,20 +719,23 @@ export const BlogPage = ({ setActiveTab }: { setActiveTab: (tab: string) => void
                           />
 
                           <div style={{ padding: '24px', cursor: 'pointer' }} onClick={() => setSelectedPost(post)}>
-                            <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '10px' }}>
-                              <span>⏱️ {post.readTime}</span>
+                            <span style={{ fontSize: '12px', fontWeight: 600, color: '#0f766e', display: 'block', marginBottom: '6px' }}>
+                              {post.category}
+                            </span>
+                            <h3 style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', marginBottom: '10px', lineHeight: '1.4' }}>{post.title}</h3>
+                            <p style={{ fontSize: '14px', color: '#475569', lineHeight: '1.6', marginBottom: '14px' }}>{post.excerpt}</p>
+                            <div style={{ fontSize: '12px', color: '#64748b' }}>
+                              <span>{post.readTime}</span>
                             </div>
-                            <h3 style={{ fontSize: '19px', color: '#0f172a', fontWeight: '800', marginBottom: '12px', lineHeight: '1.4' }}>{post.title}</h3>
-                            <p style={{ fontSize: '14px', color: '#475569', lineHeight: '1.6', marginBottom: '18px' }}>{post.excerpt}</p>
                           </div>
                         </div>
 
                         <div
-                          style={{ padding: '18px 24px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+                          style={{ padding: '14px 24px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
                           onClick={() => setSelectedPost(post)}
                         >
-                          <span style={{ fontSize: '12px', fontWeight: '600', color: '#64748b' }}>📅 {post.date}</span>
-                          <span style={{ fontSize: '13px', fontWeight: '800', color: 'var(--primary-cyan)' }}>Read Article &rarr;</span>
+                          <span style={{ fontSize: '12px', fontWeight: '500', color: '#64748b' }}>{post.date}</span>
+                          <span style={{ fontSize: '13px', fontWeight: '600', color: '#0f766e' }}>Read article &rarr;</span>
                         </div>
                       </article>
                     );
